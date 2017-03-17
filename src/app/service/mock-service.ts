@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Worker} from "../model/sworker";
+import {Worker} from "../model/worker";
 import {Company} from "../model/company";
 
 @Injectable()

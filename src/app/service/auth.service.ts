@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {MockService} from "./mock-service";
-import {Worker} from "../model/sworker";
+import {Worker} from "../model/worker";
 
 @Injectable()
 export class AuthService {
