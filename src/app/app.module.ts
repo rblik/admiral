@@ -10,6 +10,7 @@ import {AuthService} from "./service/auth.service";
 import {AppRoutingModule} from "./app-routing.module";
 import {DashboardComponent} from "./worker/dashboard.component";
 import {HomeComponent} from "./home/home.component";
+import {DialogModule, ScheduleModule, CalendarModule, ToggleButtonModule} from "primeng/primeng";
 
 @NgModule({
   declarations: [
@@ -22,7 +23,11 @@ import {HomeComponent} from "./home/home.component";
     BrowserModule,
     FormsModule,
     HttpModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ScheduleModule,
+    DialogModule,
+    CalendarModule,
+    ToggleButtonModule
   ],
   providers: [
     MockService,
