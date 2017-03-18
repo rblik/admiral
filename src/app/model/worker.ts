@@ -1,4 +1,4 @@
-import {Company} from "./company";
+import {SubProject} from "./subproject";
 
 export class Worker {
   workerId: number;
@@ -8,5 +8,5 @@ export class Worker {
   birthday: Date;
   email: string;
   workerTel: string;
-  company: Company[];
+  subProjects: SubProject[];
 }

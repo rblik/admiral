@@ -5,5 +5,4 @@ export class Company {
   name: string;
   address: Address;
   companyTel: string;
-  departments: string[];
 }
