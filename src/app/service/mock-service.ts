@@ -57,6 +57,10 @@ export class MockService {
     d4.date = '2017-03-10';
     d4.hours = 8;
     d4.subProject = this.subProj;
+    let d5 = new DailyWork();
+    d4.date = '2017-03-17';
+    d4.hours = 6;
+    d4.subProject = this.subProj1;
     this.dailyWorks = [d1, d2, d3, d4];
   }
 
@@ -65,7 +69,7 @@ export class MockService {
   }
 
   getWeekWork(sundayDate: Date, saturdayDate: Date): DailyWork[] {
-    console.log(this.dailyWorks);
+
     return this.dailyWorks.filter(function (work) {
       return (new Date(work.date)) >= sundayDate && (new Date(work.date)) <= saturdayDate;
     });

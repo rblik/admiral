@@ -1,11 +1,15 @@
 import {Injectable} from "@angular/core";
 import {MockService} from "./mock-service";
 import {DailyWork} from "../model/daily-work";
+import {Worker} from "../model/worker";
 
 @Injectable()
 export class WorkService {
 
+  worker: Worker;
+
   constructor(private mockService: MockService) {
+    this.worker = this.mockService.getLoggedWorkerInfo();
   }
 
   getWorkHoursForWeek(sundayDate: Date, saturdayDate: Date): DailyWork[][] {
@@ -13,17 +17,31 @@ export class WorkService {
   }
 
   private transform(value: Array<DailyWork>): Array<any> {
-    let mapped = value.map(obj => {
-      return {'projId': obj.subProject.subProjectId, 'obj': obj}
-    });
-    const groupedObj = mapped.reduce((prev, cur)=> {
-      if(!prev[cur['projId']]) {
-        prev[cur['projId']] = [cur];
-      } else {
-        prev[cur['projId']].push(cur);
+    console.log("value = " + value.length);
+    let arrArr: DailyWork[][] = [];
+    this.worker.subProjects.forEach(subProj => {
+      let filtered = value.filter(function (work) {
+        return work.subProject.subProjectId == subProj.subProjectId;
+      });
+      console.log("filtered = " + filtered.length);
+      let resultArr = [];
+      for (let i = 0; i < filtered.length; i++) {
+        let day = new Date(filtered[i].date).getDay();
+        resultArr[day] = filtered[i];
       }
-      return prev;
-    }, {});
-    return Object.keys(groupedObj).map(key => groupedObj[key]);
+      console.log("resultArr = " + resultArr.length);
+      for (let i = 0; i < 7; i++) {
+        if (resultArr[i] == null) {
+          resultArr[i] = {
+            subProject: subProj,
+            date: '',
+            hours: 0,
+            absence: ''
+          };
+        }
+      }
+      arrArr.push(resultArr);
+    });
+    return arrArr;
   }
 }

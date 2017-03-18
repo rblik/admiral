@@ -14,7 +14,7 @@ export class DashboardComponent implements OnInit {
 
   private worker: Worker;
   private currentSunday: Date;
-  private currentSaturday: Date;
+  private nextSunday: Date;
   private timeOffset: number;
   private weekWorks: DailyWork[][];
 
@@ -25,23 +25,34 @@ export class DashboardComponent implements OnInit {
     this.timeOffset = 0;
     this.worker = this.authService.getLoggedWorker();
     this.initWeekBorders(this.timeOffset);
-    this.weekWorks = this.workService.getWorkHoursForWeek(this.currentSunday, this.currentSaturday);
+    this.weekWorks = this.workService.getWorkHoursForWeek(this.currentSunday, this.nextSunday);
+  }
+
+  getDayByWeek(sunday: Date, offset: number): Date{
+    return this.timeService.getRelativeWeekDay(sunday, offset);
   }
 
   private initWeekBorders(offset: number) {
     this.currentSunday = this.timeService.getWeekDay(offset);
-    this.currentSaturday = this.timeService.getWeekDay(offset + 6);
+    this.nextSunday = this.timeService.getWeekDay(offset + 7);
   }
 
   moveWeekForward() {
     this.timeOffset += 7;
     this.initWeekBorders(this.timeOffset);
-    this.weekWorks = this.workService.getWorkHoursForWeek(this.currentSunday, this.currentSaturday);
+    this.weekWorks = this.workService.getWorkHoursForWeek(this.currentSunday, this.nextSunday);
+    console.log(this.weekWorks);
   }
 
   moveWeekBack() {
     this.timeOffset -= 7;
     this.initWeekBorders(this.timeOffset);
-    this.weekWorks = this.workService.getWorkHoursForWeek(this.currentSunday, this.currentSaturday);
+    this.weekWorks = this.workService.getWorkHoursForWeek(this.currentSunday, this.nextSunday);
+  }
+
+  sum(arr: any[]): number{
+    let sum = 0;
+    arr.forEach(dw => sum += dw.hours);
+    return sum;
   }
 }
