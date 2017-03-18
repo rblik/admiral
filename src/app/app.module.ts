@@ -10,6 +10,8 @@ import {AuthService} from "./service/auth.service";
 import {AppRoutingModule} from "./app-routing.module";
 import {DashboardComponent} from "./worker/dashboard.component";
 import {HomeComponent} from "./home/home.component";
+import {TimeService} from "./service/time.service";
+import {WorkService} from "./service/work.service";
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import {HomeComponent} from "./home/home.component";
   ],
   providers: [
     MockService,
-    AuthService
+    AuthService,
+    TimeService,
+    WorkService
   ],
   bootstrap: [AppComponent]
 })
