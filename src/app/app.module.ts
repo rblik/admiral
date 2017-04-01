@@ -5,13 +5,13 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import {NavBarComponent} from "./navbar/navbar.component";
-import {MockService} from "./service/mock-service";
 import {AuthService} from "./service/auth.service";
 import {AppRoutingModule} from "./app-routing.module";
 import {DashboardComponent} from "./worker/dashboard.component";
 import {HomeComponent} from "./home/home.component";
 import {TimeService} from "./service/time.service";
-import {WorkService} from "./service/work.service";
+import {WorkInfoService} from "./service/work-info.service";
+import {DatePipe} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -27,10 +27,10 @@ import {WorkService} from "./service/work.service";
     AppRoutingModule
   ],
   providers: [
-    MockService,
     AuthService,
     TimeService,
-    WorkService
+    WorkInfoService,
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

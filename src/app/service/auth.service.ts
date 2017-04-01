@@ -1,20 +1,26 @@
 import {Injectable} from "@angular/core";
-import {MockService} from "./mock-service";
-import {Worker} from "../model/worker";
-import {Company} from "../model/company";
+import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {Employee} from "../model/employee";
+import {Http} from "@angular/http";
 
 @Injectable()
 export class AuthService {
+  private loggedEmployee: Subject<Employee> = new BehaviorSubject<Employee>(null);
 
-  constructor(private workerService: MockService) {
+  constructor(private http: Http) {
+    this.getProfile();
   }
 
-  public getLoggedWorker() : Worker{
-    return this.workerService.getLoggedWorkerInfo();
+  public getProfile(){
+    this.http.get("http://localhost:8080/profile").map(res => res.json())
+      .catch(e => {
+        if (e.status === 401) {
+          return Observable.throw('Wrong Credentials');
+        }
+      }).subscribe(employee => this.loggedEmployee.next(employee));
   }
 
-  public getLoggedName(): string {
-    return this.getLoggedWorker().name;
+  public getLoggedWorker(): Subject<Employee> {
+    return this.loggedEmployee;
   }
-
 }

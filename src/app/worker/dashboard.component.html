@@ -2,6 +2,8 @@
 <button (click)="moveWeekBack()">Previous week</button>
 <button (click)="moveWeekForward()">Next week</button>
 <div style="margin: 10px">
+  <input type="text" class="form-control" #searchBox placeholder="Project"
+         (keyup)="search(searchBox.value)" [ngStyle]="{'width': '100px'}">
   <table style="width:100%; font-size: small">
     <thead>
     <tr>
@@ -18,26 +20,25 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let item of weekWorks">
+    <tr *ngFor="let item of uiAgreements">
       <td>
-        {{item[0].subProject.name}}
+        {{item.projectName}}
       </td>
       <td>
-        {{item[0].subProject.company.name}}
+        {{item.clientName}}
       </td>
-      <td *ngFor="let it of item">
-        <input [ngStyle]="{'width': '100px'}" [ngModel]="(it.absence==''||it.absence==null)? it.hours: it.absence"
+      <td *ngFor="let it of item.workInfos">
+        <input [ngStyle]="{'width': '100px'}" [ngModel]="(it.absenceType==''||it.absenceType==null)? it.duration: it.absenceType"
                style="width: inherit; text-align: center" disabled>
       </td>
       <td>
-        {{sum(item)}}
+        {{sum(item.workInfos)}}
       </td>
     </tr>
     </tbody>
   </table>
 </div>
 
-<pre>{{worker | json}}</pre>
+<pre>{{employee | json}}</pre>
 <pre>{{currentSunday}}</pre>
-<pre>{{currentSaturday}}</pre>
-<pre>{{weekWorks | json}}</pre>
+<pre>{{workInfos | json}}</pre>
