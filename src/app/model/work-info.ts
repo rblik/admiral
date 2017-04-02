@@ -1,4 +1,5 @@
 export class WorkInfo {
+  unitId: number;
   agreementId: number;
   employeeId: number;
   employeeName: string;

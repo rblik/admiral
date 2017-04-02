@@ -5,6 +5,8 @@ import {WorkInfoService} from "../service/work-info.service";
 import {Employee} from "../model/employee";
 import {Agreement} from "../model/agreement";
 import {WorkInfo} from "../model/work-info";
+import {WorkUnit} from "../model/work-unit";
+import {isNull} from "util";
 
 @Component({
   selector: 'worker-dashboard',
@@ -126,11 +128,19 @@ export class DashboardComponent implements OnInit {
       agreement.workInfos = resultArr;
     });
   }
-  showDialog(workInfo: WorkInfo, clientName: string) {
+  showDialog(workInfo: WorkInfo, agreementId: number, clientName: string) {
     this.clientForCreatingWorkInfos = clientName;
     this.dayForCreatingWorkInfos = new Date(workInfo.date).toDateString();
     this.workService.getDayWork(workInfo.date, workInfo.agreementId).subscribe(infos => {
-      this.dayWorkInfos = infos.length == 0 ? [new WorkInfo()] : infos;
+      if (infos.length == 0) {
+        let workInfoItem = new WorkInfo();
+        workInfoItem.agreementId = workInfo.agreementId;
+        workInfoItem.date = workInfo.date;
+        workInfoItem.duration = 0;
+        this.dayWorkInfos = [workInfoItem];
+      } else {
+        this.dayWorkInfos = infos;
+      }
     });
     this.display = true;
   }
@@ -145,12 +155,38 @@ export class DashboardComponent implements OnInit {
 
   save(workInfo: WorkInfo){
     this.unblockInput = false;
-    console.log(workInfo);
+    this.workService.save(workInfo.agreementId, this.convertToUnit(workInfo))
+      .subscribe(workUnit => {
+        console.log(workUnit);
+        this.dayWorkInfos.push(this.convertToInfo(workUnit));
+        this.workInfos.push(this.convertToInfo(workUnit, workInfo.agreementId));
+        console.log(this.workInfos);
+        this.transform(this.workInfos);
+        console.log(this.uiAgreements);
+      });
   }
 
-  getEnumTitle(value: string): string{
-    return this.absenceTypes.filter(function (type) {
-      return type.value == value;
-    })[0];
+  private convertToUnit(workInfo: WorkInfo): WorkUnit {
+    let workUnit2 = new WorkUnit();
+    workUnit2.id = workInfo.unitId;
+    workUnit2.date = workInfo.date;
+    workUnit2.start = workInfo.from;
+    workUnit2.finish = workInfo.to;
+    workUnit2.absenceType = workInfo.absenceType;
+    workUnit2.comment = workInfo.comment;
+    return workUnit2;
+  }
+
+  private convertToInfo(workUnit: WorkUnit, agreementId?: number): WorkInfo {
+    let workInfo2 = new WorkInfo();
+    workInfo2.unitId = workUnit.id;
+    workInfo2.date = workUnit.date;
+    workInfo2.from = workUnit.start;
+    workInfo2.to = workUnit.finish;
+    workInfo2.duration = workUnit.duration;
+    workInfo2.absenceType = workUnit.absenceType;
+    workInfo2.comment = workUnit.comment;
+    workInfo2.agreementId = isNaN(agreementId) ? NaN : agreementId;
+    return workInfo2;
   }
 }

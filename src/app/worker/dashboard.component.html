@@ -25,7 +25,7 @@
         {{sum(item.workInfos)}}
       </td>
       <td *ngFor="let work of item.workInfos">
-        <span (click)="showDialog(work, item.clientName)">
+        <span (click)="showDialog(work, item.agreementId, item.clientName)">
         <input [ngStyle]="{'width': '100px'}"
                [ngModel]="(work.absenceType==''||work.absenceType==null)? work.duration: work.absenceType"
                style="width: inherit; text-align: center" disabled>

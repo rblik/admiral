@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {Employee} from "../model/employee";
-import {Http} from "@angular/http";
+import {Http, Headers, RequestOptions} from "@angular/http";
 
 @Injectable()
 export class AuthService {
@@ -18,6 +18,12 @@ export class AuthService {
           return Observable.throw('Wrong Credentials');
         }
       }).subscribe(employee => this.loggedEmployee.next(employee));
+  }
+
+  public getOptions(): RequestOptions {
+    let headers = new Headers({'Content-Type': 'application/json'});
+    // headers.append("Authorization", "Basic " + btoa(username + ":" + password));
+    return new RequestOptions({headers: headers});
   }
 
   public getLoggedWorker(): Subject<Employee> {
