@@ -8,19 +8,34 @@ import {WorkInfo} from "../model/work-info";
 
 @Component({
   selector: 'worker-dashboard',
-  templateUrl: 'dashboard.component.html'
+  templateUrl: 'dashboard.component.html',
+  styleUrls: [
+    'dashboard.component.css'
+  ]
 })
 export class DashboardComponent implements OnInit {
 
+  private absenceTypes;
   private employee: Employee;
   private currentSunday: Date;
   private nextSunday: Date;
   private timeOffset: number;
   private agreements: Agreement[];
   private workInfos: WorkInfo[];
+  private dayWorkInfos: WorkInfo[];
+  private timeForCreating: Date;
+  private unblockInput: boolean = false;
   private uiAgreements: Agreement[];
+  private display: boolean;
+  private dayForCreatingWorkInfos: string;
+  private clientForCreatingWorkInfos: string;
 
   constructor(private timeService: TimeService, private authService: AuthService, private workService: WorkInfoService) {
+    this.absenceTypes = [];
+    this.absenceTypes.push({label: 'מחלה', value: "ILLNESS"});
+    this.absenceTypes.push({label: 'חג', value: "HOLIDAY"});
+    this.absenceTypes.push({label: 'חופשה', value: "VACATION"});
+    this.absenceTypes.push({label: 'מלוים', value: "ARMY"});
   }
 
   ngOnInit(): void {
@@ -87,14 +102,13 @@ export class DashboardComponent implements OnInit {
     this.uiAgreements = this.agreements.filter(function (agreement) {
       return agreement.clientName.toLowerCase().match(param.toLowerCase());
     });
-    console.log(this.uiAgreements);
 
     this.uiAgreements.forEach(agreement => {
-      let filtered = value.filter(function (workInfo) {
+      let filtered: WorkInfo[] = value.filter(function (workInfo) {
         return workInfo.agreementId == agreement.agreementId;
       });
 
-      let resultArr = [];
+      let resultArr: WorkInfo[] = [];
 
       for (let i = 0; i < filtered.length; i++) {
         let day = new Date(filtered[i].date).getDay();
@@ -112,5 +126,31 @@ export class DashboardComponent implements OnInit {
       agreement.workInfos = resultArr;
     });
   }
+  showDialog(workInfo: WorkInfo, clientName: string) {
+    this.clientForCreatingWorkInfos = clientName;
+    this.dayForCreatingWorkInfos = new Date(workInfo.date).toDateString();
+    this.workService.getDayWork(workInfo.date, workInfo.agreementId).subscribe(infos => {
+      this.dayWorkInfos = infos.length == 0 ? [new WorkInfo()] : infos;
+    });
+    this.display = true;
+  }
+  closeDialog() {
+    this.dayWorkInfos = [new WorkInfo()];
+    this.display = false;
+  }
 
+  edit(){
+    this.unblockInput = true;
+  }
+
+  save(workInfo: WorkInfo){
+    this.unblockInput = false;
+    console.log(workInfo);
+  }
+
+  getEnumTitle(value: string): string{
+    return this.absenceTypes.filter(function (type) {
+      return type.value == value;
+    })[0];
+  }
 }

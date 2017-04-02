@@ -17,7 +17,7 @@ export class WorkInfoService {
   }
 
   public getDayWork(date: string, agreementId: number): Observable<WorkInfo[]>{
-    return this.http.get("http://localhost:8080/units" + date + "?agreementId=" + agreementId)
+    return this.http.get("http://localhost:8080/units/" + date + "?agreementId=" + agreementId)
       .map(res => res.json());
   }
 

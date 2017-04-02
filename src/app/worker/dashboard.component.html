@@ -7,8 +7,7 @@
   <table style="width:100%; font-size: small">
     <thead>
     <tr>
-      <th>SubProject</th>
-      <th>Company</th>
+      <th>סה"כ</th>
       <th>{{currentSunday.toDateString()}}</th>
       <th>{{getDayByWeek(currentSunday, 1).toDateString()}}</th>
       <th>{{getDayByWeek(currentSunday, 2).toDateString()}}</th>
@@ -16,29 +15,67 @@
       <th>{{getDayByWeek(currentSunday, 4).toDateString()}}</th>
       <th>{{getDayByWeek(currentSunday, 5).toDateString()}}</th>
       <th>{{getDayByWeek(currentSunday, 6).toDateString()}}</th>
-      <th>סה"כ</th>
+      <th>פרויקט</th>
+      <th>לקןח</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let item of uiAgreements">
+      <td>
+        {{sum(item.workInfos)}}
+      </td>
+      <td *ngFor="let work of item.workInfos">
+        <span (click)="showDialog(work, item.clientName)">
+        <input [ngStyle]="{'width': '100px'}"
+               [ngModel]="(work.absenceType==''||work.absenceType==null)? work.duration: work.absenceType"
+               style="width: inherit; text-align: center" disabled>
+        </span>
+      </td>
       <td>
         {{item.projectName}}
       </td>
       <td>
         {{item.clientName}}
       </td>
-      <td *ngFor="let it of item.workInfos">
-        <input [ngStyle]="{'width': '100px'}" [ngModel]="(it.absenceType==''||it.absenceType==null)? it.duration: it.absenceType"
-               style="width: inherit; text-align: center" disabled>
-      </td>
-      <td>
-        {{sum(item.workInfos)}}
-      </td>
     </tr>
     </tbody>
   </table>
-</div>
+  <p-dialog title="{{dayForCreatingWorkInfos}}" modal="modal" [(visible)]="display" width="500"
+            position="center center">
+    <p-header>
+      {{dayForCreatingWorkInfos}}
+    </p-header>
+    <div style="min-height: 350px ;max-height: 550px">
+      <div style="text-align: center">
+        {{clientForCreatingWorkInfos}}-עבודה יומי ב
+      </div>
+      <div *ngFor="let workInfo of dayWorkInfos">
+        <div>
+        <button type="button" pButton icon="fa-edit" (click)="edit()" label="Edit"></button>
+        </div>
+        <div>
+          <p-inputMask [(ngModel)]="workInfo.from" mask="99:99" [maxlength]="5"
+                       [readonly]="unblockInput==false"></p-inputMask>
+          <p-inputMask [(ngModel)]="workInfo.to" mask="99:99" [maxlength]="5"
+                       [readonly]="unblockInput==false"></p-inputMask>
+        </div>
+        <div>
+          <p-dropdown [options]="absenceTypes" [style]="{'width':'150px'}" placeholder="בחר את סוג"
+                      [(ngModel)]="workInfo.absenceType" [readonly]="unblockInput==false"></p-dropdown>
+        </div>
+        <div>
+          <textarea pInputTextarea [(ngModel)]="workInfo.comment" [maxlength]="50"
+                    [readonly]="unblockInput==false"></textarea>
+        </div>
+        <button type="button" pButton icon="fa-check" (click)="save(workInfo)" label="Save"></button>
+        <!--<button class="ui-g-12 ui-md-2" (click)="save(workInfo)">Save</button>-->
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+        <button type="button" pButton icon="fa-check" (click)="closeDialog()" label="Ok"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
 
-<pre>{{employee | json}}</pre>
-<pre>{{currentSunday}}</pre>
-<pre>{{workInfos | json}}</pre>
+</div>
