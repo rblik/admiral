@@ -3,6 +3,7 @@ import {Http} from "@angular/http";
 import {Observable} from "rxjs";
 import {WorkInfo} from "../model/work-info";
 import {WorkUnit} from "../model/work-unit";
+import {Agreement} from "../model/agreement";
 
 @Injectable()
 export class WorkInfoService {
@@ -15,12 +16,12 @@ export class WorkInfoService {
       .map(res => res.json());
   }
 
-  public getDayWork(date: string, agreementId: number){
+  public getDayWork(date: string, agreementId: number): Observable<WorkInfo[]>{
     return this.http.get("http://localhost:8080/units" + date + "?agreementId=" + agreementId)
       .map(res => res.json());
   }
 
-  public getWorkAgreements(){
+  public getWorkAgreements(): Observable<Agreement[]>{
     return this.http.get("http://localhost:8080/agreements").map(res => res.json());
   }
 
@@ -32,7 +33,7 @@ export class WorkInfoService {
       });
   }
 
-  public remove(unitId: number) {
+  public remove(unitId: number): void {
     this.http.delete("http://localhost:8080/" + unitId).subscribe(() => {});
   }
 

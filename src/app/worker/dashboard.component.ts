@@ -103,7 +103,7 @@ export class DashboardComponent implements OnInit {
       for (let i = 0; i < 7; i++) {
         if (resultArr[i] == null) {
           let info = new WorkInfo();
-          info.date = '';
+          info.date = this.timeService.getDateString(this.timeService.getRelativeWeekDay(this.currentSunday, i));
           info.agreementId = agreement.agreementId;
           info.duration = 0;
           resultArr[i] = info;
