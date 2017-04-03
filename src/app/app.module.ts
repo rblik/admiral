@@ -8,6 +8,7 @@ import {NavBarComponent} from "./navbar/navbar.component";
 import {AuthService} from "./service/auth.service";
 import {AppRoutingModule} from "./app-routing.module";
 import {DashboardComponent} from "./worker/dashboard.component";
+import {ReportComponent} from "./admin/report/report.component";
 import {HomeComponent} from "./home/home.component";
 import {TimeService} from "./service/time.service";
 import {WorkInfoService} from "./service/work-info.service";
@@ -24,7 +25,8 @@ import {
     AppComponent,
     NavBarComponent,
     DashboardComponent,
-    HomeComponent
+    HomeComponent,
+    ReportComponent
   ],
   imports: [
     BrowserModule,
