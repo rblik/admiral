@@ -1,1 +1,23 @@
-<h2>Reports</h2>
+<div class="ui-g">
+  <div class="ui-g-12 ui-md-4">
+    <h3>Period of report</h3>
+    From Date:
+    <p-calendar [(ngModel)]="startDate"></p-calendar>
+    <div></div>
+    To Date:
+    <p-calendar [(ngModel)]="endDate"></p-calendar>
+
+  </div>
+  <div *ngIf="startDate != null && endDate != null">
+    <div>
+      <button (click)="missingDaysReport()">דוח ימים חסרים</button>
+    </div>
+    <div>
+      <button (click)="partialDaysReport()">דוח ימים חלקיים</button>
+    </div>
+    <div>
+      <button (click)="pivotalReport()">דוח שעות גולמי</button>
+    </div>
+    <p-selectButton [options]="types" [(ngModel)]="selectedType"></p-selectButton>
+  </div>
+</div>
