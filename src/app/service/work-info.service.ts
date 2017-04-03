@@ -13,23 +13,38 @@ export class WorkInfoService {
   }
 
   public getWeekWork(sundayDate: string, nextSundayDate: string): Observable<WorkInfo[]> {
-    return this.http.get("http://localhost:8080/units?from=" + sundayDate + "&to=" + nextSundayDate)
+    let params = new URLSearchParams();
+    params.append("from", sundayDate);
+    params.append("to", nextSundayDate);
+    let headers = new Headers({'Content-Type': 'application/json'});
+    headers.append("Authorization", "Basic " + btoa("name1@gmail.com" + ":" + "Qwerty123"));
+    let options = new RequestOptions({headers: headers, search: params});
+    return this.http.get("http://localhost:8080/units", options)
       .map(res => res.json());
   }
 
   public getDayWork(date: string, agreementId: number): Observable<WorkInfo[]>{
-    return this.http.get("http://localhost:8080/units/" + date + "?agreementId=" + agreementId)
+    let params = new URLSearchParams();
+    params.append("agreementId", agreementId.toString());
+    let headers = new Headers({'Content-Type': 'application/json'});
+    headers.append("Authorization", "Basic " + btoa("name1@gmail.com" + ":" + "Qwerty123"));
+    let options = new RequestOptions({headers: headers, search: params});
+    return this.http.get("http://localhost:8080/units/" + date, options)
       .map(res => res.json());
   }
 
   public getWorkAgreements(): Observable<Agreement[]>{
-    return this.http.get("http://localhost:8080/agreements").map(res => res.json());
+    let headers = new Headers({'Content-Type': 'application/json'});
+    headers.append("Authorization", "Basic " + btoa("name1@gmail.com" + ":" + "Qwerty123"));
+    let options = new RequestOptions({headers: headers});
+    return this.http.get("http://localhost:8080/agreements", options).map(res => res.json());
   }
 
   public save(agreementId: number, workUnit: WorkUnit): Observable<WorkUnit> {
     let params = new URLSearchParams();
     params.append("agreementId", agreementId.toString());
     let headers = new Headers({'Content-Type': 'application/json'});
+    headers.append("Authorization", "Basic " + btoa("name1@gmail.com" + ":" + "Qwerty123"));
     let options = new RequestOptions({headers: headers, search: params});
     return this.http.post("http://localhost:8080/units", JSON.stringify(workUnit), options)
       .map(res => res.json())
@@ -40,7 +55,10 @@ export class WorkInfoService {
   }
 
   public remove(unitId: number): void {
-    this.http.delete("http://localhost:8080/units/" + unitId).subscribe(() => {});
+    let headers = new Headers({'Content-Type': 'application/json'});
+    headers.append("Authorization", "Basic " + btoa("name1@gmail.com" + ":" + "Qwerty123"));
+    let options = new RequestOptions({headers: headers});
+    this.http.delete("http://localhost:8080/units/" + unitId, options).subscribe(() => {});
   }
 
 }

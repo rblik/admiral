@@ -12,7 +12,7 @@ export class AuthService {
   }
 
   public getProfile(){
-    this.http.get("http://localhost:8080/profile").map(res => res.json())
+    this.http.get("http://localhost:8080/profile", this.getOptions()).map(res => res.json())
       .catch(e => {
         if (e.status === 401) {
           return Observable.throw('Wrong Credentials');
@@ -22,7 +22,7 @@ export class AuthService {
 
   public getOptions(): RequestOptions {
     let headers = new Headers({'Content-Type': 'application/json'});
-    // headers.append("Authorization", "Basic " + btoa(username + ":" + password));
+    headers.append("Authorization", "Basic " + btoa("name1@gmail.com" + ":" + "Qwerty123"));
     return new RequestOptions({headers: headers});
   }
 
