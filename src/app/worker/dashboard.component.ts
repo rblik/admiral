@@ -6,8 +6,6 @@ import {Employee} from "../model/employee";
 import {Agreement} from "../model/agreement";
 import {WorkInfo} from "../model/work-info";
 import {WorkUnit} from "../model/work-unit";
-import {isNull} from "util";
-import {forEach} from "@angular/router/src/utils/collection";
 
 @Component({
   selector: 'worker-dashboard',
@@ -30,6 +28,10 @@ export class DashboardComponent implements OnInit {
   private unblockInput: boolean = false;
   private uiAgreements: Agreement[];
   private display: boolean;
+  private activeAgreementId: number;
+  private activeDate: string;
+  private createDialog: boolean;
+  private workInfoItem: WorkInfo;
   private dayForCreatingWorkInfos: string;
   private clientForCreatingWorkInfos: string;
 
@@ -130,54 +132,97 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  showDialog(workInfo: WorkInfo, agreementId: number, clientName: string) {
+  showDialog(workInfo: WorkInfo, clientName: string) {
     this.clientForCreatingWorkInfos = clientName;
     this.dayForCreatingWorkInfos = new Date(workInfo.date).toDateString();
+    this.activeAgreementId = workInfo.agreementId;
+    this.activeDate = workInfo.date;
     this.workService.getDayWork(workInfo.date, workInfo.agreementId).subscribe(infos => {
-      if (infos.length == 0) {
-        let workInfoItem = new WorkInfo();
-        workInfoItem.agreementId = workInfo.agreementId;
-        workInfoItem.date = workInfo.date;
-        workInfoItem.duration = 0;
-        this.dayWorkInfos = [workInfoItem];
-      } else {
-        this.dayWorkInfos = infos;
-      }
+      this.dayWorkInfos = infos;
+      console.log(this.dayWorkInfos);
     });
     this.display = true;
+  }
+
+  create() {
+    console.log(this.dayWorkInfos);
+    this.workInfoItem = new WorkInfo();
+    this.workInfoItem.agreementId = this.activeAgreementId;
+    this.workInfoItem.date = this.activeDate;
+    this.workInfoItem.duration = 0;
+    this.createDialog = true;
+  }
+
+  edit(workInfo: WorkInfo) {
+    this.workInfoItem = workInfo;
+    this.createDialog = true;
   }
 
   closeDialog() {
     this.dayWorkInfos = [new WorkInfo()];
     this.display = false;
-  }
-
-  edit() {
-    this.unblockInput = true;
+    this.createDialog = false;
   }
 
   save(workInfo: WorkInfo) {
-    this.unblockInput = false;
+    console.log(this.dayWorkInfos);
     this.workService.save(workInfo.agreementId, this.convertToUnit(workInfo))
       .subscribe(workUnit => {
-        console.log(this.workInfos);
         var saved = this.convertToInfo(workUnit, workInfo.agreementId);
+        console.log(11111111111);
         this.replaceInDayWorkInfos(saved);
-        console.log(this.workInfos);
         this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
         this.transform(this.workInfos);
-        console.log(this.uiAgreements);
+        this.createDialog = false;
+        this.workInfoItem = null;
       });
   }
 
-  private replaceInDayWorkInfos(workInfo) {
+  public remove(workInfo: WorkInfo) {
+    this.workService.remove(workInfo.unitId);
+    this.removeInDayWorkInfos(workInfo);
+    this.removeInAllWorkInfos(workInfo);
+    this.transform(this.workInfos);
+  }
+
+  private removeInDayWorkInfos(workInfo: WorkInfo) {
+    console.log(this.dayWorkInfos);
+    console.log(workInfo);
+    let index = -1;
     for (let i = 0; i < this.dayWorkInfos.length; i++) {
       if (this.dayWorkInfos[i].unitId === workInfo.unitId) {
-        this.dayWorkInfos[i] = workInfo;
+        index = i;
+        break;
+      }
+    }
+    console.log(index);
+    this.dayWorkInfos.splice(index, 1);
+    console.log(this.dayWorkInfos);
+    console.log(workInfo);
+  }
+
+  private removeInAllWorkInfos(workInfo: WorkInfo) {
+    for (let i = 0; i < this.workInfos.length; i++) {
+      if (this.workInfos[i].agreementId === workInfo.agreementId && this.workInfos[i].date === workInfo.date) {
+        this.workInfos[i].duration -= workInfo.duration;
         return;
       }
     }
-    this.dayWorkInfos.push(workInfo);
+  }
+
+  private replaceInDayWorkInfos(workInfo) {
+    let index = -1;
+    for (let i = 0; i < this.dayWorkInfos.length; i++) {
+      if (this.dayWorkInfos[i].unitId === workInfo.unitId) {
+        index = i;
+        break;
+      }
+    }
+    if (index == -1) {
+      this.dayWorkInfos.push(workInfo);
+    } else {
+        this.dayWorkInfos[index] = workInfo;
+    }
   }
 
   private replaceInAllWorkInfos(workInfo: WorkInfo, duration: number, isNotNew: boolean) {
@@ -216,4 +261,5 @@ export class DashboardComponent implements OnInit {
     workInfo2.agreementId = isNaN(agreementId) ? NaN : agreementId;
     return workInfo2;
   }
+
 }

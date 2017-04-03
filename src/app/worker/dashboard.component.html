@@ -25,7 +25,7 @@
         {{sum(item.workInfos)}}
       </td>
       <td *ngFor="let work of item.workInfos">
-        <span (click)="showDialog(work, item.agreementId, item.clientName)">
+        <span (click)="showDialog(work, item.clientName)">
         <input [ngStyle]="{'width': '100px'}"
                [ngModel]="(work.absenceType==''||work.absenceType==null)? work.duration: work.absenceType"
                style="width: inherit; text-align: center" disabled>
@@ -47,29 +47,57 @@
     </p-header>
     <div style="min-height: 350px ;max-height: 550px">
       <div style="text-align: center">
-        {{clientForCreatingWorkInfos}}-עבודה יומי ב
+        <h3>
+          {{clientForCreatingWorkInfos}}-עבודה יומי ב
+        </h3>
       </div>
-      <div *ngFor="let workInfo of dayWorkInfos">
+      <button type="button" class="btn btn-xs btn-info" (click)="create()">הוסיף</button>
+      <div class="row">
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th style="width: 10%"></th>
+            <th style="width: 10%"></th>
+            <th style="width: 16%">תאור</th>
+            <th style="width: 16%">משך</th>
+            <th style="width: 16%">חופשה</th>
+            <th style="width: 16%">עד-</th>
+            <th style="width: 16%">מ-</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let workInfo of dayWorkInfos">
+            <td>
+              <button type="button" class="btn btn-xs btn-danger" (click)="remove(workInfo)">מחק</button>
+            </td>
+            <td>
+              <button type="button" class="btn btn-xs btn-warning" (click)="edit(workInfo)">ערוך</button>
+            </td>
+            <td>{{workInfo.comment}}</td>
+            <td>{{workInfo.duration}}</td>
+            <td>{{workInfo.absenceType}}</td>
+            <td>{{workInfo.to}}</td>
+            <td>{{workInfo.from}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div *ngIf="createDialog">
         <div>
-          <button type="button" pButton icon="fa-edit" (click)="edit()" label="Edit"></button>
-        </div>
-        <div>
-          <p-inputMask [(ngModel)]="workInfo.from" mask="99:99" [maxlength]="5"
-                       [readonly]="unblockInput==false"></p-inputMask>
-          <p-inputMask [(ngModel)]="workInfo.to" mask="99:99" [maxlength]="5"
-                       [readonly]="unblockInput==false"></p-inputMask>
+          <p-inputMask [(ngModel)]="workInfoItem.from" mask="99:99" [maxlength]="5"></p-inputMask>
+          <p-inputMask [(ngModel)]="workInfoItem.to" mask="99:99" [maxlength]="5"></p-inputMask>
         </div>
         <div>
           <p-dropdown [options]="absenceTypes" [style]="{'width':'150px'}" placeholder="בחר את סוג"
-                      [(ngModel)]="workInfo.absenceType" [readonly]="unblockInput==false"></p-dropdown>
+                      [(ngModel)]="workInfoItem.absenceType"></p-dropdown>
         </div>
         <div>
-          <textarea pInputTextarea [(ngModel)]="workInfo.comment" [maxlength]="50"
-                    [readonly]="unblockInput==false"></textarea>
+          <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" [maxlength]="50"></textarea>
         </div>
-        <button type="button" pButton icon="fa-check" (click)="save(workInfo)" label="Save"></button>
+        <button type="button" pButton icon="fa-check" (click)="save(workInfoItem)" label="Save"></button>
         <!--<button class="ui-g-12 ui-md-2" (click)="save(workInfo)">Save</button>-->
       </div>
+
     </div>
     <p-footer>
       <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">

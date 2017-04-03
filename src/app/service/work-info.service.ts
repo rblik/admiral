@@ -39,7 +39,7 @@ export class WorkInfoService {
   }
 
   public remove(unitId: number): void {
-    this.http.delete("http://localhost:8080/" + unitId).subscribe(() => {});
+    this.http.delete("http://localhost:8080/units/" + unitId).subscribe(() => {});
   }
 
 }
