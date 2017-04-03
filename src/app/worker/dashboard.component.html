@@ -51,7 +51,7 @@
       </div>
       <div *ngFor="let workInfo of dayWorkInfos">
         <div>
-        <button type="button" pButton icon="fa-edit" (click)="edit()" label="Edit"></button>
+          <button type="button" pButton icon="fa-edit" (click)="edit()" label="Edit"></button>
         </div>
         <div>
           <p-inputMask [(ngModel)]="workInfo.from" mask="99:99" [maxlength]="5"

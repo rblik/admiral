@@ -7,6 +7,7 @@ import {Agreement} from "../model/agreement";
 import {WorkInfo} from "../model/work-info";
 import {WorkUnit} from "../model/work-unit";
 import {isNull} from "util";
+import {forEach} from "@angular/router/src/utils/collection";
 
 @Component({
   selector: 'worker-dashboard',
@@ -90,8 +91,8 @@ export class DashboardComponent implements OnInit {
   sum(arr: WorkInfo[]): number {
     let sum = 0;
     arr.forEach((workInfo) => sum += workInfo.duration);
-    sum /=60;
-    Number((sum/60).toFixed(2));
+    sum /= 60;
+    Number((sum / 60).toFixed(2));
     return sum;
   }
 
@@ -128,6 +129,7 @@ export class DashboardComponent implements OnInit {
       agreement.workInfos = resultArr;
     });
   }
+
   showDialog(workInfo: WorkInfo, agreementId: number, clientName: string) {
     this.clientForCreatingWorkInfos = clientName;
     this.dayForCreatingWorkInfos = new Date(workInfo.date).toDateString();
@@ -144,26 +146,51 @@ export class DashboardComponent implements OnInit {
     });
     this.display = true;
   }
+
   closeDialog() {
     this.dayWorkInfos = [new WorkInfo()];
     this.display = false;
   }
 
-  edit(){
+  edit() {
     this.unblockInput = true;
   }
 
-  save(workInfo: WorkInfo){
+  save(workInfo: WorkInfo) {
     this.unblockInput = false;
     this.workService.save(workInfo.agreementId, this.convertToUnit(workInfo))
       .subscribe(workUnit => {
-        console.log(workUnit);
-        this.dayWorkInfos.push(this.convertToInfo(workUnit));
-        this.workInfos.push(this.convertToInfo(workUnit, workInfo.agreementId));
         console.log(this.workInfos);
+        var saved = this.convertToInfo(workUnit, workInfo.agreementId);
+        this.replaceInDayWorkInfos(saved);
+        console.log(this.workInfos);
+        this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
         this.transform(this.workInfos);
         console.log(this.uiAgreements);
       });
+  }
+
+  private replaceInDayWorkInfos(workInfo) {
+    for (let i = 0; i < this.dayWorkInfos.length; i++) {
+      if (this.dayWorkInfos[i].unitId === workInfo.unitId) {
+        this.dayWorkInfos[i] = workInfo;
+        return;
+      }
+    }
+    this.dayWorkInfos.push(workInfo);
+  }
+
+  private replaceInAllWorkInfos(workInfo: WorkInfo, duration: number, isNotNew: boolean) {
+    for (let i = 0; i < this.workInfos.length; i++) {
+      if (this.workInfos[i].date === workInfo.date && this.workInfos[i].agreementId == workInfo.agreementId) {
+        if (isNotNew) {
+          this.workInfos[i].duration -= duration;
+        }
+        this.workInfos[i].duration += workInfo.duration;
+        return;
+      }
+    }
+    this.workInfos.push(workInfo);
   }
 
   private convertToUnit(workInfo: WorkInfo): WorkUnit {
