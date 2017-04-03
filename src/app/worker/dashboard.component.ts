@@ -34,6 +34,7 @@ export class DashboardComponent implements OnInit {
   private workInfoItem: WorkInfo;
   private dayForCreatingWorkInfos: string;
   private clientForCreatingWorkInfos: string;
+  private error: string;
 
   constructor(private timeService: TimeService, private authService: AuthService, private workService: WorkInfoService) {
     this.absenceTypes = [];
@@ -139,13 +140,11 @@ export class DashboardComponent implements OnInit {
     this.activeDate = workInfo.date;
     this.workService.getDayWork(workInfo.date, workInfo.agreementId).subscribe(infos => {
       this.dayWorkInfos = infos;
-      console.log(this.dayWorkInfos);
     });
     this.display = true;
   }
 
   create() {
-    console.log(this.dayWorkInfos);
     this.workInfoItem = new WorkInfo();
     this.workInfoItem.agreementId = this.activeAgreementId;
     this.workInfoItem.date = this.activeDate;
@@ -159,23 +158,27 @@ export class DashboardComponent implements OnInit {
   }
 
   closeDialog() {
+    this.error = '';
     this.dayWorkInfos = [new WorkInfo()];
     this.display = false;
     this.createDialog = false;
   }
 
   save(workInfo: WorkInfo) {
-    console.log(this.dayWorkInfos);
+    if (workInfo.from > workInfo.to) {
+      this.error = "Wrong time range";
+      return;
+    }
     this.workService.save(workInfo.agreementId, this.convertToUnit(workInfo))
       .subscribe(workUnit => {
+        this.error = '';
         var saved = this.convertToInfo(workUnit, workInfo.agreementId);
-        console.log(11111111111);
         this.replaceInDayWorkInfos(saved);
         this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
         this.transform(this.workInfos);
         this.createDialog = false;
         this.workInfoItem = null;
-      });
+      }, err => this.error = err);
   }
 
   public remove(workInfo: WorkInfo) {
@@ -186,8 +189,6 @@ export class DashboardComponent implements OnInit {
   }
 
   private removeInDayWorkInfos(workInfo: WorkInfo) {
-    console.log(this.dayWorkInfos);
-    console.log(workInfo);
     let index = -1;
     for (let i = 0; i < this.dayWorkInfos.length; i++) {
       if (this.dayWorkInfos[i].unitId === workInfo.unitId) {
@@ -195,10 +196,7 @@ export class DashboardComponent implements OnInit {
         break;
       }
     }
-    console.log(index);
     this.dayWorkInfos.splice(index, 1);
-    console.log(this.dayWorkInfos);
-    console.log(workInfo);
   }
 
   private removeInAllWorkInfos(workInfo: WorkInfo) {
@@ -221,7 +219,7 @@ export class DashboardComponent implements OnInit {
     if (index == -1) {
       this.dayWorkInfos.push(workInfo);
     } else {
-        this.dayWorkInfos[index] = workInfo;
+      this.dayWorkInfos[index] = workInfo;
     }
   }
 
