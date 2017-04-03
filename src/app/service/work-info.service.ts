@@ -34,7 +34,8 @@ export class WorkInfoService {
     return this.http.post("http://localhost:8080/units", JSON.stringify(workUnit), options)
       .map(res => res.json())
       .catch(e => {
-        return Observable.throw(e);
+        let s: string = e.json().details[0];
+        return Observable.throw(s);
       });
   }
 

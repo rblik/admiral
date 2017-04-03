@@ -165,10 +165,10 @@ export class DashboardComponent implements OnInit {
   }
 
   save(workInfo: WorkInfo) {
-    if (workInfo.from > workInfo.to) {
+    /*if (workInfo.from > workInfo.to) {
       this.error = "Wrong time range";
       return;
-    }
+    }*/
     this.workService.save(workInfo.agreementId, this.convertToUnit(workInfo))
       .subscribe(workUnit => {
         this.error = '';
