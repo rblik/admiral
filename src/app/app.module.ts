@@ -17,7 +17,7 @@ import {
   SharedModule, DialogModule,
   ButtonModule, CalendarModule,
   InputTextModule, InputMaskModule,
-  DropdownModule, InputTextareaModule
+  DropdownModule, InputTextareaModule, SelectButtonModule
 } from 'primeng/primeng';
 
 @NgModule({
@@ -37,6 +37,7 @@ import {
     SharedModule,
     ButtonModule,
     CalendarModule,
+    SelectButtonModule,
     InputTextModule,
     InputMaskModule,
     DropdownModule,
