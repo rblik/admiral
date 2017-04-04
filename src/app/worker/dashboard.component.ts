@@ -6,6 +6,7 @@ import {Employee} from "../model/employee";
 import {Agreement} from "../model/agreement";
 import {WorkInfo} from "../model/work-info";
 import {WorkUnit} from "../model/work-unit";
+import {SessionStorageService, SessionStorage} from 'ng2-webstorage';
 
 @Component({
   selector: 'worker-dashboard',
@@ -36,7 +37,7 @@ export class DashboardComponent implements OnInit {
   private clientForCreatingWorkInfos: string;
   private error: string;
 
-  constructor(private timeService: TimeService, private authService: AuthService, private workService: WorkInfoService) {
+  constructor(private timeService: TimeService, private authService: AuthService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
     this.absenceTypes = [];
     this.absenceTypes.push({label: 'מחלה', value: "ILLNESS"});
     this.absenceTypes.push({label: 'חג', value: "HOLIDAY"});
@@ -46,7 +47,9 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.timeOffset = 0;
-    this.authService.getLoggedWorker().subscribe(emp => this.employee = emp);
+    // this.authService.getLoggedWorker().subscribe(emp => this.employee = emp);
+    this.sessionStorageService.observe('employee')
+      .subscribe((employee) => this.employee = JSON.parse(employee));
     this.initWeekBorders(this.timeOffset);
     this.workService.getWorkAgreements().subscribe(agreements => this.agreements = agreements);
     this.workService.getWeekWork(

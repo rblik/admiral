@@ -16,9 +16,10 @@ export class AuthService {
   public getProfile(): void {
     this.http.get("http://localhost:8080/profile", this.getOptions()).map(res => res.json())
       .subscribe(employee => {
-      this.loggedEmployee.next(employee);
-      this.localSt.store("TOKEN", AuthService.TOKEN);
-    });
+        // this.loggedEmployee.next(employee);
+        this.localSt.store("employee", JSON.stringify(employee));
+        this.localSt.store("TOKEN", AuthService.TOKEN);
+      });
   }
 
   public getOptions(): RequestOptions {
