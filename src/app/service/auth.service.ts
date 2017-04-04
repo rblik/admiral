@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {Employee} from "../model/employee";
-import {Http, Headers, RequestOptions} from "@angular/http";
+import {Headers, Http, RequestOptions} from "@angular/http";
 
 @Injectable()
 export class AuthService {
@@ -28,5 +28,9 @@ export class AuthService {
 
   public getLoggedWorker(): Subject<Employee> {
     return this.loggedEmployee;
+  }
+
+  public getToken(): string {
+    return "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuYW1lNUBnbWFpbC5jb20iLCJjcmVhdGVkIjoxNDkxMzMxMDQ2OTI3fQ.Yrxj8GbuY3506Dnz2C_7cG2NZlafxcJ4zrgrWJ_Zm_765QCwWiy_aYxZS2tsNsp10zlGvhr-Af5xOb-VNUg1yQ";
   }
 }

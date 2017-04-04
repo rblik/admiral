@@ -6,18 +6,11 @@ import {SelectItem} from "primeng/primeng";
   templateUrl: 'report.component.html'
 })
 export class ReportComponent {
-  startDate: Date;
-  endDate: Date;
 
-  minDate: Date;
-
-  maxDate: Date;
-
-  invalidDates: Array<Date>;
-
-  types: SelectItem[];
-
-  selectedType: string;
+  private startDate: Date;
+  private endDate: Date;
+  private types: SelectItem[];
+  private selectedType: string;
 
   constructor() {
     this.types = [];
@@ -38,6 +31,7 @@ export class ReportComponent {
       this.dateToString(this.endDate) + "&limit=" + '7');  }
 
   pivotalReport() {
+
     window.open("http://localhost:8080/admin/" + this.selectedType +
       "/pivotal?from=" +
       this.dateToString(this.startDate) + "&to=" +
