@@ -25,6 +25,7 @@ import {
   SharedModule
 } from "primeng/primeng";
 import {Ng2Webstorage} from "ng2-webstorage";
+import {DownloadService} from "./service/download.service";
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import {Ng2Webstorage} from "ng2-webstorage";
     AuthService,
     TimeService,
     WorkInfoService,
-    DatePipe
+    DatePipe,
+    DownloadService
   ],
   bootstrap: [AppComponent]
 })
