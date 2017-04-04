@@ -1,9 +1,9 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {HttpModule} from '@angular/http';
+import {BrowserModule} from "@angular/platform-browser";
+import {NgModule} from "@angular/core";
+import {FormsModule} from "@angular/forms";
+import {HttpModule} from "@angular/http";
 
-import {AppComponent} from './app.component';
+import {AppComponent} from "./app.component";
 import {NavBarComponent} from "./navbar/navbar.component";
 import {AuthService} from "./service/auth.service";
 import {AppRoutingModule} from "./app-routing.module";
@@ -14,11 +14,17 @@ import {TimeService} from "./service/time.service";
 import {WorkInfoService} from "./service/work-info.service";
 import {DatePipe} from "@angular/common";
 import {
-  SharedModule, DialogModule,
-  ButtonModule, CalendarModule,
-  InputTextModule, InputMaskModule,
-  DropdownModule, InputTextareaModule, SelectButtonModule
-} from 'primeng/primeng';
+  ButtonModule,
+  CalendarModule,
+  DialogModule,
+  DropdownModule,
+  InputMaskModule,
+  InputTextareaModule,
+  InputTextModule,
+  SelectButtonModule,
+  SharedModule
+} from "primeng/primeng";
+import {Ng2Webstorage} from "ng2-webstorage";
 
 @NgModule({
   declarations: [
@@ -41,7 +47,8 @@ import {
     InputTextModule,
     InputMaskModule,
     DropdownModule,
-    InputTextareaModule
+    InputTextareaModule,
+    Ng2Webstorage
   ],
   providers: [
     AuthService,
