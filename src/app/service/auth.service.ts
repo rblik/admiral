@@ -15,11 +15,7 @@ export class AuthService {
 
   public getProfile(): void {
     this.http.get("http://localhost:8080/profile", this.getOptions()).map(res => res.json())
-      .catch(e => {
-        if (e.status === 401) {
-          return Observable.throw('Wrong Credentials');
-        }
-      }).subscribe(employee => {
+      .subscribe(employee => {
       this.loggedEmployee.next(employee);
       this.localSt.store("TOKEN", AuthService.TOKEN);
     });
