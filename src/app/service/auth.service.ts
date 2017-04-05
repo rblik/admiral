@@ -7,7 +7,7 @@ import {SessionStorageService} from "ng2-webstorage";
 @Injectable()
 export class AuthService {
   private loggedEmployee: Subject<Employee> = new BehaviorSubject<Employee>(null);
-  private static TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuYW1lNUBnbWFpbC5jb20iLCJjcmVhdGVkIjoxNDkxMzM1OTE1ODMzfQ.rTdQQdMG3A1gzmWPGRKlS1VwO0ITESYbYZ-cjgQh4egaDCXRcRxPl4BQYnQaZOPyeHNEzcqy89Ko35C-nndOcQ";
+  private static TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuYW1lMUBnbWFpbC5jb20iLCJjcmVhdGVkIjoxNDkxMzUxNTIzNzM0fQ.LGVyUGLNkarbcC8_x7bWIqmVBq8YFkjxyZUDMKlat2Fqewg2s-uybORXY8aibdbIYzLLzDlDbAB8rBW3Y2mD5Q";
 
   constructor(private http: Http, private localSt: SessionStorageService) {
     this.getProfile();
