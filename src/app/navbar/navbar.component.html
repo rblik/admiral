@@ -3,36 +3,40 @@
     <div class="navbar-header">
       <a class="navbar-brand" href="#">NAYA</a>
     </div>
-    <ul class="nav navbar-nav navbar-left">
-      <li>
-        <a routerLink="/app/login" routerLinkActive="active"><span class="glyphicon glyphicon-log-in"></span>   סניסה</a>
-      </li>
-      <li>
-        <a (click)="logout()">
-          <span class="glyphicon glyphicon-log-out"></span> יציאה</a>
-      </li>
+    <ul class="nav navbar-nav navbar-left"[ngSwitch]="profile">
+      <template [ngSwitchCase]="null">
+        <li>
+          <a routerLink="/app/login" routerLinkActive="active"><span class="glyphicon glyphicon-log-in"></span> סניסה</a>
+        </li>
+      </template>
+      <template ngSwitchDefault>
+        <li>
+          <a (click)="logout()">
+            <span class="glyphicon glyphicon-log-out"></span> יציאה</a>
+        </li>
+      </template>
     </ul>
-    <ul class="nav navbar-nav navbar-right">
-      <li>
+    <ul class="nav navbar-nav navbar-right" [ngSwitch]="profile">
+      <li *ngIf="profile != null">
         <a routerLink="/app/dashboard" routerLinkActive="active">דיווח שעות</a>
       </li>
-      <li>
-        <a routerLink="#" routerLinkActive="active">הוצאות</a>
+      <li *ngIf="profile != null">
+        <a routerLink="#" routerLinkActive="active" *ngIf="profile.roles.indexOf('ROLE_ADMIN') != -1">הוצאות</a>
       </li>
-      <li>
-        <a routerLink="#" routerLinkActive="active">תכנון</a>
+      <li *ngIf="profile != null">
+        <a routerLink="#" routerLinkActive="active" *ngIf="profile.roles.indexOf('ROLE_ADMIN') != -1">תכנון</a>
       </li>
-      <li>
-        <a routerLink="#" routerLinkActive="active">הזמנות</a>
+      <li *ngIf="profile != null">
+        <a routerLink="#" routerLinkActive="active" *ngIf="profile.roles.indexOf('ROLE_ADMIN') != -1">הזמנות</a>
       </li>
-      <li>
-        <a routerLink="#" routerLinkActive="active">חשבונות</a>
-      </li>
-      <li>
-        <a routerLink="/app/admin/reports" routerLinkActive="active">דוחות</a>
+      <li *ngIf="profile != null">
+        <a routerLink="/app/admin/reports" routerLinkActive="active" *ngIf="profile.roles.indexOf('ROLE_ADMIN') != -1">דוחות</a>
       </li>
       <li>
         <a routerLink="/" routerLinkActive="active">דף הבית</a>
+      </li>
+      <li *ngIf="profile != null">
+        <span class="navbar-brand" href="#">{{profile.surname + ' ' + profile.name}}</span>
       </li>
     </ul>
   </div>

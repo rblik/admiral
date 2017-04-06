@@ -8,18 +8,21 @@ import {Employee} from "../model/employee";
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavBarComponent implements OnInit{
-  private profile: Employee;
+export class NavBarComponent implements OnInit {
+  profile: Employee;
 
   constructor(private authService: AuthService) {
   }
 
   ngOnInit(): void {
     this.profile = this.authService.getProfile();
-    this.authService.profileObserv().subscribe(employee => this.profile = employee);
+    this.authService.profileObserv().subscribe(employee => {
+      this.profile = JSON.parse(employee);
+      console.log(111111111111111111111111111);
+    });
   }
 
-  logout(): void{
+  logout(): void {
     this.authService.logout();
   }
 }

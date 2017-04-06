@@ -23,14 +23,14 @@ export class AuthService {
   }
 
   public storeProfile(): void {
-    this.http.get("http://localhost:8080/profile", this.getOptions()).map(res => res.json()).catch(e=>Observable.throw('Unauthorized'))
+    this.http.get("http://localhost:8080/profile", this.getOptions()).map(res => res.json()).catch(e => Observable.throw('Unauthorized'))
       .subscribe(employee => {
         // this.loggedEmployee.next(employee);
         this.localSt.store("employee", JSON.stringify(employee));
       });
   }
 
-  public getOptions():RequestOptions {
+  public getOptions(): RequestOptions {
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.getToken());
     return new RequestOptions({headers: headers});
@@ -40,19 +40,19 @@ export class AuthService {
     return this.localSt.retrieve("TOKEN");
   }
 
-  public tokenObserv(): Observable<string>{
+  public tokenObserv(): Observable<string> {
     return this.localSt.observe('TOKEN');
   }
 
-  public getProfile(): Employee{
-    return this.localSt.retrieve("employee");
+  public getProfile(): Employee {
+    return JSON.parse(this.localSt.retrieve("employee"));
   }
 
-  public profileObserv(): Observable<Employee>{
+  public profileObserv(): Observable<string> {
     return this.localSt.observe("employee");
   }
 
-  public logout(){
+  public logout() {
     this.localSt.clear('TOKEN');
     this.localSt.clear('employee');
   }

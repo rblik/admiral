@@ -21,6 +21,7 @@ export class LoginComponent {
     this.authService.login(this.credentials)
       .subscribe(jwt => {
           this.localSt.store("TOKEN", jwt.token);
+          this.authService.storeProfile();
           this.error = '';
           let redirect = this.redirectUrl ? this.redirectUrl : '/app';
           this.router.navigate([redirect]);

@@ -25,8 +25,6 @@ export class DashboardComponent implements OnInit {
   private agreements: Agreement[];
   private workInfos: WorkInfo[];
   private dayWorkInfos: WorkInfo[];
-  private timeForCreating: Date;
-  private unblockInput: boolean = false;
   private uiAgreements: Agreement[];
   private display: boolean;
   private activeAgreementId: number;
