@@ -51,14 +51,16 @@ export class DashboardComponent implements OnInit {
     this.sessionStorageService.observe('employee')
       .subscribe((employee) => this.employee = JSON.parse(employee));
     this.initWeekBorders(this.timeOffset);
-    this.workService.getWorkAgreements().subscribe(agreements => this.agreements = agreements);
-    this.workService.getWeekWork(
-      this.timeService.getDateString(this.currentSunday),
-      this.timeService.getDateString(this.nextSunday))
-      .subscribe(workInfos => {
-        this.workInfos = workInfos;
-        this.transform(this.workInfos);
-      });
+    this.workService.getWorkAgreements().subscribe(agreements => {
+      this.agreements = agreements;
+      this.workService.getWeekWork(
+        this.timeService.getDateString(this.currentSunday),
+        this.timeService.getDateString(this.nextSunday))
+        .subscribe(workInfos => {
+          this.workInfos = workInfos;
+          this.transform(this.workInfos);
+        });
+    });
   }
 
   getDayByWeek(sunday: Date, offset: number): Date {
@@ -169,9 +171,9 @@ export class DashboardComponent implements OnInit {
 
   save(workInfo: WorkInfo) {
     /*if (workInfo.from > workInfo.to) {
-      this.error = "Wrong time range";
-      return;
-    }*/
+     this.error = "Wrong time range";
+     return;
+     }*/
     this.workService.save(workInfo.agreementId, this.convertToUnit(workInfo))
       .subscribe(workUnit => {
         this.error = '';
