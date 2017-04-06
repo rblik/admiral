@@ -8,5 +8,6 @@ export class Employee {
   birthday: string;
   email: string;
   privatePhone: string;
+  roles: string[];
   department: Department
 }

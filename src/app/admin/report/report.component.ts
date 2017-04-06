@@ -5,7 +5,7 @@ import * as fileSaver from "file-saver";
 
 @Component({
   selector: 'admin-report',
-  templateUrl: 'report.component.html'
+  templateUrl: './report.component.html'
 })
 export class ReportComponent {
 

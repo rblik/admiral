@@ -10,9 +10,9 @@ import {SessionStorageService, SessionStorage} from 'ng2-webstorage';
 
 @Component({
   selector: 'worker-dashboard',
-  templateUrl: 'dashboard.component.html',
+  templateUrl: './dashboard.component.html',
   styleUrls: [
-    'dashboard.component.css'
+    './dashboard.component.css'
   ]
 })
 export class DashboardComponent implements OnInit {

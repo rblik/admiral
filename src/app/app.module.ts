@@ -26,6 +26,8 @@ import {
 } from "primeng/primeng";
 import {Ng2Webstorage} from "ng2-webstorage";
 import {DownloadService} from "./service/download.service";
+import {LoginComponent} from "./login/login.component";
+import {AuthGuardService} from "./service/auth-guard.service";
 
 @NgModule({
   declarations: [
@@ -33,7 +35,8 @@ import {DownloadService} from "./service/download.service";
     NavBarComponent,
     DashboardComponent,
     HomeComponent,
-    ReportComponent
+    ReportComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +59,8 @@ import {DownloadService} from "./service/download.service";
     TimeService,
     WorkInfoService,
     DatePipe,
-    DownloadService
+    DownloadService,
+    AuthGuardService
   ],
   bootstrap: [AppComponent]
 })

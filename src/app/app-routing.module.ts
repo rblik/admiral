@@ -3,8 +3,13 @@ import {DashboardComponent} from "./worker/dashboard.component";
 import {NgModule} from "@angular/core";
 import {HomeComponent} from "./home/home.component";
 import {ReportComponent} from "./admin/report/report.component";
+import {LoginComponent} from "./login/login.component";
 
 const routes: Routes = [
+  {
+    path: 'app/login',
+    component: LoginComponent
+  },
   {
     path: 'app/dashboard',
     component: DashboardComponent
