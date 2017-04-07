@@ -5,11 +5,15 @@ import {WorkInfo} from "../model/work-info";
 import {WorkUnit} from "../model/work-unit";
 import {Agreement} from "../model/agreement";
 import {AuthService} from "./auth.service";
+import {Url} from "../url";
 
 @Injectable()
 export class WorkInfoService {
-
+  private unitsUrl: string;
+  private agreementsUrl: string;
   constructor(private http: Http, private authService: AuthService) {
+    this.agreementsUrl = Url.getUrl("/agreements");
+    this.unitsUrl = Url.getUrl("/units");
   }
 
   public getWeekWork(sundayDate: string, nextSundayDate: string): Observable<WorkInfo[]> {
@@ -19,7 +23,7 @@ export class WorkInfoService {
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.authService.getToken());
     let options = new RequestOptions({headers: headers, search: params});
-    return this.http.get("http://localhost:8080/units", options)
+    return this.http.get(this.unitsUrl, options)
       .map(res => res.json());
   }
 
@@ -29,7 +33,7 @@ export class WorkInfoService {
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.authService.getToken());
     let options = new RequestOptions({headers: headers, search: params});
-    return this.http.get("http://localhost:8080/units/" + date, options)
+    return this.http.get(this.unitsUrl + "/" + date, options)
       .map(res => res.json());
   }
 
@@ -37,7 +41,7 @@ export class WorkInfoService {
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.authService.getToken());
     let options = new RequestOptions({headers: headers});
-    return this.http.get("http://localhost:8080/agreements", options).map(res => res.json());
+    return this.http.get(this.agreementsUrl, options).map(res => res.json());
   }
 
   public save(agreementId: number, workUnit: WorkUnit): Observable<WorkUnit> {
@@ -46,7 +50,7 @@ export class WorkInfoService {
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.authService.getToken());
     let options = new RequestOptions({headers: headers, search: params});
-    return this.http.post("http://localhost:8080/units", JSON.stringify(workUnit), options)
+    return this.http.post(this.unitsUrl, JSON.stringify(workUnit), options)
       .map(res => res.json())
       .catch(e => {
         let s: string = e.json().details[0];
@@ -58,7 +62,7 @@ export class WorkInfoService {
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.authService.getToken());
     let options = new RequestOptions({headers: headers});
-    this.http.delete("http://localhost:8080/units/" + unitId, options).subscribe(() => {});
+    this.http.delete(this.unitsUrl + "/" + unitId, options).subscribe(() => {});
   }
 
 }

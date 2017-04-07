@@ -2,11 +2,14 @@ import {Injectable} from "@angular/core";
 import {Http, Headers, ResponseContentType, RequestMethod, URLSearchParams} from "@angular/http";
 import {AuthService} from "./auth.service";
 import {Observable} from "rxjs";
+import {Url} from "../url";
 
 @Injectable()
 export class DownloadService {
+  private adminUrl: string;
 
   constructor(private http: Http, private auth: AuthService) {
+    this.adminUrl = Url.getUrl("/admin");
   }
 
   public downloadMissing(type: string, from: string, to: string) {
@@ -14,7 +17,7 @@ export class DownloadService {
     params.append('from', from);
     params.append('to', to);
 
-    return this.http.get("http://localhost:8080/admin/" + type + "/missing", {
+    return this.http.get(this.adminUrl + "/" + type + "/missing", {
       method: RequestMethod.Get,
       responseType: ResponseContentType.Blob,
       headers: new Headers({'Authorization': this.auth.getToken()}),
@@ -34,7 +37,7 @@ export class DownloadService {
     params.append('from', from);
     params.append('to', to);
     params.append('limit', '7');
-    return this.http.get("http://localhost:8080/admin/" + type + "/partial", {
+    return this.http.get(this.adminUrl + "/" + type + "/partial", {
       method: RequestMethod.Get,
       responseType: ResponseContentType.Blob,
       headers: new Headers({'Authorization': this.auth.getToken()}),
@@ -50,7 +53,7 @@ export class DownloadService {
     let params = new URLSearchParams();
     params.append('from', from);
     params.append('to', to);
-    return this.http.get("http://localhost:8080/admin/" + type + "/pivotal", {
+    return this.http.get(this.adminUrl + "/" + type + "/pivotal", {
       method: RequestMethod.Get,
       responseType: ResponseContentType.Blob,
       headers: new Headers({'Authorization': this.auth.getToken()}),

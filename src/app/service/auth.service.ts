@@ -5,18 +5,23 @@ import {Headers, Http, RequestOptions} from "@angular/http";
 import {SessionStorageService} from "ng2-webstorage";
 import {Credentials} from "../model/credentials";
 import {Router} from "@angular/router";
+import {Url} from "../url";
 
 @Injectable()
 export class AuthService {
 
   redirectUrl: string;
+  private authUrl;
+  private profileUrl;
 
   constructor(private http: Http, private localSt: SessionStorageService, private router: Router) {
+    this.profileUrl = Url.getUrl("/profile");
+    this.authUrl = Url.getUrl("/auth");
     this.storeProfile();
   }
 
   public login(credentials: Credentials): Observable<any> {
-    return this.http.post("http://localhost:8080/auth", JSON.stringify(credentials), new RequestOptions({headers: new Headers({'Content-Type': 'application/json'})}))
+    return this.http.post(this.authUrl, JSON.stringify(credentials), new RequestOptions({headers: new Headers({'Content-Type': 'application/json'})}))
       .map(res => res.json())
       .catch(e => {
         if (e.status === 401) {
@@ -26,7 +31,7 @@ export class AuthService {
   }
 
   public storeProfile(): void {
-    this.http.get("http://localhost:8080/profile", this.getOptions()).map(res => res.json()).catch(e => Observable.throw('Unauthorized'))
+    this.http.get(this.profileUrl, this.getOptions()).map(res => res.json()).catch(e => Observable.throw('Unauthorized'))
       .subscribe(employee => {
         // this.loggedEmployee.next(employee);
         this.localSt.store("employee", JSON.stringify(employee));
