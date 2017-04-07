@@ -12,7 +12,7 @@ export class ReportComponent {
   private startDate: Date;
   private endDate: Date;
   private types: SelectItem[];
-  private selectedType: string;
+  private selectedType: string = 'xlsx';
   private error: string;
 
   constructor(private downloadService: DownloadService) {

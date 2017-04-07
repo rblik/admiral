@@ -11,7 +11,6 @@ import {Router} from "@angular/router";
 export class LoginComponent {
   error: string;
   credentials: Credentials;
-  redirectUrl: string;
 
   constructor(private authService: AuthService, private localSt: SessionStorageService, private router: Router) {
     this.credentials = new Credentials();
@@ -23,7 +22,7 @@ export class LoginComponent {
           this.localSt.store("TOKEN", jwt.token);
           this.authService.storeProfile();
           this.error = '';
-          let redirect = this.redirectUrl ? this.redirectUrl : '/app';
+          let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/app';
           this.router.navigate([redirect]);
         },
         err => {

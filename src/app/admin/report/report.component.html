@@ -1,24 +1,26 @@
-<div class="ui-g">
-  <div class="ui-g-12 ui-md-4">
-    <h3>Period of report</h3>
-    From Date:
+<div class="jumbotron" style="background-color: rgba(104, 157, 255, 0.32);">
+  <h1 style="text-align: center">דוחות</h1>
+</div>
+<div class="container">
+<div class="row">
+  <div class="col-md-6 pull-right">
+    <h3>תקופת הדו"ח</h3>
     <p-calendar [(ngModel)]="startDate"></p-calendar>
+    מתאריך:
     <div></div>
-    To Date:
     <p-calendar [(ngModel)]="endDate"></p-calendar>
-
+    עד תעריך:
   </div>
-  <div>{{error}}</div>
-  <div *ngIf="startDate != null && endDate != null">
-    <div>
-      <button (click)="missingDaysReport()">דוח ימים חסרים</button>
-    </div>
-    <div>
-      <button (click)="partialDaysReport()">דוח ימים חלקיים</button>
-    </div>
-    <div>
-      <button (click)="pivotalReport()">דוח שעות גולמי</button>
-    </div>
+  <div class="col-md-2 pull-right">
+  <div class="btn-group-vertical" *ngIf="startDate != null && endDate != null">
+      <button class="btn btn-sm btn-default" (click)="missingDaysReport()">דוח ימים חסרים</button>
+      <button class="btn btn-sm btn-default" (click)="partialDaysReport()">דוח ימים חלקיים</button>
+      <button class="btn btn-sm btn-default" (click)="pivotalReport()">דוח שעות גולמי</button>
     <p-selectButton [options]="types" [(ngModel)]="selectedType"></p-selectButton>
+  </div>
+  </div>
+</div>
+  <div *ngIf="error" class="alert alert-danger">
+    <strong>Error!</strong> {{error}}
   </div>
 </div>

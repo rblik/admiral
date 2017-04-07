@@ -1,9 +1,21 @@
-<h1>Dashboard</h1>
-<button (click)="moveWeekBack()">Previous week</button>
-<button (click)="moveWeekForward()">Next week</button>
+<div class="jumbotron" style="background-color: rgba(104, 157, 255, 0.32);">
+  <h1 style="text-align: center">דיווח שעות</h1>
+</div>
 <div style="margin: 10px">
-  <input type="text" class="form-control" #searchBox placeholder="Project"
-         (keyup)="search(searchBox.value)" [ngStyle]="{'width': '100px'}">
+  <div class="container" style="padding: 1em">
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-4 pull-left">
+      <input type="text" pInputText #searchBox placeholder="לקוח"
+             (keyup)="search(searchBox.value)">
+    </div>
+    <div class="col-md-4 pull-right">
+      <button (click)="moveWeekBack()" class="btn btn-warning">שבוע לפני</button>
+      <button (click)="moveWeekForward()" class="btn btn-info">שבוע הבא</button>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+  </div>
   <table style="width:100%; font-size: small">
     <thead>
     <tr>
@@ -28,7 +40,8 @@
         <span (click)="showDialog(work, item.clientName)">
         <input [ngStyle]="{'width': '100px'}"
                [ngModel]="(work.absenceType==''||work.absenceType==null)? work.duration: work.absenceType"
-               style="width: inherit; text-align: center" disabled>
+               style="width: inherit; text-align: center; border-style:solid; border-width: 1px; border-radius: 3px; background-color: white"
+               disabled>
         </span>
       </td>
       <td>

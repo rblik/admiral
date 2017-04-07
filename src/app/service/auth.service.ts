@@ -4,11 +4,14 @@ import {Employee} from "../model/employee";
 import {Headers, Http, RequestOptions} from "@angular/http";
 import {SessionStorageService} from "ng2-webstorage";
 import {Credentials} from "../model/credentials";
+import {Router} from "@angular/router";
 
 @Injectable()
 export class AuthService {
 
-  constructor(private http: Http, private localSt: SessionStorageService) {
+  redirectUrl: string;
+
+  constructor(private http: Http, private localSt: SessionStorageService, private router: Router) {
     this.storeProfile();
   }
 
@@ -53,6 +56,7 @@ export class AuthService {
   }
 
   public logout() {
+    this.router.navigate(['/app']);
     this.localSt.clear('TOKEN');
     this.localSt.clear('employee');
   }

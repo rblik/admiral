@@ -28,6 +28,8 @@ import {Ng2Webstorage} from "ng2-webstorage";
 import {DownloadService} from "./service/download.service";
 import {LoginComponent} from "./login/login.component";
 import {AuthGuardService} from "./service/auth-guard.service";
+import {ClientsComponent} from "./admin/client/clients.component";
+import {AdminAuthGuardService} from "./service/admin-auth-guard.service";
 
 @NgModule({
   declarations: [
@@ -35,7 +37,6 @@ import {AuthGuardService} from "./service/auth-guard.service";
     NavBarComponent,
     DashboardComponent,
     HomeComponent,
-    ReportComponent,
     LoginComponent
   ],
   imports: [
@@ -60,7 +61,8 @@ import {AuthGuardService} from "./service/auth-guard.service";
     WorkInfoService,
     DatePipe,
     DownloadService,
-    AuthGuardService
+    AuthGuardService,
+    AdminAuthGuardService
   ],
   bootstrap: [AppComponent]
 })

@@ -16,8 +16,13 @@ export class AuthGuardService implements CanActivate, CanActivateChild {
     return this.canActivate(childRoute, state);
   }
 
-  private checkLogin(url: string): boolean {
-    this.authService.getToken()
-    return true;
+  checkLogin(url: string): boolean {
+    let token = this.authService.getToken();
+      if (token) {
+        return true;
+      }
+      this.authService.redirectUrl = url;
+      this.router.navigateByUrl('/app/login');
+      return false;
   }
 }
