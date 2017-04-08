@@ -8,7 +8,6 @@ import {NavBarComponent} from "./navbar/navbar.component";
 import {AuthService} from "./service/auth.service";
 import {AppRoutingModule} from "./app-routing.module";
 import {DashboardComponent} from "./worker/dashboard.component";
-import {ReportComponent} from "./admin/report/report.component";
 import {HomeComponent} from "./home/home.component";
 import {TimeService} from "./service/time.service";
 import {WorkInfoService} from "./service/work-info.service";
@@ -25,7 +24,7 @@ import {
   SharedModule
 } from "primeng/primeng";
 import {Ng2Webstorage} from "ng2-webstorage";
-import {DownloadService} from "./service/download.service";
+import {DownloadService} from "./admin/service/download.service";
 import {LoginComponent} from "./login/login.component";
 import {AuthGuardService} from "./service/auth-guard.service";
 import {ClientsComponent} from "./admin/client/clients.component";
@@ -60,7 +59,6 @@ import {AdminAuthGuardService} from "./service/admin-auth-guard.service";
     TimeService,
     WorkInfoService,
     DatePipe,
-    DownloadService,
     AuthGuardService,
     AdminAuthGuardService
   ],

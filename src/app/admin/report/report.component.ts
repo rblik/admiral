@@ -1,6 +1,6 @@
 import {Component} from "@angular/core";
 import {SelectItem} from "primeng/primeng";
-import {DownloadService} from "../../service/download.service";
+import {DownloadService} from "../service/download.service";
 import * as fileSaver from "file-saver";
 
 @Component({

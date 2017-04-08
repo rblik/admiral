@@ -6,6 +6,7 @@ import {CalendarModule, DialogModule, InputMaskModule, SelectButtonModule, Share
 import {HttpModule} from "@angular/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
+import {DownloadService} from "./service/download.service";
 
 @NgModule({
   declarations: [
@@ -24,7 +25,9 @@ import {CommonModule} from "@angular/common";
     CalendarModule,
     InputMaskModule
   ],
-  providers: []
+  providers: [
+    DownloadService
+  ]
 })
 export class AdminModule {
 

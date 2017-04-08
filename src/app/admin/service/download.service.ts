@@ -1,8 +1,8 @@
 import {Injectable} from "@angular/core";
 import {Http, Headers, ResponseContentType, RequestMethod, URLSearchParams} from "@angular/http";
-import {AuthService} from "./auth.service";
+import {AuthService} from "../../service/auth.service";
 import {Observable} from "rxjs";
-import {Url} from "../url";
+import {Url} from "../../url";
 
 @Injectable()
 export class DownloadService {
