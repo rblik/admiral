@@ -31,10 +31,6 @@ export class ReportComponent {
         err => {
           this.error = err;
         });
-    /*window.open("http://localhost:8080/admin/" + this.selectedType +
-     "/missing?from=" +
-     this.dateToString(this.startDate) + "&to=" +
-     this.dateToString(this.endDate)); */
   }
 
   partialDaysReport() {
@@ -47,10 +43,6 @@ export class ReportComponent {
         err => {
           this.error = err;
         });
-    /*window.open("http://localhost:8080/admin/" + this.selectedType +
-     "/partial?from=" +
-     this.dateToString(this.startDate) + "&to=" +
-     this.dateToString(this.endDate) + "&limit=" + '7');*/
   }
 
   pivotalReport() {
@@ -63,10 +55,6 @@ export class ReportComponent {
       err => {
         this.error = err;
       });
-    /*window.open("http://localhost:8080/admin/" + this.selectedType +
-     "/pivotal?from=" +
-     this.dateToString(this.startDate) + "&to=" +
-     this.dateToString(this.endDate));*/
   }
 
   private dateToString(date: Date): string {
