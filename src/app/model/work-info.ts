@@ -4,6 +4,7 @@ export class WorkInfo {
   employeeId: number;
   employeeName: string;
   employeeSurname: string;
+  employeeEmail: string;
   departmentName: string;
   projectId: number;
   projectName: string;
