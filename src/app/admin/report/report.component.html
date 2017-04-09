@@ -2,25 +2,30 @@
   <h1 style="text-align: center">דוחות</h1>
 </div>
 <div class="container">
-<div class="row">
-  <div class="col-md-6 pull-right">
-    <h3>תקופת הדו"ח</h3>
-    <p-calendar [(ngModel)]="startDate"></p-calendar>
-    מתאריך:
-    <div></div>
-    <p-calendar [(ngModel)]="endDate"></p-calendar>
-    עד תעריך:
+  <div class="row">
+
+    <a class="btn btn-sm btn-info" [routerLink]="['missing']" style="color: lavender">ימים חסרים <i class="fa fa-chevron-circle-down" aria-hidden="true"></i></a>
+    <button class="btn btn-sm btn-default" (click)="moveMonth(-1)">שבוע אחורה</button>
+    <button class="btn btn-sm btn-default" (click)="moveMonth(1)">שבוע קדימה</button>
+    <div class="col-md-6 pull-right">
+      <h3>תקופת הדו"ח</h3>
+      <p-calendar [(ngModel)]="startDate" (onSelect)="populateTimeServiceWithDates()"></p-calendar>
+      מתאריך:
+      <div></div>
+      <p-calendar [(ngModel)]="endDate" (onSelect)="populateTimeServiceWithDates()"></p-calendar>
+      עד תעריך:
+    </div>
+    <!--<div class="col-md-2 pull-right">
+      <div class="btn-group-vertical" *ngIf="startDate != null && endDate != null">
+        <button class="btn btn-sm btn-default" (click)="missingDaysReport()">דוח ימים חסרים</button>
+        <button class="btn btn-sm btn-default" (click)="partialDaysReport()">דוח ימים חלקיים</button>
+        <button class="btn btn-sm btn-default" (click)="pivotalReport()">דוח שעות גולמי</button>
+        <p-selectButton [options]="types" [(ngModel)]="selectedType"></p-selectButton>
+      </div>
+    </div>-->
   </div>
-  <div class="col-md-2 pull-right">
-  <div class="btn-group-vertical" *ngIf="startDate != null && endDate != null">
-      <button class="btn btn-sm btn-default" (click)="missingDaysReport()">דוח ימים חסרים</button>
-      <button class="btn btn-sm btn-default" (click)="partialDaysReport()">דוח ימים חלקיים</button>
-      <button class="btn btn-sm btn-default" (click)="pivotalReport()">דוח שעות גולמי</button>
-    <p-selectButton [options]="types" [(ngModel)]="selectedType"></p-selectButton>
-  </div>
-  </div>
-</div>
   <div *ngIf="error" class="alert alert-danger">
     <strong>Error!</strong> {{error}}
   </div>
 </div>
+<router-outlet></router-outlet>

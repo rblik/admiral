@@ -4,7 +4,15 @@ import {DatePipe} from "@angular/common";
 @Injectable()
 export class TimeService {
 
+  public fromDate: Date;
+  public toDate: Date;
+
   constructor(private datepipe: DatePipe) {
+  }
+
+  setDefaultDateRange(offset: number) {
+    this.fromDate = this.getFirstDayOfMonth(offset);
+    this.toDate = this.getFirstDayOfNextMonth(offset);
   }
 
   public getDateString(date: Date): string {
@@ -25,6 +33,16 @@ export class TimeService {
     return new Date(date.setDate(diff));
   }
 
+  public getFirstDayOfMonth(offset: number): Date {
+    let d = new Date();
+    return new Date(d.getFullYear(), d.getMonth() + offset, 1);
+  }
+
+  public getFirstDayOfNextMonth(offset: number): Date {
+    let d = new Date();
+    return new Date(d.getFullYear(), d.getMonth() + offset + 1, 1);
+  }
+
   public getTime(timeStr: string): any {
     let dt = new Date();
 
@@ -41,6 +59,6 @@ export class TimeService {
   }
 
   public getTimeDiff(timeStr1: string, timeStr2: string) {
-    return (this.getTime(timeStr1).getTime() - this.getTime(timeStr2).getTime())/(3600*1000);
+    return (this.getTime(timeStr1).getTime() - this.getTime(timeStr2).getTime()) / (3600 * 1000);
   }
 }

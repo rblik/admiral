@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-4 pull-left">
+      <input type="text" pInputText #searchBox placeholder="לקוח"
+             (keyup)="search(searchBox.value)">
+    </div>
+    <div class="col-md-3 pull-left">
+      <button class="btn btn-info" (click)="getMissedDays()">להראות</button>
+    </div>
+    <p-dropdown [options]="departmentsUi" [(ngModel)]="chosenDepartment"
+                (onChange)="getEmployeesUi(chosenDepartment)"></p-dropdown>
+    <p-dropdown [options]="employeesUi" [(ngModel)]="chosenEmployee"></p-dropdown>
+  </div>
+  <div class="row">
+    <p-selectButton [options]="types" [(ngModel)]="selectedType"></p-selectButton>
+    <button class="btn btn-sm btn-default" (click)="missingDaysReport()">דוח ימים חסרים</button>
+
+  </div>
+</div>
+<!--<div>{{employeesUi | json}}</div>-->
+<div>{{infosUi | json}}</div>

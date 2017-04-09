@@ -24,10 +24,8 @@ import {
   SharedModule
 } from "primeng/primeng";
 import {Ng2Webstorage} from "ng2-webstorage";
-import {DownloadService} from "./admin/service/download.service";
 import {LoginComponent} from "./login/login.component";
 import {AuthGuardService} from "./service/auth-guard.service";
-import {ClientsComponent} from "./admin/client/clients.component";
 import {AdminAuthGuardService} from "./service/admin-auth-guard.service";
 
 @NgModule({
