@@ -35,7 +35,7 @@ export class DashboardComponent implements OnInit {
   private clientForCreatingWorkInfos: string;
   private error: string;
 
-  constructor(private timeService: TimeService, private authService: AuthService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
+  constructor(private timeService: TimeService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
     this.absenceTypes = [];
     this.absenceTypes.push({label: 'מחלה', value: "ILLNESS"});
     this.absenceTypes.push({label: 'חג', value: "HOLIDAY"});
@@ -98,8 +98,7 @@ export class DashboardComponent implements OnInit {
     let sum = 0;
     arr.forEach((workInfo) => sum += workInfo.duration);
     sum /= 60;
-    Number((sum / 60).toFixed(2));
-    return sum;
+    return Number((sum / 60).toFixed(2));
   }
 
   search(param: string) {
@@ -178,7 +177,7 @@ export class DashboardComponent implements OnInit {
     this.workService.save(workInfo.agreementId, this.convertToUnit(workInfo))
       .subscribe(workUnit => {
         this.error = '';
-        var saved = this.convertToInfo(workUnit, workInfo.agreementId);
+        let saved = this.convertToInfo(workUnit, workInfo.agreementId);
         this.replaceInDayWorkInfos(saved);
         this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
         this.transform(this.workInfos);
@@ -189,9 +188,9 @@ export class DashboardComponent implements OnInit {
 
   private validate(workInfo: WorkInfo) {
     return parseInt(workInfo.from.substr(0, 2)) > 23
-      || parseInt(workInfo.from.substr(3, 2)) > 60
+      || parseInt(workInfo.from.substr(3, 2)) > 59
       || parseInt(workInfo.to.substr(0, 2)) > 23
-      || parseInt(workInfo.to.substr(3, 2)) > 60
+      || parseInt(workInfo.to.substr(3, 2)) > 59
       || workInfo.from > workInfo.to;
   }
 

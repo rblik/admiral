@@ -13,6 +13,16 @@ export class ReportService {
     this.missingUrl = Url.getUrl("/admin/info/missing");
   }
 
+  getDistinct(objects: Array<any>, field: string): Array<any> {
+    let arr = [];
+    for (let i = 0; i < objects.length; i++) {
+      if (arr.indexOf(objects[i][field] == -1)) {
+        arr.push(objects[i][field]);
+      }
+    }
+    return arr;
+  }
+
   public getMissedDaysForPeriod(from: string, to: string, employeeId?: string, departmentId?: string): Observable<WorkInfo[]> {
     let params = new URLSearchParams();
     params.append('from', from);

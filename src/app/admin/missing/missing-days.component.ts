@@ -65,10 +65,16 @@ export class MissingDaysComponent implements OnInit {
   }
 
   getDepartmentsUi(employees: Array<Employee>) {
-    employees.map(employee => this.departmentsUi.push({
-      label: employee.department.name,
-      value: employee.department
-    }));
+    let arr = [];
+    employees.map(employee => {
+      if (arr.indexOf(employee.department.name) == -1) {
+        this.departmentsUi.push({
+          label: employee.department.name,
+          value: employee.department
+        });
+        arr.push(employee.department.name);
+      }
+    });
   }
 
   getEmployeesUi(department: Department) {
