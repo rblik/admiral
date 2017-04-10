@@ -4,7 +4,7 @@ import {ReportComponent} from "./report/report.component";
 import {AdminRoutingModule} from "./admin-routing.module";
 import {
   CalendarModule, DataTableModule, DialogModule, DropdownModule, InputMaskModule, SelectButtonModule,
-  SharedModule
+  SharedModule, SpinnerModule
 } from "primeng/primeng";
 import {HttpModule} from "@angular/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -12,11 +12,13 @@ import {CommonModule} from "@angular/common";
 import {DownloadService} from "./service/download.service";
 import {ReportService} from "./service/report.service";
 import {EmployeeService} from "./service/employee.service";
+import {PartialDaysComponent} from "./partial/partial-days.component";
 
 @NgModule({
   declarations: [
+    ReportComponent,
     MissingDaysComponent,
-    ReportComponent
+    PartialDaysComponent
   ],
   imports: [
     AdminRoutingModule,
@@ -30,7 +32,8 @@ import {EmployeeService} from "./service/employee.service";
     CalendarModule,
     InputMaskModule,
     DropdownModule,
-    DataTableModule
+    DataTableModule,
+    SpinnerModule
   ],
   providers: [
     DownloadService,

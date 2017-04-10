@@ -1,19 +1,19 @@
 import {Component, OnInit} from "@angular/core";
-import {ReportService} from "../service/report.service";
 import {TimeService} from "../../service/time.service";
-import {WorkInfo} from "../../model/work-info";
 import {EmployeeService} from "../service/employee.service";
-import {Employee} from "../../model/employee";
-import {SelectItem} from 'primeng/primeng'
-import {Department} from "../../model/department";
-import * as fileSaver from "file-saver";
+import {ReportService} from "../service/report.service";
 import {DownloadService} from "../service/download.service";
+import {SelectItem} from "primeng/primeng";
+import {Employee} from "../../model/employee";
+import {Department} from "../../model/department";
+import {WorkInfo} from "../../model/work-info";
+import * as fileSaver from "file-saver";
 
 @Component({
-  selector: 'missing-days',
-  templateUrl: './missing-days.component.html'
+  selector: 'partial-days',
+  templateUrl: './partial-days.component.html'
 })
-export class MissingDaysComponent implements OnInit {
+export class PartialDaysComponent implements OnInit{
 
   private selectedType: string = 'xlsx';
   private chosenEmployee: Employee;
@@ -26,8 +26,11 @@ export class MissingDaysComponent implements OnInit {
   private employees: Employee[];
   private employeesUi: SelectItem[] = [];
   private departmentsUi: SelectItem[] = [];
+  private limit: number;
+  private durationFilter: number;
 
   constructor(private downloadService: DownloadService, private reportService: ReportService, private employeeService: EmployeeService, private timeService: TimeService) {
+    this.limit = 9;
     this.types = [];
     this.types.push({label: 'PDF', value: 'pdf'});
     this.types.push({label: 'Excel', value: 'xlsx'});
@@ -49,12 +52,12 @@ export class MissingDaysComponent implements OnInit {
     });
   }
 
-  getMissedDays(): void {
+  getPartialDays(){
     let from = this.timeService.getDateString(this.timeService.fromDate);
     let to = this.timeService.getDateString(this.timeService.toDate);
     let employeeId = this.chosenEmployee != null ? this.chosenEmployee.id.toString() : null;
     let departmentId = this.chosenDepartment != null ? this.chosenDepartment.id.toString() : null;
-    this.reportService.getMissedDaysForPeriod(from, to, employeeId, departmentId)
+    this.reportService.getPartialDaysForPeriodAndLimit(from, to, this.limit, employeeId, departmentId)
       .subscribe(infos => {
         this.infosUi = infos;
         this.tableVisible = true;
@@ -86,12 +89,12 @@ export class MissingDaysComponent implements OnInit {
     filter.map(employee => this.employeesUi.push({label: employee.name + ' ' + employee.surname, value: employee}));
   }
 
-  missingDaysReport() {
-    this.downloadService.downloadMissing(this.selectedType, this.timeService.getDateString(this.timeService.fromDate), this.timeService.getDateString(this.timeService.toDate))
+  partialDaysReport() {
+    this.downloadService.downloadPartial(this.selectedType, this.timeService.getDateString(this.timeService.fromDate), this.timeService.getDateString(this.timeService.toDate))
       .subscribe(res => {
           let appType = this.getMimeType(this.selectedType);
           let blob = new Blob([res.blob()], {type: appType});
-          fileSaver.saveAs(blob, 'missing.' + this.selectedType);
+          fileSaver.saveAs(blob, 'partial.' + this.selectedType);
         },
         err => {
           this.error = err;

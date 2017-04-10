@@ -7,9 +7,11 @@ import {WorkInfo} from "../../model/work-info";
 @Injectable()
 export class ReportService {
 
+  private partialUrl: string;
   private missingUrl: string;
 
   constructor(private auth: AuthService, private http: Http) {
+    this.partialUrl = Url.getUrl("/admin/info/partial");
     this.missingUrl = Url.getUrl("/admin/info/missing");
   }
 
@@ -21,6 +23,23 @@ export class ReportService {
       }
     }
     return arr;
+  }
+
+  public getPartialDaysForPeriodAndLimit(from: string, to: string, limit: number, employeeId?: string, departmentId?: string): Observable<WorkInfo[]> {
+    let params = new URLSearchParams();
+    params.append('from', from);
+    params.append('to', to);
+    params.append('limit', limit.toString());
+    params.append('employeeId', employeeId);
+    params.append('departmentId', departmentId);
+    return this.http.get(this.partialUrl, {
+      headers: new Headers({'Authorization': this.auth.getToken()}),
+      search: params
+    }).map(res => res.json())
+      .catch(e => {
+        let s = e.json().details[0];
+        return Observable.throw(s);
+      });
   }
 
   public getMissedDaysForPeriod(from: string, to: string, employeeId?: string, departmentId?: string): Observable<WorkInfo[]> {

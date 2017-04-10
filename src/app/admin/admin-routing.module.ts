@@ -3,6 +3,7 @@ import {NgModule} from "@angular/core";
 import {ReportComponent} from "./report/report.component";
 import {AdminAuthGuardService} from "../service/admin-auth-guard.service";
 import {MissingDaysComponent} from "./missing/missing-days.component";
+import {PartialDaysComponent} from "./partial/partial-days.component";
 
 const routes: Routes = [
   {
@@ -11,6 +12,10 @@ const routes: Routes = [
     canActivate: [AdminAuthGuardService],
     canActivateChild: [AdminAuthGuardService],
     children: [
+      {
+        path: 'partial',
+        component: PartialDaysComponent
+      },
       {
         path: 'missing',
         component: MissingDaysComponent
