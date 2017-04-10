@@ -23,6 +23,7 @@ export class LoginComponent {
           this.authService.storeProfile();
           this.error = '';
           let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/app';
+          console.log(redirect);
           this.router.navigate([redirect]);
         },
         err => {

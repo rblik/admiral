@@ -18,7 +18,6 @@ export class NavBarComponent implements OnInit {
     this.profile = this.authService.getProfile();
     this.authService.profileObserv().subscribe(employee => {
       this.profile = JSON.parse(employee);
-      console.log(111111111111111111111111111);
     });
   }
 
