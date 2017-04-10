@@ -13,12 +13,14 @@ import {DownloadService} from "./service/download.service";
 import {ReportService} from "./service/report.service";
 import {EmployeeService} from "./service/employee.service";
 import {PartialDaysComponent} from "./partial/partial-days.component";
+import {PivotalComponent} from "./pivotal/pivotal.component";
 
 @NgModule({
   declarations: [
     ReportComponent,
     MissingDaysComponent,
-    PartialDaysComponent
+    PartialDaysComponent,
+    PivotalComponent
   ],
   imports: [
     AdminRoutingModule,

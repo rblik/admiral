@@ -10,8 +10,8 @@
              (keyup)="search(searchBox.value)">
     </div>
     <div class="col-md-4 pull-right">
-      <button (click)="moveWeekForward()" class="btn btn-sm btn-info"><i class="fa fa-chevron-left" aria-hidden="true"></i> שבוע קדימה</button>
-      <button (click)="moveWeekBack()" class="btn btn-sm btn-warning">שבוע אחורה <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+      <button (click)="moveWeekForward()" class="btn btn-sm btn-info"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;שבוע קדימה&nbsp;</button>
+      <button (click)="moveWeekBack()" class="btn btn-sm btn-warning">&nbsp;שבוע אחורה&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></button>
     </div>
     <div class="col-md-2"></div>
   </div>
@@ -65,7 +65,7 @@
         </h3>
       </div>
       <div>
-      <button type="button" class="btn btn-xs btn-info" (click)="create()">הוסיף <i class="fa fa-plus" aria-hidden="true"></i></button>
+      <button type="button" class="btn btn-xs btn-info" (click)="create()">&nbsp;הוסיף&nbsp;<i class="fa fa-plus" aria-hidden="true"></i></button>
       </div>
       <div class="row">
         <div *ngIf="error" class="alert alert-danger">
@@ -86,10 +86,10 @@
           <tbody>
             <tr *ngFor="let workInfo of dayWorkInfos">
               <td>
-                <button type="button" class="btn btn-xs btn-danger" (click)="remove(workInfo)">מחק <i class="fa fa-trash-o fa-fw"></i></button>
+                <button type="button" class="btn btn-xs btn-danger" (click)="remove(workInfo)">&nbsp;מחק&nbsp;<i class="fa fa-trash-o fa-fw"></i></button>
               </td>
               <td>
-                <button type="button" class="btn btn-xs btn-warning" (click)="edit(workInfo)">ערוך <i class="fa fa-pencil fa-fw"></i></button>
+                <button type="button" class="btn btn-xs btn-warning" (click)="edit(workInfo)">&nbsp;ערוך&nbsp;<i class="fa fa-pencil fa-fw"></i></button>
               </td>
               <td>{{workInfo.comment}}</td>
               <td>{{workInfo.duration}}</td>
@@ -103,19 +103,16 @@
         <div *ngIf="createDialog" class="form-group">
           <!--<p-calendar [(ngModel)]="tes" [stepMinute]=10 hourFormat="24" readonlyInput="true" dataType="string" [timeOnly]="true"></p-calendar>-->
             <label for="dayWorkInfoTo">
-            <p-inputMask [(ngModel)]="workInfoItem.to" mask="99:99" id="dayWorkInfoTo" inputStyleClass="form-control" [maxlength]="5"></p-inputMask>
-               -עד
+              <p-inputMask [(ngModel)]="workInfoItem.to" mask="99:99" id="dayWorkInfoTo" inputStyleClass="form-control" [maxlength]="5"></p-inputMask>&nbsp;עד&nbsp;
             </label>
             <label for="dayWorkInfoFrom">
-              <p-inputMask [(ngModel)]="workInfoItem.from" id="dayWorkInfoFrom" mask="99:99" inputStyleClass="form-control" [maxlength]="5"></p-inputMask>
-              -מ
+              <p-inputMask [(ngModel)]="workInfoItem.from" id="dayWorkInfoFrom" mask="99:99" inputStyleClass="form-control" [maxlength]="5"></p-inputMask>&nbsp;מ&nbsp;
             </label>
             <button type="button" pButton icon="fa-clock-o" (click)="makeWholeDay()" label="24"></button>
             <br>
           <label for="dayWorkInfoVacation">
             <p-dropdown [options]="absenceTypes" [style]="{'text-align':'center'}" id="dayWorkInfoVacation" panelStyleClass="form-control pull-left" placeholder="בחר את סוג"
-                        [(ngModel)]="workInfoItem.absenceType"></p-dropdown>
-            בחירת חופשה
+                        [(ngModel)]="workInfoItem.absenceType"></p-dropdown>&nbsp;בחירת חופשה&nbsp;
           </label>
             <br>
             <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" placeholder="תאור" id="dayWorkInfoComment" class="form-control" [maxlength]="50"></textarea>

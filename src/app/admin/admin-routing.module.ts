@@ -4,6 +4,7 @@ import {ReportComponent} from "./report/report.component";
 import {AdminAuthGuardService} from "../service/admin-auth-guard.service";
 import {MissingDaysComponent} from "./missing/missing-days.component";
 import {PartialDaysComponent} from "./partial/partial-days.component";
+import {PivotalComponent} from "./pivotal/pivotal.component";
 
 const routes: Routes = [
   {
@@ -19,6 +20,10 @@ const routes: Routes = [
       {
         path: 'missing',
         component: MissingDaysComponent
+      },
+      {
+        path: 'pivotal',
+        component: PivotalComponent
       }
     ]
   }
