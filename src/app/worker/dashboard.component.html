@@ -10,8 +10,8 @@
              (keyup)="search(searchBox.value)">
     </div>
     <div class="col-md-4 pull-right">
-      <button (click)="moveWeekBack()" class="btn btn-warning">שבוע לפני</button>
-      <button (click)="moveWeekForward()" class="btn btn-info">שבוע הבא</button>
+      <button (click)="moveWeekForward()" class="btn btn-sm btn-info"><i class="fa fa-chevron-left" aria-hidden="true"></i> שבוע קדימה</button>
+      <button (click)="moveWeekBack()" class="btn btn-sm btn-warning">שבוע אחורה <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
     </div>
     <div class="col-md-2"></div>
   </div>
@@ -64,9 +64,13 @@
           {{clientForCreatingWorkInfos}}-עבודה יומי ב
         </h3>
       </div>
-      <button type="button" class="btn btn-xs btn-info" (click)="create()">הוסיף</button>
+      <div>
+      <button type="button" class="btn btn-xs btn-info" (click)="create()">הוסיף <i class="fa fa-plus" aria-hidden="true"></i></button>
+      </div>
       <div class="row">
-        {{error}}
+        <div *ngIf="error" class="alert alert-danger">
+          <strong>Error!</strong> {{error}}
+        </div>
         <table class="table table-hover">
           <thead>
           <tr>
@@ -80,44 +84,49 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let workInfo of dayWorkInfos">
-            <td>
-              <button type="button" class="btn btn-xs btn-danger" (click)="remove(workInfo)">מחק</button>
-            </td>
-            <td>
-              <button type="button" class="btn btn-xs btn-warning" (click)="edit(workInfo)">ערוך</button>
-            </td>
-            <td>{{workInfo.comment}}</td>
-            <td>{{workInfo.duration}}</td>
-            <td>{{workInfo.absenceType}}</td>
-            <td>{{workInfo.to}}</td>
-            <td>{{workInfo.from}}</td>
-          </tr>
-          </tbody>
-        </table>
+            <tr *ngFor="let workInfo of dayWorkInfos">
+              <td>
+                <button type="button" class="btn btn-xs btn-danger" (click)="remove(workInfo)">מחק <i class="fa fa-trash-o fa-fw"></i></button>
+              </td>
+              <td>
+                <button type="button" class="btn btn-xs btn-warning" (click)="edit(workInfo)">ערוך <i class="fa fa-pencil fa-fw"></i></button>
+              </td>
+              <td>{{workInfo.comment}}</td>
+              <td>{{workInfo.duration}}</td>
+              <td>{{workInfo.absenceType}}</td>
+              <td>{{workInfo.to}}</td>
+              <td>{{workInfo.from}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="createDialog" class="form-group">
+          <!--<p-calendar [(ngModel)]="tes" [stepMinute]=10 hourFormat="24" readonlyInput="true" dataType="string" [timeOnly]="true"></p-calendar>-->
+            <label for="dayWorkInfoTo">
+            <p-inputMask [(ngModel)]="workInfoItem.to" mask="99:99" id="dayWorkInfoTo" inputStyleClass="form-control" [maxlength]="5"></p-inputMask>
+               -עד
+            </label>
+            <label for="dayWorkInfoFrom">
+              <p-inputMask [(ngModel)]="workInfoItem.from" id="dayWorkInfoFrom" mask="99:99" inputStyleClass="form-control" [maxlength]="5"></p-inputMask>
+              -מ
+            </label>
+            <button type="button" pButton icon="fa-clock-o" (click)="makeWholeDay()" label="24"></button>
+            <br>
+          <label for="dayWorkInfoVacation">
+            <p-dropdown [options]="absenceTypes" [style]="{'text-align':'center'}" id="dayWorkInfoVacation" panelStyleClass="form-control pull-left" placeholder="בחר את סוג"
+                        [(ngModel)]="workInfoItem.absenceType"></p-dropdown>
+            בחירת חופשה
+          </label>
+            <br>
+            <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" placeholder="תאור" id="dayWorkInfoComment" class="form-control" [maxlength]="50"></textarea>
+          <br>
+          <button type="button" pButton icon="fa-check" (click)="save(workInfoItem)" label="Save"></button>
+        </div>
       </div>
-      <div *ngIf="createDialog">
-        <div>
-          <p-inputMask [(ngModel)]="workInfoItem.from" mask="99:99" [maxlength]="5"></p-inputMask>
-          <p-inputMask [(ngModel)]="workInfoItem.to" mask="99:99" [maxlength]="5"></p-inputMask>
-        </div>
-        <div>
-          <p-dropdown [options]="absenceTypes" [style]="{'width':'150px'}" placeholder="בחר את סוג"
-                      [(ngModel)]="workInfoItem.absenceType"></p-dropdown>
-        </div>
-        <div>
-          <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" [maxlength]="50"></textarea>
-        </div>
-        <button type="button" pButton icon="fa-check" (click)="save(workInfoItem)" label="Save"></button>
-        <!--<button class="ui-g-12 ui-md-2" (click)="save(workInfo)">Save</button>-->
-      </div>
-
-    </div>
     <p-footer>
       <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
         <button type="button" pButton icon="fa-check" (click)="closeDialog()" label="Ok"></button>
       </div>
     </p-footer>
   </p-dialog>
-
 </div>

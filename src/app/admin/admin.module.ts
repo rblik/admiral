@@ -3,7 +3,7 @@ import {MissingDaysComponent} from "./missing/missing-days.component";
 import {ReportComponent} from "./report/report.component";
 import {AdminRoutingModule} from "./admin-routing.module";
 import {
-  CalendarModule, DialogModule, DropdownModule, InputMaskModule, SelectButtonModule,
+  CalendarModule, DataTableModule, DialogModule, DropdownModule, InputMaskModule, SelectButtonModule,
   SharedModule
 } from "primeng/primeng";
 import {HttpModule} from "@angular/http";
@@ -29,7 +29,8 @@ import {EmployeeService} from "./service/employee.service";
     SharedModule,
     CalendarModule,
     InputMaskModule,
-    DropdownModule
+    DropdownModule,
+    DataTableModule
   ],
   providers: [
     DownloadService,

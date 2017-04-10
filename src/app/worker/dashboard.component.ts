@@ -137,6 +137,8 @@ export class DashboardComponent implements OnInit {
   }
 
   showDialog(workInfo: WorkInfo, clientName: string) {
+    this.error = '';
+    this.createDialog = false;
     this.clientForCreatingWorkInfos = clientName;
     this.dayForCreatingWorkInfos = new Date(workInfo.date).toDateString();
     this.activeAgreementId = workInfo.agreementId;
@@ -168,10 +170,11 @@ export class DashboardComponent implements OnInit {
   }
 
   save(workInfo: WorkInfo) {
-    /*if (workInfo.from > workInfo.to) {
-     this.error = "Wrong time range";
-     return;
-     }*/
+    if (this.validate(workInfo)) {
+      this.error = "Wrong time range";
+      return;
+    }
+
     this.workService.save(workInfo.agreementId, this.convertToUnit(workInfo))
       .subscribe(workUnit => {
         this.error = '';
@@ -182,6 +185,14 @@ export class DashboardComponent implements OnInit {
         this.createDialog = false;
         this.workInfoItem = null;
       }, err => this.error = err);
+  }
+
+  private validate(workInfo: WorkInfo) {
+    return parseInt(workInfo.from.substr(0, 2)) > 23
+      || parseInt(workInfo.from.substr(3, 2)) > 60
+      || parseInt(workInfo.to.substr(0, 2)) > 23
+      || parseInt(workInfo.to.substr(3, 2)) > 60
+      || workInfo.from > workInfo.to;
   }
 
   public remove(workInfo: WorkInfo) {
@@ -263,4 +274,8 @@ export class DashboardComponent implements OnInit {
     return workInfo2;
   }
 
+  makeWholeDay(): void {
+    this.workInfoItem.from = "00:00";
+    this.workInfoItem.to = "23:59";
+  }
 }

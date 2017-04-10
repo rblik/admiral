@@ -22,6 +22,7 @@ export class MissingDaysComponent implements OnInit {
   private infosUi: WorkInfo[];
   private types: SelectItem[];
   private error: string;
+  private tableVisible: boolean;
   private chosenDepartment: Department;
   private employees: Employee[];
   private employeesUi: SelectItem[] = [];
@@ -56,29 +57,11 @@ export class MissingDaysComponent implements OnInit {
     let departmentId = this.chosenDepartment != null ? this.chosenDepartment.id.toString() : null;
     this.reportService.getMissedDaysForPeriod(from, to, employeeId, departmentId)
       .subscribe(infos => {
-        this.infos = infos;
-        this.fillTheTable();
+        this.infosUi = infos;
+        this.tableVisible = true;
       }, err => {
         this.error = err;
       });
-  }
-
-  fillTheTable() {
-    this.search('');
-  }
-
-  search(searchParam: string) {
-    if (this.infos != null) {
-      this.transformInfosBySearch(this.infos, searchParam);
-    }
-  }
-
-  transformInfosBySearch(value: Array<WorkInfo>, searchParam?: string) {
-    this.infosUi = value.filter(function (info: WorkInfo) {
-      return info.employeeName.toLowerCase().match(searchParam.toLowerCase())
-        || info.employeeSurname.toLowerCase().match(searchParam.toLowerCase())
-        || info.departmentName.toLowerCase().match(searchParam.toLowerCase());
-    });
   }
 
   getDepartmentsUi(employees: Array<Employee>) {

@@ -1,21 +1,29 @@
+<h3 style="text-align: center">ימים חסרים</h3>
 <div class="container">
   <div class="row">
     <div class="col-md-4 pull-left">
-      <input type="text" pInputText #searchBox placeholder="לקוח"
-             (keyup)="search(searchBox.value)">
+      <button class="btn btn-sm btn-info" style="color: lavender" (click)="getMissedDays()">להראות <i
+        class="fa fa-chevron-circle-down" aria-hidden="true"></i></button>
     </div>
-    <div class="col-md-3 pull-left">
-      <button class="btn btn-info" (click)="getMissedDays()">להראות</button>
-    </div>
-    <p-dropdown [options]="departmentsUi" [(ngModel)]="chosenDepartment"
+    <p-dropdown [options]="departmentsUi" [(ngModel)]="chosenDepartment" [filter]="true"
                 (onChange)="getEmployeesUi(chosenDepartment)"></p-dropdown>
-    <p-dropdown [options]="employeesUi" [(ngModel)]="chosenEmployee"></p-dropdown>
-  </div>
-  <div class="row">
-    <p-selectButton [options]="types" [(ngModel)]="selectedType"></p-selectButton>
-    <button class="btn btn-sm btn-default" (click)="missingDaysReport()">דוח ימים חסרים</button>
-
+    <p-dropdown [options]="employeesUi" [(ngModel)]="chosenEmployee" [filter]="true"></p-dropdown>
+    <div class="col-md-4 pull-right">
+      <p-selectButton [options]="types" [(ngModel)]="selectedType"></p-selectButton>
+      <button class="btn btn-sm btn-default" (click)="missingDaysReport()">הורדה <i class="fa fa fa-save" aria-hidden="true"></i></button>
+    </div>
   </div>
 </div>
-<!--<div>{{employeesUi | json}}</div>-->
-<div>{{infosUi | json}}</div>
+<br>
+<div *ngIf="tableVisible">
+  <div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none">
+    <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+    <input #gb type="text" pInputText size="50" placeholder="חיפוש">
+  </div>
+  <p-dataTable [value]="infosUi" [globalFilter]="gb" sortMode="multiple" [style]="{'text-align':'center'}">
+    <p-column field="date" header="תאריך" [sortable]="true"></p-column>
+    <p-column field="departmentName" header="צוות" [sortable]="true"></p-column>
+    <p-column field="employeeSurname" header="שם משפחה" [sortable]="true"></p-column>
+    <p-column field="employeeName" header="שם" [sortable]="true"></p-column>
+  </p-dataTable>
+</div>
