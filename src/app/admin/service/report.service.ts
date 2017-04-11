@@ -17,16 +17,6 @@ export class ReportService {
     this.pivotalUrl = Url.getUrl("/admin/info/pivotal");
   }
 
-  getDistinct(objects: Array<any>, field: string): Array<any> {
-    let arr = [];
-    for (let i = 0; i < objects.length; i++) {
-      if (arr.indexOf(objects[i][field] == -1)) {
-        arr.push(objects[i][field]);
-      }
-    }
-    return arr;
-  }
-
   public getPartialDaysForPeriodAndLimit(from: string, to: string, limit: number, employeeId?: string, departmentId?: string): Observable<WorkInfo[]> {
     let params = new URLSearchParams();
     params.append('from', from);

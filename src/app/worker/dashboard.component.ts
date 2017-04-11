@@ -45,7 +45,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.timeOffset = 0;
-    // this.authService.getLoggedWorker().subscribe(emp => this.employee = emp);
     this.sessionStorageService.observe('employee')
       .subscribe((employee) => this.employee = JSON.parse(employee));
     this.initWeekBorders(this.timeOffset);

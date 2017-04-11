@@ -32,14 +32,6 @@
       <button class="btn btn-sm btn-default" (click)="moveMonth(-1)"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;חודש אחורה&nbsp;</button>
       <button class="btn btn-sm btn-default" (click)="moveMonth(1)">&nbsp;חודש קדימה&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></button>
     </div>
-    <!--<div class="col-md-2 pull-right">
-      <div class="btn-group-vertical" *ngIf="startDate != null && endDate != null">
-        <button class="btn btn-sm btn-default" (click)="missingDaysReport()">דוח ימים חסרים</button>
-        <button class="btn btn-sm btn-default" (click)="partialDaysReport()">דוח ימים חלקיים</button>
-        <button class="btn btn-sm btn-default" (click)="pivotalReport()">דוח שעות גולמי</button>
-        <p-selectButton [options]="types" [(ngModel)]="selectedType"></p-selectButton>
-      </div>
-    </div>-->
   </div>
   <div *ngIf="error" class="alert alert-danger">
     <strong>Error!</strong> {{error}}
