@@ -12,10 +12,12 @@ export class DownloadService {
     this.adminUrl = Url.getUrl("/admin");
   }
 
-  public downloadMissing(type: string, from: string, to: string) {
+  public downloadMissing(type: string, from: string, to: string, employeeId: string, departmentId: string) {
     let params = new URLSearchParams();
     params.append('from', from);
     params.append('to', to);
+    params.append('employeeId', employeeId);
+    params.append('departmentId', departmentId);
 
     return this.http.get(this.adminUrl + "/" + type + "/missing", {
       method: RequestMethod.Get,
@@ -32,11 +34,13 @@ export class DownloadService {
     });
   }
 
-  public downloadPartial(type: string, from: string, to: string) {
+  public downloadPartial(type: string, from: string, to: string, employeeId: string, departmentId: string) {
     let params = new URLSearchParams();
     params.append('from', from);
     params.append('to', to);
     params.append('limit', '7');
+    params.append('employeeId', employeeId);
+    params.append('departmentId', departmentId);
     return this.http.get(this.adminUrl + "/" + type + "/partial", {
       method: RequestMethod.Get,
       responseType: ResponseContentType.Blob,

@@ -44,18 +44,6 @@ export class ReportComponent implements OnInit{
     this.setDefaultDateRange();
   }
 
-  partialDaysReport() {
-    this.downloadService.downloadPartial(this.selectedType, this.dateToString(this.startDate), this.dateToString(this.endDate))
-      .subscribe(res => {
-          let appType = this.getMimeType(this.selectedType);
-          let blob = new Blob([res.blob()], {type: appType});
-          fileSaver.saveAs(blob, 'partial.' + this.selectedType);
-        },
-        err => {
-          this.error = err;
-        });
-  }
-
   pivotalReport() {
     this.downloadService.downloadPivotal(this.selectedType, this.dateToString(this.startDate), this.dateToString(this.endDate))
       .subscribe(res => {
