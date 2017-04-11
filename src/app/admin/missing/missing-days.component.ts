@@ -65,13 +65,13 @@ export class MissingDaysComponent implements OnInit {
 
   getDepartmentsUi(employees: Array<Employee>) {
     let arr = [];
-    employees.map(employee => {
-      if (arr.indexOf(employee.department.name) == -1) {
+    employees.forEach(employee => {
+      if (arr.indexOf(employee.department.id) == -1) {
         this.departmentsUi.push({
           label: employee.department.name,
           value: employee.department
         });
-        arr.push(employee.department.name);
+        arr.push(employee.department.id);
       }
     });
   }
@@ -80,10 +80,10 @@ export class MissingDaysComponent implements OnInit {
     this.chosenEmployee = null;
     this.employeesUi = [];
     let filter = this.employees.filter(function (employee) {
-      return department != null ? employee.department.name === department.name : true;
+      return department != null ? employee.department.id === department.id : true;
     });
     this.employeesUi.push({label: "בחר עובד", value: null});
-    filter.map(employee => this.employeesUi.push({label: employee.name + ' ' + employee.surname, value: employee}));
+    filter.forEach(employee => this.employeesUi.push({label: employee.name + ' ' + employee.surname, value: employee}));
   }
 
   missingDaysReport() {

@@ -47,9 +47,32 @@ export class PivotalComponent implements OnInit {
   getAgreements() {
     this.agreementService.getAgreements().subscribe(agreements => {
       this.agreements = agreements;
+      this.getEmployeesUi();
+      this.getDepartmentsUi();
+      this.getProjectsUi();
+      this.getClientsUi();
     }, error => {
       this.error = error;
     });
+  }
+
+  getEmployeesUi() {
+    let arr = [];
+    /*this.agreements.forEach(agreement => {
+      if(arr.indexOf(agreement.e))
+    });*/
+  }
+
+  getDepartmentsUi() {
+
+  }
+
+  getProjectsUi() {
+
+  }
+
+  getClientsUi() {
+
   }
 
   getAllWorkInfo() {
