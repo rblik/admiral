@@ -53,10 +53,14 @@ export class DownloadService {
     });
   }
 
-  public downloadPivotal(type: string, from: string, to: string) {
+  public downloadPivotal(type: string, from: string, to: string, employeeId: string, departmentId: string, projectId: string, clientId: string) {
     let params = new URLSearchParams();
     params.append('from', from);
     params.append('to', to);
+    params.append('employeeId', employeeId);
+    params.append('departmentId', departmentId);
+    params.append('projectId', projectId);
+    params.append('clientId', clientId);
     return this.http.get(this.adminUrl + "/" + type + "/pivotal", {
       method: RequestMethod.Get,
       responseType: ResponseContentType.Blob,
@@ -68,6 +72,4 @@ export class DownloadService {
       }
     });
   }
-
-
 }
