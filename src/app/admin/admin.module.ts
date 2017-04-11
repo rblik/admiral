@@ -14,6 +14,7 @@ import {ReportService} from "./service/report.service";
 import {EmployeeService} from "./service/employee.service";
 import {PartialDaysComponent} from "./partial/partial-days.component";
 import {PivotalComponent} from "./pivotal/pivotal.component";
+import {AgreementService} from "./service/agreement.service";
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import {PivotalComponent} from "./pivotal/pivotal.component";
   providers: [
     DownloadService,
     ReportService,
-    EmployeeService
+    EmployeeService,
+    AgreementService
   ]
 })
 export class AdminModule {

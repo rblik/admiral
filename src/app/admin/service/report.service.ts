@@ -9,10 +9,12 @@ export class ReportService {
 
   private partialUrl: string;
   private missingUrl: string;
+  private pivotalUrl: string;
 
   constructor(private auth: AuthService, private http: Http) {
     this.partialUrl = Url.getUrl("/admin/info/partial");
     this.missingUrl = Url.getUrl("/admin/info/missing");
+    this.pivotalUrl = Url.getUrl("/admin/info/pivotal");
   }
 
   getDistinct(objects: Array<any>, field: string): Array<any> {
@@ -49,6 +51,24 @@ export class ReportService {
     params.append('employeeId', employeeId);
     params.append('departmentId', departmentId);
     return this.http.get(this.missingUrl, {
+      headers: new Headers({'Authorization': this.auth.getToken()}),
+      search: params
+    }).map(res => res.json())
+      .catch(e => {
+        let s = e.json().details[0];
+        return Observable.throw(s);
+      });
+  }
+
+  public getPivotalForPeriod(from: string, to: string, employeeId?: string, departmentId?: string, projectId?: string, clientId?: string) {
+    let params = new URLSearchParams();
+    params.append('from', from);
+    params.append('to', to);
+    params.append('employeeId', employeeId);
+    params.append('departmentId', departmentId);
+    params.append('projectId', projectId);
+    params.append('clientId', clientId);
+    return this.http.get(this.pivotalUrl, {
       headers: new Headers({'Authorization': this.auth.getToken()}),
       search: params
     }).map(res => res.json())
