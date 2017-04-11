@@ -86,7 +86,7 @@ export class PartialDaysComponent implements OnInit{
       return department != null ? employee.department.name === department.name : true;
     });
     this.employeesUi.push({label: "בחר עובד", value: null});
-    filter.map(employee => this.employeesUi.push({label: employee.name + ' ' + employee.surname, value: employee}));
+    filter.forEach(employee => this.employeesUi.push({label: employee.name + ' ' + employee.surname, value: employee}));
   }
 
   partialDaysReport() {

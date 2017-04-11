@@ -39,6 +39,7 @@ export class PivotalComponent implements OnInit {
   private error: string;
   private tableVisible: boolean;
   private agreements: Agreement[];
+  private agreementsUi: Agreement[];
   private employeesUi: SelectItem[] = [];
   private departmentsUi: SelectItem[] = [];
   private projectUi: SelectItem[] = [];
@@ -47,18 +48,25 @@ export class PivotalComponent implements OnInit {
   getAgreements() {
     this.agreementService.getAgreements().subscribe(agreements => {
       this.agreements = agreements;
-      this.getEmployeesUi();
+      this.agreementsUi = agreements;
+      this.getEmployeesUi(this.chosenDepartment);
       this.getDepartmentsUi();
-      this.getProjectsUi();
+      this.getProjectsUi(this.chosenClient);
       this.getClientsUi();
     }, error => {
       this.error = error;
     });
   }
 
-  getEmployeesUi() {
+  getEmployeesUi(departmentId: number) {
+    this.chosenEmployee = null;
+    this.employeesUi = [];
     let arr = [];
-    this.agreements.forEach(agreement => {
+    let filter = this.agreementsUi.filter(function (agreement) {
+      return departmentId != null ? agreement.departmentId === departmentId : true;
+    });
+    this.employeesUi.push({label: "בחר עובד", value: null});
+    filter.forEach(agreement => {
       if (arr.indexOf(agreement.employeeId) == -1) {
         this.employeesUi.push({
           label: agreement.employeeSurname + ' ' + agreement.employeeName,
@@ -71,7 +79,7 @@ export class PivotalComponent implements OnInit {
 
   getDepartmentsUi() {
     let arr = [];
-    this.agreements.forEach(agreement => {
+    this.agreementsUi.forEach(agreement => {
       if (arr.indexOf(agreement.departmentId) == -1) {
         this.departmentsUi.push({
           label: agreement.departmentName,
@@ -82,9 +90,15 @@ export class PivotalComponent implements OnInit {
     });
   }
 
-  getProjectsUi() {
+  getProjectsUi(clientId: number) {
+    this.chosenProject = null;
+    this.projectUi = [];
     let arr = [];
-    this.agreements.forEach(agreement => {
+    let filter = this.agreementsUi.filter(function (agreement) {
+      return clientId != null ? agreement.clientId === clientId : true;
+    });
+    this.projectUi.push({label: "בחר פרויקט", value: null});
+    filter.forEach(agreement => {
       if (arr.indexOf(agreement.projectId) == -1) {
         this.projectUi.push({
           label: agreement.projectName,
@@ -97,7 +111,7 @@ export class PivotalComponent implements OnInit {
 
   getClientsUi() {
     let arr = [];
-    this.agreements.forEach(agreement => {
+    this.agreementsUi.forEach(agreement => {
       if (arr.indexOf(agreement.clientId) == -1) {
         this.clientUi.push({
           label: agreement.clientName,
