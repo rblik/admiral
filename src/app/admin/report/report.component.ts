@@ -44,24 +44,6 @@ export class ReportComponent implements OnInit{
     this.setDefaultDateRange();
   }
 
-/*
-  pivotalReport() {
-    let employeeId = this.chosenEmployee != null ? this.chosenEmployee.id.toString() : null;
-    let departmentId = this.chosenDepartment != null ? this.chosenDepartment.id.toString() : null;
-    let projectId = this.chosenProject != null ? this.chosenProject.id.toString() : null;
-    let clientId = this.chosenClient != null ? this.chosenClient.id.toString() : null;
-    this.downloadService.downloadPivotal(this.selectedType, this.timeService.getDateString(this.timeService.fromDate), this.timeService.getDateString(this.timeService.toDate), employeeId, departmentId, projectId, clientId)
-      .subscribe(res => {
-        let appType = this.getMimeType(this.selectedType);
-        let blob = new Blob([res.blob()], {type: appType});
-        fileSaver.saveAs(blob, 'pivotal.' + this.selectedType);
-      },
-      err => {
-        this.error = err;
-      });
-  }
-*/
-
   private getMimeType(type: string): string {
     let apType;
     if (type === 'pdf') {

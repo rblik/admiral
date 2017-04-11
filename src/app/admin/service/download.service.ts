@@ -72,4 +72,14 @@ export class DownloadService {
       }
     });
   }
+
+  public getMimeType(type: string): string {
+    let apType;
+    if (type === 'pdf') {
+      apType = 'pdf';
+    } else if (type === 'xls') {
+      apType = 'vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    }
+    return 'application/' + apType;
+  }
 }

@@ -94,22 +94,12 @@ export class PartialDaysComponent implements OnInit{
     let departmentId = this.chosenDepartment != null ? this.chosenDepartment.id.toString() : null;
     this.downloadService.downloadPartial(this.selectedType, this.timeService.getDateString(this.timeService.fromDate), this.timeService.getDateString(this.timeService.toDate), employeeId, departmentId)
       .subscribe(res => {
-          let appType = this.getMimeType(this.selectedType);
+          let appType = this.downloadService.getMimeType(this.selectedType);
           let blob = new Blob([res.blob()], {type: appType});
           fileSaver.saveAs(blob, 'partial.' + this.selectedType);
         },
         err => {
           this.error = err;
         });
-  }
-
-  private getMimeType(type: string): string {
-    let apType;
-    if (type === 'pdf') {
-      apType = 'pdf';
-    } else if (type === 'xls') {
-      apType = 'vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    }
-    return 'application/' + apType;
   }
 }
