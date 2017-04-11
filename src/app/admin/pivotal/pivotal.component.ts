@@ -46,4 +46,5 @@ export class PivotalComponent implements OnInit{
         err => {
           this.error = err;
         });
+  }
 }

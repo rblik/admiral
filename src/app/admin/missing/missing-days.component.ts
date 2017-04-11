@@ -89,7 +89,9 @@ export class MissingDaysComponent implements OnInit {
   missingDaysReport() {
     let employeeId = this.chosenEmployee != null ? this.chosenEmployee.id.toString() : null;
     let departmentId = this.chosenDepartment != null ? this.chosenDepartment.id.toString() : null;
-    this.downloadService.downloadMissing(this.selectedType, this.timeService.getDateString(this.timeService.fromDate), this.timeService.getDateString(this.timeService.toDate), employeeId, departmentId)
+    let fromDate = this.timeService.getDateString(this.timeService.fromDate);
+    let toDate = this.timeService.getDateString(this.timeService.toDate);
+    this.downloadService.downloadMissing(this.selectedType, fromDate, toDate, employeeId, departmentId)
       .subscribe(res => {
           let appType = this.downloadService.getMimeType(this.selectedType);
           let blob = new Blob([res.blob()], {type: appType});
