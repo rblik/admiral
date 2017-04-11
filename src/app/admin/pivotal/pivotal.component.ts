@@ -58,33 +58,67 @@ export class PivotalComponent implements OnInit {
 
   getEmployeesUi() {
     let arr = [];
-    /*this.agreements.forEach(agreement => {
-      if(arr.indexOf(agreement.e))
-    });*/
+    this.agreements.forEach(agreement => {
+      if (arr.indexOf(agreement.employeeId) == -1) {
+        this.employeesUi.push({
+          label: agreement.employeeSurname + ' ' + agreement.employeeName,
+          value: agreement.employeeId
+        });
+        arr.push(agreement.employeeId);
+      }
+    });
   }
 
   getDepartmentsUi() {
-
+    let arr = [];
+    this.agreements.forEach(agreement => {
+      if (arr.indexOf(agreement.departmentId) == -1) {
+        this.departmentsUi.push({
+          label: agreement.departmentName,
+          value: agreement.departmentId
+        });
+        arr.push(agreement.departmentId);
+      }
+    });
   }
 
   getProjectsUi() {
-
+    let arr = [];
+    this.agreements.forEach(agreement => {
+      if (arr.indexOf(agreement.projectId) == -1) {
+        this.projectUi.push({
+          label: agreement.projectName,
+          value: agreement.projectId
+        });
+        arr.push(agreement.projectId);
+      }
+    });
   }
 
   getClientsUi() {
-
+    let arr = [];
+    this.agreements.forEach(agreement => {
+      if (arr.indexOf(agreement.clientId) == -1) {
+        this.clientUi.push({
+          label: agreement.clientName,
+          value: agreement.clientId
+        });
+        arr.push(agreement.clientId);
+      }
+    });
   }
 
   getAllWorkInfo() {
     let from = this.timeService.getDateString(this.timeService.fromDate);
     let to = this.timeService.getDateString(this.timeService.toDate);
-    let employeeId = this.chosenEmployee != null ? this.chosenEmployee.id.toString() : null;
-    let departmentId = this.chosenDepartment != null ? this.chosenDepartment.id.toString() : null;
-    let projectId = this.chosenProject != null ? this.chosenProject.id.toString() : null;
-    let clientId = this.chosenClient != null ? this.chosenClient.id.toString() : null;
-    this.downloadService.downloadPivotal(this.selectedType, from, to, employeeId, departmentId, projectId, clientId)
+    let employeeId = this.chosenEmployee != null ? this.chosenEmployee.toString() : null;
+    let departmentId = this.chosenDepartment != null ? this.chosenDepartment.toString() : null;
+    let projectId = this.chosenProject != null ? this.chosenProject.toString() : null;
+    let clientId = this.chosenClient != null ? this.chosenClient.toString() : null;
+    this.reportService.getPivotalForPeriod(from, to, employeeId, departmentId, projectId, clientId)
       .subscribe(infos => {
         this.infosUi = infos;
+        this.tableVisible = true;
       }, err => {
         this.error = err;
       });
@@ -93,10 +127,10 @@ export class PivotalComponent implements OnInit {
   pivotalReport() {
     let from = this.timeService.getDateString(this.timeService.fromDate);
     let to = this.timeService.getDateString(this.timeService.toDate);
-    let employeeId = this.chosenEmployee != null ? this.chosenEmployee.id.toString() : null;
-    let departmentId = this.chosenDepartment != null ? this.chosenDepartment.id.toString() : null;
-    let projectId = this.chosenProject != null ? this.chosenProject.id.toString() : null;
-    let clientId = this.chosenClient != null ? this.chosenClient.id.toString() : null;
+    let employeeId = this.chosenEmployee != null ? this.chosenEmployee.toString() : null;
+    let departmentId = this.chosenDepartment != null ? this.chosenDepartment.toString() : null;
+    let projectId = this.chosenProject != null ? this.chosenProject.toString() : null;
+    let clientId = this.chosenClient != null ? this.chosenClient.toString() : null;
     this.downloadService.downloadPivotal(this.selectedType, from, to, employeeId, departmentId, projectId, clientId)
       .subscribe(res => {
           let appType = this.downloadService.getMimeType(this.selectedType);

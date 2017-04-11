@@ -4,6 +4,7 @@ export class Agreement {
   employeeId: number;
   employeeName: string;
   employeeSurname: string;
+  departmentId: number;
   departmentName: string;
   projectId: number;
   projectName: string;
