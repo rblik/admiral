@@ -5,6 +5,7 @@ import {AdminAuthGuardService} from "../service/admin-auth-guard.service";
 import {MissingDaysComponent} from "./missing/missing-days.component";
 import {PartialDaysComponent} from "./partial/partial-days.component";
 import {PivotalComponent} from "./pivotal/pivotal.component";
+import {AdminClientsComponent} from "./clients/admin-clients.component";
 
 const routes: Routes = [
   {
@@ -26,6 +27,12 @@ const routes: Routes = [
         component: PivotalComponent
       }
     ]
+  },
+  {
+    path: 'clients',
+    component: AdminClientsComponent,
+    canActivate: [AdminAuthGuardService],
+    canActivateChild: [AdminAuthGuardService]
   }
 ];
 

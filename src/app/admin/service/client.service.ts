@@ -10,7 +10,7 @@ export class ClientService {
   private clientUrl: string;
 
   constructor(private auth: AuthService, private http: Http) {
-    this.clientUrl = Url.getUrl('/admin/client');
+    this.clientUrl = Url.getUrl('/admin/clients');
   }
 
   public getClients(): Observable<Client[]> {
