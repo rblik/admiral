@@ -3,6 +3,7 @@ import {ClientService} from "../service/client.service";
 import {ProjectService} from "../service/project.service";
 import {Client} from "../../model/client";
 import {Project} from "../../model/project";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'admin-clients',
@@ -11,10 +12,14 @@ import {Project} from "../../model/project";
 })
 export class AdminClientsComponent implements OnInit{
   private clients: Client[];
+  private clientsUi: Client[];
   private projects: Project[];
   private error: string;
 
-  constructor(private clientService: ClientService, private projectService: ProjectService) {
+  constructor(private clientService: ClientService,
+              private projectService: ProjectService,
+              private router: Router,
+              private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
@@ -25,6 +30,7 @@ export class AdminClientsComponent implements OnInit{
   getClients(){
     this.clientService.getClients().subscribe(clients => {
       this.clients = clients;
+      this.clientsUi = clients;
     }, error => {
       this.error = error;
     });
@@ -38,4 +44,13 @@ export class AdminClientsComponent implements OnInit{
     });
   }
 
+  search(clientId: string){
+    this.clientsUi = this.clients.filter(function (client) {
+      return client.name.toLowerCase().match(clientId.toLowerCase());
+    });
+  }
+
+  toDetail(clientId: number){
+    this.router.navigate([clientId], {relativeTo: this.route});
+  }
 }

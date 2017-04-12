@@ -1,5 +1,36 @@
-<div class="jumbotron" style="background-color: rgba(104, 157, 255, 0.32);">
+<!--<div class="jumbotron" style="background-color: rgba(104, 157, 255, 0.32);">
   <h1 style="text-align: center">לקוחות</h1>
 </div>
-<div>{{clients | json}}</div>
-<div>{{projects | json}}</div>
+<div class="col-md-3 pull-right">
+  <a data-toggle="modal" data-keyboard="true" data-target="#myModal" >
+    <div class="module hero">
+      <p><i class="glyphicon glyphicon-plus"></i></p>
+    </div>
+  </a>
+  <a *ngFor="let client of clients" [routerLink]="['/app/admin/clients', client.id]">
+    <div class="module hero">
+      <p>{{client.name}}</p>
+    </div>
+  </a>
+</div>-->
+<div class="container">
+  <div class="page-header">
+    <p style="text-align: center; font-size: 300%">לקוחות</p>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 col-md-4 jumbotron pull-right" style="background-color: rgba(104, 157, 255, 0.32)">
+      <div class="list-group" >
+        <div >
+          <p ><i class="module-plus glyphicon glyphicon-plus"></i></p>
+        </div>
+          <p><input type="text" style="text-align: center" class="form-control" #searchBox placeholder="חפש"
+                 (keyup)="search(searchBox.value)"></p>
+        <p class="module" *ngFor="let client of clientsUi" style="font-size: small"
+           (click)="toDetail(client.id)">{{client.name}}
+        </p>
+      </div>
+      <p *ngIf="error">{{error}}</p>
+    </div>
+    <router-outlet></router-outlet>
+  </div>
+</div>

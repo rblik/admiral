@@ -22,4 +22,13 @@ export class ClientService {
         return Observable.throw(s);
       });
   }
+
+  get(clientId: number): Observable<Client> {
+    return this.http.get(this.clientUrl + "/" + clientId, {headers: new Headers({'Authorization': this.auth.getToken()})
+  }).map(res => res.json())
+      .catch(e => {
+        let s = e.json().details[0];
+        return Observable.throw(s);
+      });
+  }
 }

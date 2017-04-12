@@ -6,6 +6,7 @@ import {MissingDaysComponent} from "./missing/missing-days.component";
 import {PartialDaysComponent} from "./partial/partial-days.component";
 import {PivotalComponent} from "./pivotal/pivotal.component";
 import {AdminClientsComponent} from "./clients/admin-clients.component";
+import {ClientDetailComponent} from "./client-detail/client-detail.component";
 
 const routes: Routes = [
   {
@@ -32,7 +33,13 @@ const routes: Routes = [
     path: 'clients',
     component: AdminClientsComponent,
     canActivate: [AdminAuthGuardService],
-    canActivateChild: [AdminAuthGuardService]
+    canActivateChild: [AdminAuthGuardService],
+    children: [
+      {
+        path: ':clientId',
+        component: ClientDetailComponent
+      }
+    ]
   }
 ];
 
