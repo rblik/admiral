@@ -15,13 +15,17 @@ import {EmployeeService} from "./service/employee.service";
 import {PartialDaysComponent} from "./partial/partial-days.component";
 import {PivotalComponent} from "./pivotal/pivotal.component";
 import {AgreementService} from "./service/agreement.service";
+import {AdminClientsComponent} from "./clients/admin-clients.component";
+import {ProjectService} from "./service/project.service";
+import {ClientService} from "./service/client.service";
 
 @NgModule({
   declarations: [
     ReportComponent,
     MissingDaysComponent,
     PartialDaysComponent,
-    PivotalComponent
+    PivotalComponent,
+    AdminClientsComponent
   ],
   imports: [
     AdminRoutingModule,
@@ -42,7 +46,9 @@ import {AgreementService} from "./service/agreement.service";
     DownloadService,
     ReportService,
     EmployeeService,
-    AgreementService
+    AgreementService,
+    ProjectService,
+    ClientService
   ]
 })
 export class AdminModule {

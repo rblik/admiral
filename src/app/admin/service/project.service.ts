@@ -1,20 +1,20 @@
 import {Injectable} from "@angular/core";
 import {Http, Headers} from "@angular/http";
 import {AuthService} from "../../service/auth.service";
-import {Agreement} from "../../model/agreement";
-import {Observable} from "rxjs";
 import {Url} from "../../url";
+import {Observable} from "rxjs";
+import {Project} from "../../model/project";
 
 @Injectable()
-export class AgreementService {
-  private agreementsUrl: string;
+export class ProjectService {
+  private projectsUrl: string;
 
   constructor(private auth: AuthService, private http: Http) {
-    this.agreementsUrl = Url.getUrl("/admin/agreements");
+    this.projectsUrl = Url.getUrl('/admin/projects');
   }
 
-  public getAgreements(): Observable<Agreement[]> {
-    return this.http.get(this.agreementsUrl, {
+  public getProjects(): Observable<Project[]> {
+    return this.http.get(this.projectsUrl, {
       headers: new Headers({'Authorization': this.auth.getToken()})
     }).map(res => res.json())
       .catch(e => {

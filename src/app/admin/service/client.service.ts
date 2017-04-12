@@ -1,20 +1,20 @@
 import {Injectable} from "@angular/core";
 import {Http, Headers} from "@angular/http";
 import {AuthService} from "../../service/auth.service";
-import {Agreement} from "../../model/agreement";
-import {Observable} from "rxjs";
 import {Url} from "../../url";
+import {Observable} from "rxjs";
+import {Client} from "../../model/client";
 
 @Injectable()
-export class AgreementService {
-  private agreementsUrl: string;
+export class ClientService {
+  private clientUrl: string;
 
   constructor(private auth: AuthService, private http: Http) {
-    this.agreementsUrl = Url.getUrl("/admin/agreements");
+    this.clientUrl = Url.getUrl('/admin/client');
   }
 
-  public getAgreements(): Observable<Agreement[]> {
-    return this.http.get(this.agreementsUrl, {
+  public getClients(): Observable<Client[]> {
+    return this.http.get(this.clientUrl, {
       headers: new Headers({'Authorization': this.auth.getToken()})
     }).map(res => res.json())
       .catch(e => {
