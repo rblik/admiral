@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Http, Headers} from "@angular/http";
+import {Headers, Http} from "@angular/http";
 import {AuthService} from "../../service/auth.service";
 import {Url} from "../../url";
 import {Observable} from "rxjs";
@@ -23,7 +23,7 @@ export class ClientService {
       });
   }
 
-  get(clientId: number): Observable<Client> {
+  public get(clientId: number): Observable<Client> {
     return this.http.get(this.clientUrl + "/" + clientId, {headers: new Headers({'Authorization': this.auth.getToken()})
   }).map(res => res.json())
       .catch(e => {

@@ -3,10 +3,10 @@
     <div class="navbar-header">
       <a class="navbar-brand" href="#">NAYA</a>
     </div>
-    <ul class="nav navbar-nav navbar-left"[ngSwitch]="profile">
+    <ul class="nav navbar-nav navbar-left" [ngSwitch]="profile">
       <template [ngSwitchCase]="null">
         <li>
-          <a routerLink="/app/login" routerLinkActive="active"><span class="glyphicon glyphicon-log-in"></span> סניסה</a>
+          <a routerLink="/app/login" routerLinkActive="active"><span class="glyphicon glyphicon-log-in"></span> כניסה</a>
         </li>
       </template>
       <template ngSwitchDefault>
