@@ -1,8 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {ClientService} from "../service/client.service";
-import {ProjectService} from "../service/project.service";
 import {Client} from "../../model/client";
-import {Project} from "../../model/project";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Validators, FormGroup, FormArray, FormBuilder, FormControl} from '@angular/forms';
 
