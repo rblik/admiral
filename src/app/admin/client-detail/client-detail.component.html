@@ -1,16 +1,19 @@
 <div *ngIf="client" class="col-sm-12 col-md-7 jumbotron pull-left" style="background-color: rgba(104, 157, 255, 0.32)">
   <div class="card">
-<div class="card-block">
-  <h4 class="card-title" style="font-weight: bold; text-align: center">{{client.name}}</h4>
-  <ul class="list-group">
-    <li class="list-group-item" *ngFor="let address of client.addresses">{{address.houseNumber+'&nbsp;'+address.street+'&nbsp;'+address.city}}<span class="pull-right"><strong>כתובת</strong></span></li>
-    <li class="list-group-item" ><span *ngFor="let phone of client.phones">{{phone}}&nbsp;&nbsp;</span><span class="pull-right"><strong>טל</strong></span></li>
-    <li class="list-group-item">Third item</li>
-  </ul>
-  <p class="card-text" style="font-size: small">
-
-  </p>
-</div>
+    <div class="card-block">
+      <h4 class="card-title" style="font-weight: bold; text-align: center">{{client.name}}</h4>
+      <ul class="list-group">
+        <li class="list-group-item" *ngFor="let address of client.addresses">{{(address.houseNumber>0? address.houseNumber:'')+'&nbsp;'+address.street+'&nbsp;'+address.city}}<span
+          class="pull-right"><strong>כתובת</strong></span></li>
+        <li class="list-group-item"><span *ngFor="let phone of client.phones">{{phone}}&nbsp;&nbsp;</span><span
+          class="pull-right"><strong>טל</strong></span></li>
+        <li class="list-group-item">
+          <span class="pull-right" style="text-align: right"><strong>פרויקטים</strong></span>
+          <div *ngFor="let project of client.projects">
+            {{project.name}}
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
-  <div>{{client | json}}</div>
 </div>
