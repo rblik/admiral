@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Headers, Http} from "@angular/http";
+import {Headers, Http, RequestOptions, URLSearchParams} from "@angular/http";
 import {AuthService} from "../../service/auth.service";
 import {Url} from "../../url";
 import {Observable} from "rxjs";
@@ -26,6 +26,19 @@ export class ClientService {
   public get(clientId: number): Observable<Client> {
     return this.http.get(this.clientUrl + "/" + clientId, {headers: new Headers({'Authorization': this.auth.getToken()})
   }).map(res => res.json())
+      .catch(e => {
+        let s = e.json().details[0];
+        return Observable.throw(s);
+      });
+  }
+
+  public save(client: Client): Observable<Client> {
+    console.log(client);
+    let headers = new Headers({'Content-Type': 'application/json'});
+    headers.append("Authorization", this.auth.getToken());
+    let options = new RequestOptions({headers: headers});
+    return this.http.post(this.clientUrl, JSON.stringify(client), options)
+      .map(res => res.json())
       .catch(e => {
         let s = e.json().details[0];
         return Observable.throw(s);

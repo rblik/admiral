@@ -27,7 +27,19 @@ p {
   cursor: pointer;
   color: white;
 }
+
 .module-plus:hover {
   cursor: pointer;
   color: white;
+}
+
+input {
+  margin-bottom: 5px;
+  text-align: right;
+}
+
+.modal-dialog .modal-content {
+  position: relative;
+  display: table;
+  overflow-y: auto;
 }
