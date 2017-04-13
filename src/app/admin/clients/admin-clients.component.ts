@@ -14,13 +14,11 @@ import {Validators, FormGroup, FormArray, FormBuilder, FormControl} from '@angul
 export class AdminClientsComponent implements OnInit {
   private clients: Client[];
   private clientsUi: Client[];
-  private projects: Project[];
   private clientForCreation: Client;
   private error: string;
   public myForm: FormGroup;
 
   constructor(private clientService: ClientService,
-              private projectService: ProjectService,
               private router: Router,
               private route: ActivatedRoute,
               private _fb: FormBuilder) {
@@ -30,7 +28,6 @@ export class AdminClientsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getClients();
-    this.getProjects();
     this.myForm = this._fb.group({
       name: ['', [Validators.required]],
       companyNumber: ['', [Validators.required]],
@@ -51,14 +48,6 @@ export class AdminClientsComponent implements OnInit {
     });
   }
 
-  getProjects() {
-    this.projectService.getProjects().subscribe(projects => {
-      this.projects = projects;
-    }, error => {
-      this.error = error;
-    });
-  }
-
   createNew(client: any) {
     let value = client.value;
     console.log(value);
@@ -69,6 +58,7 @@ export class AdminClientsComponent implements OnInit {
     document.getElementById("closeButton").click();
     this.clientService.save(this.clientForCreation).subscribe(client => {
       this.clientsUi.push(client);
+      this.myForm.reset();
     });
   }
 
