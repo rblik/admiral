@@ -23,7 +23,7 @@
 
 
 <!--modal form for client creation-->
-<div id="myModal" tabindex='-1' class="modal fade" role="dialog">
+<div id="myModal" tabindex='-1' class="modal fade" onclose="" role="dialog">
   <div class="modal-dialog">
 
     <!-- Modal content-->
@@ -33,13 +33,16 @@
         <h4 class="modal-title">לקוח חדש</h4>
       </div>
       <div class="modal-body">
+        <div *ngIf="errorClient" class="alert alert-danger pull-right">
+          {{errorClient}}&nbsp;<strong>שגיאה!</strong>
+        </div>
         <form [formGroup]="myForm" novalidate (ngSubmit)="createNew(myForm)">
           <!-- we will place our fields here -->
 
           <div class="row col-md-12">
             <div class="form-group col-md-6 pull-left">
               <!--display error message if name is not valid-->
-              <input type="text" placeholder="מס. חברה" class="form-control" formControlName="companyNumber">
+              <input type="text" placeholder="מס. חברה *" class="form-control" formControlName="companyNumber">
             </div>
             <div class="form-group col-md-6 pull-right">
               <!--display error message if name is not valid-->

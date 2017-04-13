@@ -13,8 +13,9 @@ export class AdminClientsComponent implements OnInit {
   private clients: Client[];
   private clientsUi: Client[];
   private clientForCreation: Client;
-  private error: string;
   public myForm: FormGroup;
+  private errorClient: string;
+  private errorClients: string;
 
   constructor(private clientService: ClientService,
               private router: Router,
@@ -36,13 +37,12 @@ export class AdminClientsComponent implements OnInit {
     });
   }
 
-
   getClients() {
     this.clientService.getClients().subscribe(clients => {
       this.clients = clients;
       this.clientsUi = clients;
     }, error => {
-      this.error = error;
+      this.errorClients = error;
     });
   }
 
@@ -53,11 +53,12 @@ export class AdminClientsComponent implements OnInit {
     this.clientForCreation.companyNumber = value.companyNumber;
     this.clientForCreation.addresses = value.addresses;
     this.clientForCreation.phones = value.phones;
-    document.getElementById("closeButton").click();
     this.clientService.save(this.clientForCreation).subscribe(client => {
+      document.getElementById("closeButton").click();
       this.clientsUi.push(client);
+      this.errorClient = '';
       this.myForm.reset();
-    });
+    }, error => this.errorClient = error);
   }
 
   search(clientId: string) {

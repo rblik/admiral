@@ -24,8 +24,9 @@ export class ClientService {
   }
 
   public get(clientId: number): Observable<Client> {
-    return this.http.get(this.clientUrl + "/" + clientId, {headers: new Headers({'Authorization': this.auth.getToken()})
-  }).map(res => res.json())
+    return this.http.get(this.clientUrl + "/" + clientId, {
+      headers: new Headers({'Authorization': this.auth.getToken()})
+    }).map(res => res.json())
       .catch(e => {
         let s = e.json().details[0];
         return Observable.throw(s);
@@ -40,8 +41,9 @@ export class ClientService {
     return this.http.post(this.clientUrl, JSON.stringify(client), options)
       .map(res => res.json())
       .catch(e => {
-        let s = e.json().details[0];
-        return Observable.throw(s);
+        if (e.status == 409) {
+          return Observable.throw('שם הלקוח כזה כבר קיים');
+        }
       });
   }
 }
