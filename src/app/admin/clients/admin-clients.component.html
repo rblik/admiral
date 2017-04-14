@@ -34,7 +34,7 @@
       </div>
       <div class="modal-body">
         <div *ngIf="errorClient" class="alert alert-danger pull-right">
-          {{errorClient}}&nbsp;<strong>שגיאה</strong>
+          {{errorClient}}
         </div>
         <form [formGroup]="myForm" novalidate (ngSubmit)="createNew(myForm)">
           <!-- we will place our fields here -->
