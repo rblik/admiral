@@ -3,6 +3,7 @@ import {ClientService} from "../service/client.service";
 import {Client} from "../../model/client";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Validators, FormGroup, FormArray, FormBuilder, FormControl} from '@angular/forms';
+import {SessionStorageService} from "ng2-webstorage";
 
 @Component({
   selector: 'admin-clients',
@@ -19,6 +20,7 @@ export class AdminClientsComponent implements OnInit {
 
   constructor(private clientService: ClientService,
               private router: Router,
+              private localSt: SessionStorageService,
               private route: ActivatedRoute,
               private _fb: FormBuilder) {
     this.clientForCreation = new Client();
@@ -27,6 +29,7 @@ export class AdminClientsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getClients();
+    this.subscribeOnEditedClient();
     this.myForm = this._fb.group({
       name: ['', [Validators.required]],
       companyNumber: ['', [Validators.required]],
@@ -34,6 +37,18 @@ export class AdminClientsComponent implements OnInit {
       addresses: this._fb.array([
         this.initAddress(),
       ])
+    });
+  }
+
+  private subscribeOnEditedClient() {
+    this.localSt.observe('editedClient').subscribe(edited => {
+      let editedClient = JSON.parse(edited);
+      this.clientsUi.forEach(client => {
+        if (client.id.toString() == editedClient.id.toString()) {
+          client.name = editedClient.name;
+          return;
+        }
+      });
     });
   }
 

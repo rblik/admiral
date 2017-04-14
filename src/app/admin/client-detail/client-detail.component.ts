@@ -6,6 +6,7 @@ import {Client} from "../../model/client";
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Address} from "../../model/address";
 import {Project} from "../../model/project";
+import {SessionStorageService} from "ng2-webstorage";
 
 @Component({
   selector: 'client-detail',
@@ -23,7 +24,7 @@ export class ClientDetailComponent implements OnInit {
   private labelForProjectPopup: string;
 
 
-  constructor(private clientService: ClientService, private _fb: FormBuilder, private projectService: ProjectService, private route: ActivatedRoute) {
+  constructor(private clientService: ClientService, private localSt: SessionStorageService, private _fb: FormBuilder, private projectService: ProjectService, private route: ActivatedRoute) {
     this.formProject = new Project();
   }
 
@@ -43,7 +44,8 @@ export class ClientDetailComponent implements OnInit {
     this.client.companyNumber = value.companyNumber;
     this.client.addresses = value.addresses;
     this.client.phones = value.phones;
-    this.clientService.save(this.client).subscribe(client => {
+    this.clientService.save(this.client).subscribe(updated => {
+      this.localSt.store('editedClient', JSON.stringify({id: updated.id, name: updated.name}));
       document.getElementById("closeButton").click();
       this.errorClient = '';
     }, error => this.errorClient = error);
