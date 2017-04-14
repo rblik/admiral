@@ -4,8 +4,8 @@
       <h4 class="card-title" style="font-weight: bold; text-align: center">{{client.name}}</h4>
       <ul class="list-group">
         <li class="list-group-item">
-          <p><i data-toggle="modal" data-keyboard="true" data-target="#myModalEdit"
-                class="module-plus glyphicon glyphicon-plus"></i></p></li>
+          <p style="font-size: small" class="btn btn-xs btn-warning" data-toggle="modal" data-keyboard="true" data-target="#myModalEdit"><i
+                class="fa fa-pencil-square-o"></i>&nbsp;ערוך</p></li>
         <li class="list-group-item" *ngFor="let address of client.addresses">{{(address.houseNumber>0? address.houseNumber:'')+'&nbsp;'+address.street+'&nbsp;'+address.city}}<span
           class="pull-right"><strong>כתובת</strong></span></li>
         <li class="list-group-item"><span *ngFor="let phone of client.phones">{{phone}}&nbsp;&nbsp;</span><span
