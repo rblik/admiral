@@ -7,6 +7,8 @@ import {PartialDaysComponent} from "./partial/partial-days.component";
 import {PivotalComponent} from "./pivotal/pivotal.component";
 import {AdminClientsComponent} from "./clients/admin-clients.component";
 import {ClientDetailComponent} from "./client-detail/client-detail.component";
+import {AdminEmployeesComponent} from "./employees/admin-employees.component";
+import {EmployeeDetailComponent} from "./employee-detail/employee-detail.component";
 
 const routes: Routes = [
   {
@@ -38,6 +40,18 @@ const routes: Routes = [
       {
         path: ':clientId',
         component: ClientDetailComponent
+      }
+    ]
+  },
+  {
+    path: 'employees',
+    component: AdminEmployeesComponent,
+    canActivate: [AdminAuthGuardService],
+    canActivateChild: [AdminAuthGuardService],
+    children: [
+      {
+        path: ':employeeId',
+        component: EmployeeDetailComponent
       }
     ]
   }

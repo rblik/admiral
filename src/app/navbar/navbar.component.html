@@ -24,7 +24,7 @@
         <a routerLink="#" routerLinkActive="active" *ngIf="profile.roles.indexOf('ROLE_ADMIN') != -1">הוצאות</a>
       </li>
       <li *ngIf="profile != null">
-        <a routerLink="#" routerLinkActive="active" *ngIf="profile.roles.indexOf('ROLE_ADMIN') != -1">תכנון</a>
+        <a routerLink="/app/admin/employees" routerLinkActive="active" *ngIf="profile.roles.indexOf('ROLE_ADMIN') != -1">עובדים</a>
       </li>
       <li *ngIf="profile != null">
         <a routerLink="/app/admin/clients" routerLinkActive="active" *ngIf="profile.roles.indexOf('ROLE_ADMIN') != -1">לקוחות</a>

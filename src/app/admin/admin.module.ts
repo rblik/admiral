@@ -19,6 +19,8 @@ import {AdminClientsComponent} from "./clients/admin-clients.component";
 import {ProjectService} from "./service/project.service";
 import {ClientService} from "./service/client.service";
 import {ClientDetailComponent} from "./client-detail/client-detail.component";
+import {AdminEmployeesComponent} from "./employees/admin-employees.component";
+import {EmployeeDetailComponent} from "./employee-detail/employee-detail.component";
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import {ClientDetailComponent} from "./client-detail/client-detail.component";
     PartialDaysComponent,
     PivotalComponent,
     AdminClientsComponent,
-    ClientDetailComponent
+    ClientDetailComponent,
+    AdminEmployeesComponent,
+    EmployeeDetailComponent
   ],
   imports: [
     AdminRoutingModule,
