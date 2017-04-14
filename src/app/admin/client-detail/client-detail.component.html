@@ -3,6 +3,9 @@
     <div class="card-block">
       <h4 class="card-title" style="font-weight: bold; text-align: center">{{client.name}}</h4>
       <ul class="list-group">
+        <li class="list-group-item">
+          <p><i data-toggle="modal" data-keyboard="true" data-target="#myModalEdit"
+                class="module-plus glyphicon glyphicon-plus"></i></p></li>
         <li class="list-group-item" *ngFor="let address of client.addresses">{{(address.houseNumber>0? address.houseNumber:'')+'&nbsp;'+address.street+'&nbsp;'+address.city}}<span
           class="pull-right"><strong>כתובת</strong></span></li>
         <li class="list-group-item"><span *ngFor="let phone of client.phones">{{phone}}&nbsp;&nbsp;</span><span
@@ -14,6 +17,110 @@
           </div>
         </li>
       </ul>
+    </div>
+  </div>
+</div>
+
+<div id="myModalEdit" tabindex='-1' class="modal fade" onclose="" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header" style="text-align: center">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">לקוח חדש</h4>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="errorClient" class="alert alert-danger pull-right">
+          {{errorClient}}&nbsp;<strong>שגיאה!</strong>
+        </div>
+        <form [formGroup]="myFormEdit" novalidate (ngSubmit)="updateClient(myFormEdit)">
+          <!-- we will place our fields here -->
+
+          <div class="row col-md-12">
+            <div class="form-group col-md-6 pull-left">
+              <!--display error message if name is not valid-->
+              <input type="text" placeholder="מס. חברה *" class="form-control" formControlName="companyNumber">
+            </div>
+            <div class="form-group col-md-6 pull-right">
+              <!--display error message if name is not valid-->
+              <input type="text" placeholder="שם *" class="form-control" formControlName="name">
+            </div>
+          </div>
+
+
+          <div formArrayName="phones">
+            <div class="row col-md-12">
+              <div class="col-md-6 pull-left">
+                <a (click)="addPhone()" style="cursor: default">הוסיף טלפון</a>
+              </div>
+            </div>
+            <div *ngFor="let phone of myFormEdit.controls.phones.controls; let i=index">
+              <!-- address header, show remove button when more than one address available -->
+              <div class="row pull-right col-md-12">
+                <a *ngIf="myFormEdit.controls.phones.controls.length > 1" (click)="removePhones(i)">מחק טלפון</a>
+                <span class="col-md-6 pull-right"><strong>טלפון {{i + 1}}</strong></span>
+              </div>
+              <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
+              <!--area-->
+              <div class="row col-md-12">
+                <div class="pull-right col-md-6">
+                  <input type="text" class="form-control" placeholder="טל *" formControlName="{{i}}">
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div formArrayName="addresses">
+            <div class="row col-md-12">
+              <div class="col-md-6 pull-left">
+                <a (click)="addAddress()" style="cursor: default">הוסיף כתובת</a>
+              </div>
+            </div>
+            <div *ngFor="let address of myFormEdit.controls.addresses.controls; let i=index">
+              <!-- address header, show remove button when more than one address available -->
+              <div class="row pull-right col-md-12">
+                <a *ngIf="myFormEdit.controls.addresses.controls.length > 1" (click)="removeAddress(i)">מחק כתובת</a>
+                <span class="col-md-6 pull-right"><strong>כתובת {{i + 1}}</strong></span>
+              </div>
+
+              <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
+              <div [formGroupName]="i">
+                <!--area-->
+                <div class="row col-md-12">
+                  <div class="pull-right col-md-6">
+                    <input type="text" class="form-control" placeholder="אזור *" formControlName="area">
+                  </div>
+                  <!--city-->
+                  <div class="col-md-6 pull-left">
+                    <input type="text" class="form-control" placeholder="עיר *" formControlName="city">
+                  </div>
+                </div>
+                <div class="row col-md-12">
+                  <!--street-->
+                  <div class="pull-right col-md-6">
+                    <input type="text" class="form-control" placeholder="רחוב *" formControlName="street">
+                  </div>
+                  <!--houseNumber-->
+                  <div class="pull-left col-md-6">
+                    <input type="text" class="form-control" placeholder="מס. בית" formControlName="houseNumber">
+                    <!--display error message if street is not valid-->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer pull-left col-md-12">
+
+            <button id="closeButton" type="button" class="btn btn-default" data-dismiss="modal">סגור</button>
+            <button type="submit" [disabled]="!myFormEdit.valid" class="btn btn-primary">שמור</button>
+          </div>
+        </form>
+        <div *ngIf="warning" class="alert alert-danger">
+          <strong>Error!</strong> {{warning}}
+        </div>
+      </div>
     </div>
   </div>
 </div>
