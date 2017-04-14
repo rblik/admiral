@@ -54,7 +54,7 @@ export class AdminClientsComponent implements OnInit {
     this.clientForCreation.addresses = value.addresses;
     this.clientForCreation.phones = value.phones;
     this.clientService.save(this.clientForCreation).subscribe(client => {
-      document.getElementById("closeButton").click();
+      document.getElementById("closeButton1").click();
       this.clientsUi.push(client);
       this.errorClient = '';
       this.myForm.reset();
