@@ -10,16 +10,38 @@
           class="pull-right"><strong>כתובת</strong></span></li>
         <li class="list-group-item"><span *ngFor="let phone of client.phones">{{phone}}&nbsp;&nbsp;</span><span
           class="pull-right"><strong>טל</strong></span></li>
-        <li class="list-group-item">
-          <span class="pull-right" style="text-align: right"><strong>פרויקטים</strong></span>
-          <div *ngFor="let project of client.projects">
-            {{project.name}}
-          </div>
-        </li>
       </ul>
+      <h4 style="text-align: center">פרויקטים</h4>
+      <table class="table table-responsive table-condensed" style="margin: 0 auto;width: 50%">
+        <thead>
+        <tr>
+          <td colspan="2"><a style="cursor: pointer" (click)="popupCreate(project)"><i class="module-plus glyphicon glyphicon-plus" aria-hidden="true"></i></a></td>
+        </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let project of client.projects">
+            <td>{{project.name}}</td>
+            <td><a style="cursor: pointer" (click)="popupEdit(project)"><i class="fa fa-pencil" aria-hidden="true"></i></a> </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
+
+<p-dialog header="{{labelForProjectPopup}}" modal="modal" width="300" responsive="true" [(visible)]="displayFormProjectDialog">
+    <input type="text" id="projName" pInputText [(ngModel)]="formProject.name"/>
+  <label for="projName">&nbsp;שם פרויקט
+  </label>
+  <p-footer>
+    <div *ngIf="errorClient" class="alert alert-danger pull-right">
+      {{errorClient}}</div>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix pull-left">
+      <button type="button" pButton icon="fa-check" (click)="updateOrCreateProject(formProject)" label="כן"></button>
+      <button type="button" class="ui-button-danger" pButton icon="fa-close" (click)="displayFormProjectDialog=false" label="לא"></button>
+    </div>
+  </p-footer>
+</p-dialog>
 
 <div id="myModalEdit" tabindex='-1' class="modal fade" onclose="" role="dialog">
   <div class="modal-dialog">
@@ -124,3 +146,4 @@
     </div>
   </div>
 </div>
+

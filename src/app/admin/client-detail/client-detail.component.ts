@@ -5,6 +5,7 @@ import {ActivatedRoute, Params} from "@angular/router";
 import {Client} from "../../model/client";
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Address} from "../../model/address";
+import {Project} from "../../model/project";
 
 @Component({
   selector: 'client-detail',
@@ -16,19 +17,58 @@ export class ClientDetailComponent implements OnInit {
   private client: Client;
   public myFormEdit: FormGroup;
   private errorClient: string;
+  private errorProject: string;
+  private formProject: Project;
+  public displayFormProjectDialog: boolean;
+  private labelForProjectPopup: string;
 
 
   constructor(private clientService: ClientService, private _fb: FormBuilder, private projectService: ProjectService, private route: ActivatedRoute) {
+    this.formProject = new Project();
   }
 
   ngOnInit(): void {
     this.initClient();
     this.route.params.switchMap((params: Params) =>
-      this.clientService.get(params['clientId'])).
-    subscribe(client => {
+      this.clientService.get(params['clientId'])).subscribe(client => {
       this.client = client;
       this.populateClient(client);
     });
+  }
+
+  updateClient(client: any) {
+    let value = client.value;
+    console.log(value);
+    this.client.name = value.name;
+    this.client.companyNumber = value.companyNumber;
+    this.client.addresses = value.addresses;
+    this.client.phones = value.phones;
+    this.clientService.save(this.client).subscribe(client => {
+      document.getElementById("closeButton").click();
+      this.errorClient = '';
+    }, error => this.errorClient = error);
+  }
+
+  popupEdit(project: Project) {
+    this.labelForProjectPopup = 'עריכת לקוח';
+    this.formProject = project;
+    this.displayFormProjectDialog = true;
+  }
+
+  popupCreate(project: Project) {
+    this.labelForProjectPopup = 'יצירת לקוח';
+    this.formProject = new Project();
+    this.displayFormProjectDialog = true;
+  }
+
+  updateOrCreateProject(project: Project) {
+    this.projectService.save(this.client.id, project).subscribe(updated => {
+      this.formProject = new Project();
+      this.displayFormProjectDialog = false;
+      if (project.id == null) {
+        this.client.projects.push(updated);
+      }
+    }, error => this.errorProject = error);
   }
 
   private populateClient(client) {
@@ -65,18 +105,6 @@ export class ClientDetailComponent implements OnInit {
     });
   }
 
-  updateClient(client: any) {
-    let value = client.value;
-    console.log(value);
-    this.client.name = value.name;
-    this.client.companyNumber = value.companyNumber;
-    this.client.addresses = value.addresses;
-    this.client.phones = value.phones;
-    this.clientService.save(this.client).subscribe(client => {
-      document.getElementById("closeButton").click();
-      this.errorClient = '';
-    }, error => this.errorClient = error);
-  }
 
   // client creation
   initAddress() {

@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Http, Headers} from "@angular/http";
+import {Http, Headers, URLSearchParams, RequestOptions} from "@angular/http";
 import {AuthService} from "../../service/auth.service";
 import {Url} from "../../url";
 import {Observable} from "rxjs";
@@ -21,5 +21,16 @@ export class ProjectService {
         let s = e.json().details[0];
         return Observable.throw(s);
       });
+  }
+
+  save(clientId: number, project: Project) {
+    let headers = new Headers({'Content-Type': 'application/json'});
+    headers.append("Authorization", this.auth.getToken());
+    let params = new URLSearchParams();
+    params.append('clientId', clientId.toString());
+    let options = new RequestOptions({headers: headers, search: params});
+    return this.http.post(this.projectsUrl, JSON.stringify(project), options)
+      .map(res => res.json())
+      .catch(e => Observable.throw(e.json().details[0]));
   }
 }
