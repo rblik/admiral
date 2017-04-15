@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Employee} from "../../model/employee";
 import {SelectItem} from "primeng/primeng";
@@ -11,7 +11,7 @@ import {SessionStorageService} from "ng2-webstorage";
   templateUrl: './employee-form.component.html',
   styleUrls: ['./employee-form.component.css']
 })
-export class EmployeeFormComponent implements OnInit{
+export class EmployeeFormComponent implements OnInit, OnChanges{
 
   @Input() private employeeForCreation: Employee;
   public employeeCreationForm: FormGroup;
@@ -27,10 +27,23 @@ export class EmployeeFormComponent implements OnInit{
               private localSt: SessionStorageService) {
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+      // only run when property "data" changed
+      if (changes['employeeForCreation']) {
+        this.employeeForCreation = changes['employeeForCreation'].currentValue;
+        console.log(this.employeeForCreation);
+        this.fillTheForm();
+    }
+  }
+
   ngOnInit(): void {
     this.departmentsUi.push({label: "בחר צוות", value: null});
     this.getDepartments();
-    if (this.employeeForCreation == null) {
+    this.fillTheForm();
+  }
+
+  private fillTheForm() {
+    if (this.employeeForCreation == null || this.employeeForCreation.name==null) {
       this.fillTheCreationForm();
     } else {
       this.fillTheEditingForm();
@@ -50,7 +63,6 @@ export class EmployeeFormComponent implements OnInit{
       companyPhone: [''],
       isAdmin: [false],
       chosenDepartment: [null, [Validators.required]],
-      // department: [this.employeeForCreation.department, [Validators.required]]
     });
   }
 
@@ -93,7 +105,7 @@ export class EmployeeFormComponent implements OnInit{
     this.employeeForCreation.password = value.password;
     this.employeeService.save(value.chosenDepartment.id, this.employeeForCreation).subscribe(employee => {
       document.getElementById("closeNewEmployeeFormButton").click();
-      this.localSt.store('formEmployee', JSON.stringify({isNew: true, employee: employee}));
+      this.localSt.store('formEmployee', JSON.stringify({isNew: false, employee: employee}));
       this.errorEmployee = '';
       this.employeeCreationForm.reset();
     }, error => this.errorEmployee = error);

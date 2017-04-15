@@ -4,7 +4,7 @@
       <h4 class="card-title" style="font-weight: bold; text-align: center">{{employee.surname+'&nbsp;'+employee.name}}</h4>
       <ul class="list-group">
         <li class="list-group-item">
-          <p style="font-size: small" class="btn btn-xs btn-warning" data-toggle="modal" data-keyboard="true" data-target="#myModalEdit"><i
+          <p style="font-size: small" class="btn btn-xs btn-warning" data-toggle="modal" data-keyboard="true" data-target="#employeeEditionForm"><i
             class="fa fa-pencil-square-o"></i>&nbsp;ערוך</p></li>
         <li *ngIf="employee.department" class="list-group-item">&nbsp;{{employee.department.name}}
           <span class="pull-right"><strong>צוות</strong></span></li>
@@ -25,3 +25,4 @@
     </div>
   </div>
 </div>
+<employee-form *ngIf="employee" [employeeForCreation]="employee" id="employeeEditionForm" tabindex='-1' class="modal fade" onclose="" role="dialog"></employee-form>
