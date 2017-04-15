@@ -41,7 +41,8 @@ export class ClientService {
       .map(res => res.json())
       .catch(e => {
         if (e.status == 409) {
-          return Observable.throw('שם הלקוח כזה כבר קיים');
+          let s = e.json().details[0].split('Detail: Key ')[1];
+          return Observable.throw(s);
         }
       });
   }
