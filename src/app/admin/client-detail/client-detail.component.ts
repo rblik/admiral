@@ -57,7 +57,7 @@ export class ClientDetailComponent implements OnInit {
     this.displayFormProjectDialog = true;
   }
 
-  popupCreate(project: Project) {
+  popupCreate() {
     this.labelForProjectPopup = 'יצירת לקוח';
     this.formProject = new Project();
     this.displayFormProjectDialog = true;
