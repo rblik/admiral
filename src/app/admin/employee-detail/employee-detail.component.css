@@ -1,0 +1,17 @@
+li {
+  background-color: inherit
+}
+.modal-dialog .modal-content {
+  position: relative;
+  display: table;
+  overflow-y: auto;
+}
+
+input {
+  margin-bottom: 5px;
+  text-align: right;
+}
+
+tr {
+  text-align: center;
+}

@@ -1,3 +1,27 @@
-<div>
-  {{employee.name}}
+<div *ngIf="employee" class="col-sm-12 col-md-7 jumbotron pull-left" style="background-color: rgba(104, 157, 255, 0.32)">
+  <div class="card">
+    <div class="card-block">
+      <h4 class="card-title" style="font-weight: bold; text-align: center">{{employee.surname+'&nbsp;'+employee.name}}</h4>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <p style="font-size: small" class="btn btn-xs btn-warning" data-toggle="modal" data-keyboard="true" data-target="#myModalEdit"><i
+            class="fa fa-pencil-square-o"></i>&nbsp;ערוך</p></li>
+        <li *ngIf="employee.department" class="list-group-item">&nbsp;{{employee.department.name}}
+          <span class="pull-right"><strong>צוות</strong></span></li>
+        <li class="list-group-item">&nbsp;{{employee.birthday}}
+          <span class="pull-right"><strong>יום הולדת</strong></span></li>
+        <li class="list-group-item">&nbsp;{{employee.email}}
+          <span class="pull-right"><strong>ד''א</strong></span></li>
+        <li class="list-group-item">&nbsp;{{employee.privatePhone}}
+          <span class="pull-right"><strong>טל. פרטי</strong></span></li>
+        <li class="list-group-item">&nbsp;{{employee.companyPhone}}
+          <span class="pull-right"><strong>טל. עבודה</strong></span></li>
+        <li class="list-group-item">&nbsp;{{employee.passportId}}
+          <span class="pull-right"><strong>ת''ז</strong></span></li>
+        <li *ngIf="employee.roles" class="list-group-item">{{(employee.roles.indexOf('ROLE_ADMIN')!=-1)?'&nbsp;Admin':'&nbsp;User'}}
+          <span class="pull-right"><strong>סוג משתמש</strong></span></li>
+      </ul>
+
+    </div>
+  </div>
 </div>

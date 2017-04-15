@@ -21,6 +21,7 @@ export class EmployeeDetailComponent implements OnInit{
     this.route.params.switchMap((params: Params) =>
       this.employeeService.getEmployee(params['employeeId'])).subscribe(employee => {
       this.employee = employee;
+      console.log(employee);
       this.populateEmployee(employee);
     });
   }
