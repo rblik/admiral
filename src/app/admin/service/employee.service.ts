@@ -20,6 +20,17 @@ export class EmployeeService {
     }).map(res => res.json())
       .catch(e => {
         let s = e.json().details[0];
-        return Observable.throw(s)});
+        return Observable.throw(s)
+      });
+  }
+
+  public getEmployee(employeeId: number): Observable<Employee> {
+    return this.http.get(this.employeesUrl + '/' + employeeId, {
+      headers: new Headers({'Authorization': this.auth.getToken()})
+    }).map(res => res.json())
+      .catch(e => {
+        let s = e.json().details[0];
+        return Observable.throw(s)
+      });
   }
 }

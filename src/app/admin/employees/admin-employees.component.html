@@ -1,1 +1,24 @@
-<div>EMPLOYEEEESSSS</div>
+<div class="container">
+  <div class="page-header">
+    <p style="text-align: center; font-size: 300%">עובדים</p>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 col-md-4 jumbotron pull-right" style="background-color: rgba(104, 157, 255, 0.32)">
+      <div class="list-group">
+        <div>
+          <p><i data-toggle="modal" data-keyboard="true" data-target="#employeeCreationForm"
+                class="module-plus glyphicon glyphicon-plus"></i></p>
+        </div>
+        <p><input type="text" style="text-align: center" class="form-control" #searchBox placeholder="חפש"
+                  (keyup)="search(searchBox.value)"></p>
+        <p class="module" *ngFor="let employee of employeesUi" style="font-size: small"
+           (click)="toDetail(employee.id)">{{employee.surname+'&nbsp;'+employee.name}}
+        </p>
+      </div>
+      <div *ngIf="errorEmployees" class="alert alert-danger pull-right">
+        {{errorEmployees}}
+      </div>
+    </div>
+    <router-outlet></router-outlet>
+  </div>
+</div>

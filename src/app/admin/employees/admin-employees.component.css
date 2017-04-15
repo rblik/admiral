@@ -1,0 +1,34 @@
+p {
+  text-align: center;
+  position: relative;
+  font-size: small;
+}
+
+.module {
+  padding: 0;
+  text-align: center;
+  color: black;
+  max-height: 25px;
+  background-color: white;
+  border-radius: 3px;
+}
+
+.module-plus {
+  padding: 0;
+  text-align: center;
+  color: black;
+  max-height: 25px;
+  background-color: inherit;
+  border-radius: 3px;
+}
+
+.module:hover {
+  background-color: rgba(104, 157, 255, 0.32);
+  cursor: pointer;
+  color: white;
+}
+
+.module-plus:hover {
+  cursor: pointer;
+  color: white;
+}

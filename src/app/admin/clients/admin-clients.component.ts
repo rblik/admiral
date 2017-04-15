@@ -76,9 +76,9 @@ export class AdminClientsComponent implements OnInit {
     }, error => this.errorClient = error);
   }
 
-  search(clientId: string) {
+  search(value: string) {
     this.clientsUi = this.clients.filter(function (client) {
-      return client.name.toLowerCase().match(clientId.toLowerCase());
+      return client.name.toLowerCase().match(value.toLowerCase());
     });
   }
 

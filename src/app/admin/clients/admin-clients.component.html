@@ -15,7 +15,9 @@
            (click)="toDetail(client.id)">{{client.name}}
         </p>
       </div>
-      <p *ngIf="error">{{error}}</p>
+      <div *ngIf="errorClients" class="alert alert-danger pull-right">
+        {{errorClients}}
+      </div>
     </div>
     <router-outlet></router-outlet>
   </div>
