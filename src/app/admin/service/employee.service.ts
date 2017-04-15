@@ -43,7 +43,8 @@ export class EmployeeService {
     return this.http.post(this.employeesUrl, JSON.stringify(employee), options)
       .map(res => res.json())
       .catch(e => {
-          return Observable.throw(e.json().details[0]);
+        let s = e.json().details[0].split('Detail: Key ')[1];
+        return Observable.throw(s);
       });
   }
 }

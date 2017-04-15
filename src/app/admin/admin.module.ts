@@ -23,6 +23,7 @@ import {ClientDetailComponent} from "./client-detail/client-detail.component";
 import {AdminEmployeesComponent} from "./employees/admin-employees.component";
 import {EmployeeDetailComponent} from "./employee-detail/employee-detail.component";
 import {DepartmentService} from "./service/department.service";
+import {EmployeeFormComponent} from "./employee-form.component/employee-form.component";
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import {DepartmentService} from "./service/department.service";
     AdminClientsComponent,
     ClientDetailComponent,
     AdminEmployeesComponent,
-    EmployeeDetailComponent
+    EmployeeDetailComponent,
+    EmployeeFormComponent
   ],
   imports: [
     AdminRoutingModule,
