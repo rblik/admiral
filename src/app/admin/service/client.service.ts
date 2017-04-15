@@ -34,7 +34,6 @@ export class ClientService {
   }
 
   public save(client: Client): Observable<Client> {
-    console.log(client);
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.auth.getToken());
     let options = new RequestOptions({headers: headers});

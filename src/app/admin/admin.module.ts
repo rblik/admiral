@@ -21,6 +21,7 @@ import {ClientService} from "./service/client.service";
 import {ClientDetailComponent} from "./client-detail/client-detail.component";
 import {AdminEmployeesComponent} from "./employees/admin-employees.component";
 import {EmployeeDetailComponent} from "./employee-detail/employee-detail.component";
+import {DepartmentService} from "./service/department.service";
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import {EmployeeDetailComponent} from "./employee-detail/employee-detail.compone
     EmployeeService,
     AgreementService,
     ProjectService,
-    ClientService
+    ClientService,
+    DepartmentService
   ]
 })
 export class AdminModule {
