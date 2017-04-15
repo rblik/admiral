@@ -4,6 +4,9 @@ import {Employee} from "../../model/employee";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SessionStorageService} from "ng2-webstorage";
 import {EmployeeService} from "../service/employee.service";
+import {SelectItem} from "primeng/primeng";
+import {DepartmentService} from "../service/department.service";
+import {TimeService} from "../../service/time.service";
 
 @Component({
   selector: 'admin-employees',
@@ -18,22 +21,58 @@ export class AdminEmployeesComponent implements OnInit{
   public employeeCreationForm: FormGroup;
   private errorEmployee: string;
   private errorEmployees: string;
+  private isAdmin: boolean;
+  private dateOfBirthday: Date;
+  private departmentsUi: SelectItem[] = [];
 
   constructor(private employeeService: EmployeeService,
               private router: Router,
               private localSt: SessionStorageService,
+              private departmentService: DepartmentService,
+              private timeService: TimeService,
               private route: ActivatedRoute,
               private _fb: FormBuilder) {
+    this.employeeForCreation = new Employee();
   }
 
   ngOnInit(): void {
+    this.departmentsUi.push({label: "בחר צוות", value: null});
     this.getEmployees();
+    this.getDepartments();
     this.subscribeOnEditedEmployee();
     this.employeeCreationForm = this._fb.group({
       name: ['', [Validators.required]],
-      companyNumber: ['', [Validators.required]],
-      phones: this._fb.array([''])
+      surname: ['', [Validators.required]],
+      email: ['', Validators.compose([Validators.required])],
+      password: ['', [Validators.required]],
+      birthday: [this.dateOfBirthday],
+      passportId: ['', [Validators.required]],
+      privatePhone: [''],
+      companyPhone: [''],
+      isAdmin: [false],
+      chosenDepartment: [null, [Validators.required]],
+      // department: [this.employeeForCreation.department, [Validators.required]]
     });
+  }
+
+  createNew(employee: any) {
+    let value = employee.value;
+    console.log(value);
+    this.employeeForCreation.name = value.name;
+    this.employeeForCreation.surname = value.surname;
+    this.employeeForCreation.email = value.email;
+    this.employeeForCreation.birthday = this.timeService.getDateString(value.birthday);
+    this.employeeForCreation.passportId = value.passportId;
+    this.employeeForCreation.privatePhone = value.privatePhone;
+    this.employeeForCreation.companyPhone = value.companyPhone;
+    this.employeeForCreation.roles = this.isAdmin ? ['ROLE_USER', 'ROLE_ADMIN'] : ['ROLE_USER'];
+    this.employeeForCreation.password = value.password;
+    this.employeeService.save(value.chosenDepartment.id, this.employeeForCreation).subscribe(employee => {
+      document.getElementById("closeNewEmployeeFormButton").click();
+      this.employeesUi.push(employee);
+      this.errorEmployee = '';
+      this.employeeCreationForm.reset();
+    }, error => this.errorEmployee = error);
   }
 
   private getEmployees() {
@@ -43,6 +82,14 @@ export class AdminEmployeesComponent implements OnInit{
     }, error => {
       this.errorEmployees = error;
     });
+  }
+
+  private getDepartments() {
+    this.departmentService.getAll().subscribe(departments => {
+      departments.forEach(department => {
+        this.departmentsUi.push({label: department.name, value: department})
+      });
+    })
   }
 
   search(value: string) {

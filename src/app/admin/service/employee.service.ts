@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {AuthService} from "../../service/auth.service";
 import {Observable} from "rxjs";
 import {Employee} from "../../model/employee";
-import {Http, URLSearchParams, Headers} from "@angular/http";
+import {Http, URLSearchParams, Headers, RequestOptions} from "@angular/http";
 import {Url} from "../../url";
 
 @Injectable()
@@ -31,6 +31,19 @@ export class EmployeeService {
       .catch(e => {
         let s = e.json().details[0];
         return Observable.throw(s)
+      });
+  }
+
+  public save(departmentId: number, employee: Employee): Observable<Employee> {
+    let params = new URLSearchParams();
+    params.append('departmentId', departmentId.toString());
+    let headers = new Headers({'Content-Type': 'application/json'});
+    headers.append("Authorization", this.auth.getToken());
+    let options = new RequestOptions({headers: headers, search: params});
+    return this.http.post(this.employeesUrl, JSON.stringify(employee), options)
+      .map(res => res.json())
+      .catch(e => {
+          return Observable.throw(e.json().details[0]);
       });
   }
 }

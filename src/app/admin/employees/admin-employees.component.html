@@ -11,8 +11,8 @@
         </div>
         <p><input type="text" style="text-align: center" class="form-control" #searchBox placeholder="חפש"
                   (keyup)="search(searchBox.value)"></p>
-        <p class="module" *ngFor="let employee of employeesUi" style="font-size: small"
-           (click)="toDetail(employee.id)">{{employee.surname+'&nbsp;'+employee.name}}
+        <p class="module" *ngFor="let employee of employeesUi" style="font-size: small; text-align: left"
+           (click)="toDetail(employee.id)">{{employee.surname+'&nbsp;'+employee.name}}<span class="badge pull-right">{{employee.department.name}}</span>
         </p>
       </div>
       <div *ngIf="errorEmployees" class="alert alert-danger pull-right">
@@ -20,5 +20,70 @@
       </div>
     </div>
     <router-outlet></router-outlet>
+  </div>
+</div>
+
+<div id="employeeCreationForm" tabindex='-1' class="modal fade" onclose="" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header" style="text-align: center">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">עובד חדש</h4>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="errorEmployee" style="text-align: center" class="alert alert-danger">
+          {{errorEmployee}}
+        </div>
+        <form [formGroup]="employeeCreationForm" novalidate (ngSubmit)="createNew(employeeCreationForm)">
+
+          <div class="row col-md-12">
+            <div class="form-group col-md-6 pull-left">
+              <input type="text" placeholder="שם משפחה *" class="form-control" formControlName="surname">
+            </div>
+            <div class="form-group col-md-6 pull-right">
+              <input type="text" placeholder="שם *" class="form-control" formControlName="name">
+            </div>
+            <div class="form-group col-md-6 pull-left">
+              <input type="text" placeholder="דואר *" class="form-control" formControlName="email">
+            </div>
+            <div class="form-group col-md-1 pull-left">
+              <label for="isAdmin">
+                <p-checkbox id="isAdmin" formControlName="isAdmin" binary="true"></p-checkbox>
+                 האם מנהל
+              </label>
+            </div>
+            <div class="form-group col-md-5 pull-right">
+              <p-calendar formControlName="birthday" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2030" id="birthdayDate" placeholder="יום הולדת" inputStyleClass="form-control"></p-calendar>
+            </div>
+            <div class="form-group col-md-6 pull-left">
+              <input type="text" placeholder="תעודת זהות *" class="form-control" formControlName="passportId">
+            </div>
+            <div class="form-group col-md-6 pull-right">
+              <input type="text" placeholder="טל פרטי" class="form-control" formControlName="privatePhone">
+            </div>
+            <div class="form-group col-md-6 pull-left">
+              <input type="text" placeholder="טל עבודה" class="form-control" formControlName="companyPhone">
+            </div>
+            <div class="form-group col-md-6 pull-right">
+              <input type="password" placeholder="סיסמה *" class="form-control" formControlName="password">
+            </div>
+            <div class="form-group col-md-6 pull-left">
+              <p-dropdown [options]="departmentsUi" [style]="{'width':'inherit'}" formControlName="chosenDepartment" [filter]="true"></p-dropdown>
+            </div>
+
+          </div>
+
+          <div class="modal-footer pull-left col-md-12">
+            <button id="closeNewEmployeeFormButton" type="button" class="btn btn-default" data-dismiss="modal">סגור</button>
+            <button type="submit" [disabled]="!employeeCreationForm.valid" class="btn btn-primary">שמור</button>
+          </div>
+        </form>
+        <div *ngIf="warning" class="alert alert-danger">
+          <strong>Error!</strong> {{warning}}
+        </div>
+      </div>
+    </div>
   </div>
 </div>
