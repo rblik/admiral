@@ -21,8 +21,25 @@
         <li *ngIf="employee.roles" class="list-group-item">{{(employee.roles.indexOf('ROLE_ADMIN')!=-1)?'&nbsp;Admin':'&nbsp;User'}}
           <span class="pull-right"><strong>סוג משתמש</strong></span></li>
       </ul>
+      <h4 style="text-align: center"><a style="cursor: pointer; margin: 0 auto" (click)="popupAddProject()"><i class="module-plus glyphicon glyphicon-plus"
+                                                                                                               aria-hidden="true"></i></a>&nbsp;פרויקטים</h4>
 
+      <table class="table table-responsive table-condensed" style="margin: 0 auto;width: 50%">
+        <thead>
+        <tr>
+          <th>שם פרויקט</th>
+          <th>שם לקוח</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let project of projects">
+          <td>{{project.name}}</td>
+          <td>{{project.client.name}}</td>
+        </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
+<employee-project-form *ngIf="employee" (addedProject)="appendProject($event)" [employeeId]="employee.id" [(visible)]="displayFormProjectDialog"></employee-project-form>
 <employee-form *ngIf="employee" [employeeForCreation]="employee" id="employeeEditionForm" tabindex='-1' class="modal fade" onclose="" role="dialog"></employee-form>

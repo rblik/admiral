@@ -12,6 +12,6 @@ input {
   text-align: right;
 }
 
-tr {
+tr, th {
   text-align: center;
 }

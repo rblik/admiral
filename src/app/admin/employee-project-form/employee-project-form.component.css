@@ -1,0 +1,5 @@
+.modal-dialog .modal-content {
+  position: relative;
+  display: table;
+  overflow-y: auto;
+}

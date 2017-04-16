@@ -2,6 +2,9 @@ import {Component, OnInit} from "@angular/core";
 import {Employee} from "../../model/employee";
 import {ActivatedRoute, Params} from "@angular/router";
 import {EmployeeService} from "../service/employee.service";
+import {ProjectService} from "../service/project.service";
+import {Project} from "../../model/project";
+import {Observable} from "rxjs/Observable";
 @Component({
   selector: 'employee-detail',
   templateUrl: './employee-detail.component.html',
@@ -9,13 +12,28 @@ import {EmployeeService} from "../service/employee.service";
 })
 export class EmployeeDetailComponent implements OnInit{
   private employee: Employee;
-  constructor(private employeeService: EmployeeService, private route: ActivatedRoute) {
+  private projects: Project[];
+  private displayFormProjectDialog: boolean;
+  constructor(private employeeService: EmployeeService, private projectService: ProjectService, private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
-    this.route.params.switchMap((params: Params) =>
-      this.employeeService.getEmployee(params['employeeId'])).subscribe(employee => {
-      this.employee = employee;
-    });
+    this.route.params.switchMap((params: Params) => params['employeeId']).switchMap((employeeId: number) => {
+      return Observable.forkJoin([this.employeeService.getEmployee(employeeId), this.projectService.getProjectsByEmployee(employeeId)]);
+    }).catch(e => Observable.throw(e.json().details[0]))
+      .subscribe(([employee, projects]) => {
+        this.employee = employee;
+        this.projects = projects;
+      });
+  }
+
+  appendProject(project){
+    if (project != null) {
+    this.projects.push(project);
+    }
+  }
+
+  popupAddProject() {
+    this.displayFormProjectDialog = true;
   }
 }

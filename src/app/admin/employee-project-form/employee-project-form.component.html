@@ -1,0 +1,14 @@
+<p-dialog header="הוסיף פרויקט" (onHide)="close()" [(visible)]="visible" modal="modal" width="300" responsive="true">
+  <div class="row">
+  <p-dropdown [options]="clientsUi" [style]="{'width':'inherit'}" (onChange)="initProjects(chosenClient)" [(ngModel)]="chosenClient" [filter]="true"></p-dropdown>
+  <p-dropdown [options]="projectsUi" [style]="{'width':'inherit'}" [(ngModel)]="chosenProject" [filter]="true"></p-dropdown>
+  </div>
+  <p-footer>
+    <div *ngIf="errorProject" class="alert alert-danger pull-right">
+      {{errorProject}}</div>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix pull-left">
+      <button type="button" pButton icon="fa-check" (click)="addProject(chosenProject)" label="כן"></button>
+      <button type="button" class="ui-button-danger" (click)="close()" pButton icon="fa-close" label="לא"></button>
+    </div>
+  </p-footer>
+</p-dialog>
