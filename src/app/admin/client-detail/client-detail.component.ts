@@ -48,7 +48,9 @@ export class ClientDetailComponent implements OnInit {
 
   popupEdit(project: Project) {
     this.labelForProjectPopup = 'עריכת פרויקט';
-    this.formProject = project;
+    this.formProject = new Project();
+    this.formProject.name = project.name;
+    this.formProject.id = project.id;
     this.displayFormProjectDialog = true;
   }
 
@@ -64,7 +66,12 @@ export class ClientDetailComponent implements OnInit {
       this.displayFormProjectDialog = false;
       if (project.id == null) {
         this.client.projects.push(updated);
-      }
+      } else this.client.projects.forEach(value => {
+        if (value.id == project.id) {
+          value.name = project.name;
+          return;
+        }
+      });
     }, error => this.errorProject = error);
   }
 }
