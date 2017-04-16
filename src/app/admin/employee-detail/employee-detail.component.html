@@ -21,7 +21,7 @@
         <li *ngIf="employee.roles" class="list-group-item">{{(employee.roles.indexOf('ROLE_ADMIN')!=-1)?'&nbsp;Admin':'&nbsp;User'}}
           <span class="pull-right"><strong>סוג משתמש</strong></span></li>
       </ul>
-      <h4 style="text-align: center"><a style="cursor: pointer; margin: 0 auto" (click)="popupAddProject()"><i class="module-plus glyphicon glyphicon-plus"
+      <h4 style="text-align: center"><a style="cursor: pointer; margin: 0 auto" data-toggle="modal" data-keyboard="true" data-target="#employeeProjectEditionForm"><i class="module-plus glyphicon glyphicon-plus"
                                                                                                                aria-hidden="true"></i></a>&nbsp;פרויקטים</h4>
 
       <table class="table table-responsive table-condensed" style="margin: 0 auto;width: 50%">
@@ -41,5 +41,5 @@
     </div>
   </div>
 </div>
-<employee-project-form *ngIf="employee" (addedProject)="appendProject($event)" [employeeId]="employee.id" [(visible)]="displayFormProjectDialog"></employee-project-form>
+<employee-project-form id="employeeProjectEditionForm" *ngIf="employee" (addedProject)="appendProject($event)" [employeeId]="employee.id" tabindex='-1' class="modal fade" onclose="" role="dialog"></employee-project-form>
 <employee-form *ngIf="employee" [employeeForCreation]="employee" id="employeeEditionForm" tabindex='-1' class="modal fade" onclose="" role="dialog"></employee-form>

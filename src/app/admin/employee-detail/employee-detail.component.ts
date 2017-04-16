@@ -13,7 +13,6 @@ import {Observable} from "rxjs/Observable";
 export class EmployeeDetailComponent implements OnInit{
   private employee: Employee;
   private projects: Project[];
-  private displayFormProjectDialog: boolean;
   constructor(private employeeService: EmployeeService, private projectService: ProjectService, private route: ActivatedRoute) {
   }
 
@@ -33,7 +32,4 @@ export class EmployeeDetailComponent implements OnInit{
     }
   }
 
-  popupAddProject() {
-    this.displayFormProjectDialog = true;
-  }
 }

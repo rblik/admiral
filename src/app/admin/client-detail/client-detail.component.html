@@ -34,7 +34,7 @@
   <label for="projName">&nbsp;שם פרויקט
   </label>
   <p-footer>
-    <div *ngIf="errorClient" class="alert alert-danger pull-right">
+    <div *ngIf="errorClient" style="text-align: center" class="alert alert-danger">
       {{errorClient}}</div>
     <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix pull-left">
       <button type="button" pButton icon="fa-check" (click)="updateOrCreateProject(formProject)" label="כן"></button>

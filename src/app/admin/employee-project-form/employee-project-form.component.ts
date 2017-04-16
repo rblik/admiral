@@ -13,8 +13,6 @@ import {Client} from "../../model/client";
 export class EmployeeProjectForm implements OnInit, OnChanges {
 
   @Input() employeeId: number;
-  @Input() visible: boolean;
-  @Output() visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() addedProject: EventEmitter<Project> = new EventEmitter<Project>();
   private errorProject: string;
   private chosenProject: Project;
@@ -22,6 +20,7 @@ export class EmployeeProjectForm implements OnInit, OnChanges {
   private projects: Project[] = [];
   private clientsUi: SelectItem[] = [];
   private chosenClient: Client;
+  private errorProjects: string;
 
   constructor(private projectService: ProjectService, private agreementService: AgreementService) {
   }
@@ -29,9 +28,6 @@ export class EmployeeProjectForm implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['employeeId']) {
       this.employeeId = changes['employeeId'].currentValue;
-    }
-    if (changes['visible']) {
-      this.visible = changes['visible'].currentValue;
     }
   }
 
@@ -42,7 +38,7 @@ export class EmployeeProjectForm implements OnInit, OnChanges {
       this.projects = projects;
       this.initClients();
       this.initProjects(null);
-    }, error => this.errorProject = error);
+    }, error => this.errorProjects = error);
   }
 
   initClients() {
@@ -66,21 +62,19 @@ export class EmployeeProjectForm implements OnInit, OnChanges {
       return proj.client.id.toString() === client.id.toString();
     });
     filtered.forEach(project => {
-        this.projectsUi.push({
-          label: project.name,
-          value: project
+      this.projectsUi.push({
+        label: project.name,
+        value: project
       });
     });
   }
 
   addProject(project: Project) {
-    this.agreementService.save(this.employeeId, project.id).subscribe();
-    this.addedProject.emit(project);
-    this.close();
+    this.agreementService.save(this.employeeId, project.id).subscribe(agreement => {
+      document.getElementById('closeEmployeeProjectForm').click();
+      this.addedProject.emit(project);
+    },
+    error => this.errorProject = error);
   }
 
-  close() {
-    this.visible = false;
-    this.visibleChange.emit(this.visible);
-  }
 }

@@ -1,14 +1,19 @@
-<p-dialog header="הוסיף פרויקט" (onHide)="close()" [(visible)]="visible" modal="modal" width="300" responsive="true" (onclose)="close()">
-  <div class="row">
-  <p-dropdown [options]="clientsUi" [style]="{'width':'inherit'}" (onChange)="initProjects(chosenClient)" [(ngModel)]="chosenClient" [filter]="true"></p-dropdown>
-  <p-dropdown [options]="projectsUi" [style]="{'width':'inherit'}" [(ngModel)]="chosenProject" [filter]="true"></p-dropdown>
-  </div>
-  <p-footer>
-    <div *ngIf="errorProject" class="alert alert-danger pull-right">
-      {{errorProject}}</div>
-    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix pull-left">
-      <button type="button" pButton icon="fa-check" (click)="addProject(chosenProject)" label="כן"></button>
-      <button type="button" class="ui-button-danger" (click)="close()" pButton icon="fa-close" label="לא"></button>
+<div class="modal-dialog">
+
+  <div class="modal-content">
+    <div class="modal-header" style="text-align: center">
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <h4 class="modal-title">הוסיף פרויקט</h4>
     </div>
-  </p-footer>
-</p-dialog>
+    <div class="modal-body">
+      <div *ngIf="errorProject" style="text-align: center" class="alert alert-danger">
+        {{errorProject}}</div>
+      <p-dropdown [options]="clientsUi" [style]="{'width':'inherit'}" (onChange)="initProjects(chosenClient)" [(ngModel)]="chosenClient" [filter]="true"></p-dropdown>
+      <p-dropdown [options]="projectsUi" [style]="{'width':'inherit'}" [(ngModel)]="chosenProject" [filter]="true"></p-dropdown>
+    </div>
+    <div class="modal-footer pull-left col-md-12">
+      <button id="closeEmployeeProjectForm" type="button" class="btn btn-default" data-dismiss="modal">סגור</button>
+      <button type="submit" (click)="addProject(chosenProject)" class="btn btn-primary">שמור</button>
+    </div>
+  </div>
+</div>
