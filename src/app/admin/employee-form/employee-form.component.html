@@ -50,7 +50,7 @@
         </div>
 
         <div class="modal-footer pull-left col-md-12">
-          <button id="closeNewEmployeeFormButton" type="button" class="btn btn-default" data-dismiss="modal">סגור</button>
+          <button id="{{employeeForCreation.id? 'closeEditEmployeeFormButton':'closeNewEmployeeFormButton'}}" type="button" class="btn btn-default" data-dismiss="modal">סגור</button>
           <button type="submit" [disabled]="!employeeCreationForm.valid" class="btn btn-primary">שמור</button>
         </div>
       </form>
