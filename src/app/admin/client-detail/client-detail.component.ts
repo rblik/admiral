@@ -3,8 +3,6 @@ import {ClientService} from "../service/client.service";
 import {ProjectService} from "../service/project.service";
 import {ActivatedRoute, Params} from "@angular/router";
 import {Client} from "../../model/client";
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {Address} from "../../model/address";
 import {Project} from "../../model/project";
 import {SessionStorageService} from "ng2-webstorage";
 
@@ -16,7 +14,6 @@ import {SessionStorageService} from "ng2-webstorage";
 export class ClientDetailComponent implements OnInit {
 
   private client: Client;
-  public myFormEdit: FormGroup;
   private errorClient: string;
   private errorProject: string;
   private formProject: Project;
@@ -24,16 +21,14 @@ export class ClientDetailComponent implements OnInit {
   private labelForProjectPopup: string;
 
 
-  constructor(private clientService: ClientService, private localSt: SessionStorageService, private _fb: FormBuilder, private projectService: ProjectService, private route: ActivatedRoute) {
+  constructor(private clientService: ClientService, private localSt: SessionStorageService, private projectService: ProjectService, private route: ActivatedRoute) {
     this.formProject = new Project();
   }
 
   ngOnInit(): void {
-    this.initClient();
     this.route.params.switchMap((params: Params) =>
       this.clientService.get(params['clientId'])).subscribe(client => {
       this.client = client;
-      this.populateClient(client);
     });
   }
 
@@ -52,13 +47,13 @@ export class ClientDetailComponent implements OnInit {
   }
 
   popupEdit(project: Project) {
-    this.labelForProjectPopup = 'עריכת לקוח';
+    this.labelForProjectPopup = 'עריכת פרויקט';
     this.formProject = project;
     this.displayFormProjectDialog = true;
   }
 
   popupCreate() {
-    this.labelForProjectPopup = 'יצירת לקוח';
+    this.labelForProjectPopup = 'יצירת פרןיקט';
     this.formProject = new Project();
     this.displayFormProjectDialog = true;
   }
@@ -71,75 +66,5 @@ export class ClientDetailComponent implements OnInit {
         this.client.projects.push(updated);
       }
     }, error => this.errorProject = error);
-  }
-
-  private populateClient(client) {
-    this.myFormEdit = this._fb.group({
-      name: [client.name, [Validators.required]],
-      companyNumber: [client.companyNumber, [Validators.required]],
-      phones: this._fb.array(client.phones),
-      addresses: this._fb.array([])
-    });
-    const control = <FormArray>this.myFormEdit.controls['addresses'];
-    client.addresses.forEach(address => {
-      control.push(this.populateAddresses(address));
-    });
-  }
-
-  private populateAddresses(address: Address): FormGroup {
-    return this._fb.group({
-      id: address.id,
-      area: [address.area, Validators.required],
-      city: [address.city, Validators.required],
-      street: [address.street, Validators.required],
-      houseNumber: [address.houseNumber],
-    });
-  }
-
-  private initClient() {
-    this.myFormEdit = this._fb.group({
-      name: ['', [Validators.required]],
-      companyNumber: ['', [Validators.required]],
-      phones: this._fb.array(['']),
-      addresses: this._fb.array([
-        this.initAddress()
-      ])
-    });
-  }
-
-
-  // client creation
-  initAddress() {
-    // initialize our address
-    return this._fb.group({
-      area: ['', Validators.required],
-      city: ['', Validators.required],
-      street: ['', Validators.required],
-      houseNumber: [''],
-    });
-  }
-
-  addAddress() {
-    // add address to the list
-    const control = <FormArray>this.myFormEdit.controls['addresses'];
-    control.push(this.initAddress());
-  }
-
-  addPhone() {
-    // add address to the list
-    const control = <FormArray>this.myFormEdit.controls['phones'];
-    control.push(new FormControl(''));
-  }
-
-  removeAddress(i: number) {
-    // remove address from the list
-    const control = <FormArray>this.myFormEdit.controls['addresses'];
-    control.removeAt(i);
-  }
-
-  removePhones(i: number) {
-    // remove address from the list
-    const control = <FormArray>this.myFormEdit.controls['phones'];
-    control.removeAt(i);
   }
 }

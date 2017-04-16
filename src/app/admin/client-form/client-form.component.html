@@ -1,0 +1,96 @@
+<div class="modal-dialog">
+
+  <!-- Modal content-->
+  <div class="modal-content">
+    <div class="modal-header" style="text-align: center">
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <h4 class="modal-title">לקוח חדש</h4>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="errorClient" style="text-align: center" class="alert alert-danger">
+        {{errorClient}}
+      </div>
+      <form [formGroup]="clientCreationForm" novalidate (ngSubmit)="submitForm(clientCreationForm)">
+        <!-- we will place our fields here -->
+
+        <div class="row col-md-12">
+          <div class="form-group col-md-6 pull-left">
+            <input type="text" placeholder="מס. חברה *" class="form-control" formControlName="companyNumber">
+          </div>
+          <div class="form-group col-md-6 pull-right">
+            <input type="text" placeholder="שם *" class="form-control" formControlName="name">
+          </div>
+        </div>
+
+        <div formArrayName="phones">
+          <div class="row col-md-12">
+            <div class="col-md-6 pull-left">
+              <a (click)="addPhone()" style="cursor: default">הוסיף טלפון</a>
+            </div>
+          </div>
+          <div *ngFor="let phone of clientCreationForm.controls.phones.controls; let i=index">
+            <!-- address header, show remove button when more than one address available -->
+            <div class="row pull-right col-md-12">
+              <a *ngIf="clientCreationForm.controls.phones.controls.length > 1" (click)="removePhones(i)">מחק טלפון</a>
+              <span class="col-md-6 pull-right"><strong>טלפון {{i + 1}}</strong></span>
+            </div>
+            <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
+            <div class="row col-md-12">
+              <div class="pull-right col-md-6">
+                <input type="text" class="form-control" placeholder="טל *" formControlName="{{i}}">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div formArrayName="addresses">
+          <div class="row col-md-12">
+            <div class="col-md-6 pull-left">
+              <a (click)="addAddress()" style="cursor: default">הוסיף כתובת</a>
+            </div>
+          </div>
+          <div *ngFor="let address of clientCreationForm.controls.addresses.controls; let i=index">
+            <!-- address header, show remove button when more than one address available -->
+            <div class="row pull-right col-md-12">
+              <a *ngIf="clientCreationForm.controls.addresses.controls.length > 1" (click)="removeAddress(i)">מחק כתובת</a>
+              <span class="col-md-6 pull-right"><strong>כתובת {{i + 1}}</strong></span>
+            </div>
+
+            <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
+            <div [formGroupName]="i">
+              <!--area-->
+              <div class="row col-md-12">
+                <div class="pull-right col-md-6">
+                  <input type="text" class="form-control" placeholder="אזור *" formControlName="area">
+                </div>
+                <!--city-->
+                <div class="col-md-6 pull-left">
+                  <input type="text" class="form-control" placeholder="עיר *" formControlName="city">
+                </div>
+              </div>
+              <div class="row col-md-12">
+                <!--street-->
+                <div class="pull-right col-md-6">
+                  <input type="text" class="form-control" placeholder="רחוב *" formControlName="street">
+                </div>
+                <!--houseNumber-->
+                <div class="pull-left col-md-6">
+                  <input type="text" class="form-control" placeholder="מס. בית" formControlName="houseNumber">
+                  <!--display error message if street is not valid-->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer pull-left col-md-12">
+
+          <button id="{{clientForCreation.id? 'closeEditClientFormButton':'closeNewClientFormButton'}}" type="button" class="btn btn-default" data-dismiss="modal">סגור</button>
+          <button type="submit" [disabled]="!clientCreationForm.valid" class="btn btn-primary">שמור</button>
+        </div>
+      </form>
+      <div *ngIf="warning" class="alert alert-danger">
+        <strong>Error!</strong> {{warning}}
+      </div>
+    </div>
+  </div>
+</div>
