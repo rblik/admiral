@@ -29,19 +29,16 @@ export class ClientFormComponent implements OnInit, OnChanges{
     // only run when property "data" changed
     if (changes['clientForCreation']) {
       this.clientForCreation = changes['clientForCreation'].currentValue;
-      console.log(this.clientForCreation);
       this.fillTheForm();
     }
   }
 
   private fillTheForm() {
     if (this.clientForCreation == null || this.clientForCreation.name==null) {
-      console.log('CREAATE');
       console.log(this.clientForCreation);
 
       this.fillTheCreationForm();
     } else {
-      console.log('EDIIIT');
       this.fillTheEditingForm();
     }
   }
