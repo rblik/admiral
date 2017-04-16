@@ -35,8 +35,6 @@ export class ClientFormComponent implements OnInit, OnChanges{
 
   private fillTheForm() {
     if (this.clientForCreation == null || this.clientForCreation.name==null) {
-      console.log(this.clientForCreation);
-
       this.fillTheCreationForm();
     } else {
       this.fillTheEditingForm();

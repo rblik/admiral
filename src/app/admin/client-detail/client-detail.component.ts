@@ -34,7 +34,6 @@ export class ClientDetailComponent implements OnInit {
 
   updateClient(client: any) {
     let value = client.value;
-    console.log(value);
     this.client.name = value.name;
     this.client.companyNumber = value.companyNumber;
     this.client.addresses = value.addresses;

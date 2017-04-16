@@ -1,4 +1,4 @@
-<p-dialog header="הוסיף פרויקט" (onHide)="close()" [(visible)]="visible" modal="modal" width="300" responsive="true">
+<p-dialog header="הוסיף פרויקט" (onHide)="close()" [(visible)]="visible" modal="modal" width="300" responsive="true" (onclose)="close()">
   <div class="row">
   <p-dropdown [options]="clientsUi" [style]="{'width':'inherit'}" (onChange)="initProjects(chosenClient)" [(ngModel)]="chosenClient" [filter]="true"></p-dropdown>
   <p-dropdown [options]="projectsUi" [style]="{'width':'inherit'}" [(ngModel)]="chosenProject" [filter]="true"></p-dropdown>

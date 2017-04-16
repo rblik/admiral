@@ -70,12 +70,10 @@ export class EmployeeProjectForm implements OnInit, OnChanges {
           label: project.name,
           value: project
       });
-      console.log(this.projectsUi);
     });
   }
 
   addProject(project: Project) {
-    console.log(project);
     this.agreementService.save(this.employeeId, project.id).subscribe();
     this.addedProject.emit(project);
     this.close();

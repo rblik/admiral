@@ -10,7 +10,7 @@ import {Url} from "../url";
 @Injectable()
 export class AuthService {
 
-  redirectUrl: string;
+  public redirectUrl: string;
   private authUrl;
   private profileUrl;
 

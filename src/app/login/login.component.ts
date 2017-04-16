@@ -22,8 +22,7 @@ export class LoginComponent {
           this.localSt.store("TOKEN", jwt.token);
           this.authService.storeProfile();
           this.error = '';
-          let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/app';
-          console.log(redirect);
+          let redirect = this.authService.redirectUrl && this.authService.redirectUrl != '/app/admin' ? this.authService.redirectUrl : '/app';
           this.router.navigate([redirect]);
         },
         err => {

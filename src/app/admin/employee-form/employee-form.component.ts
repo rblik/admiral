@@ -31,7 +31,6 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
       // only run when property "data" changed
       if (changes['employeeForCreation']) {
         this.employeeForCreation = changes['employeeForCreation'].currentValue;
-        console.log(this.employeeForCreation);
         this.fillTheForm();
     }
   }
@@ -93,7 +92,6 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
 
   submitForm(employee: any) {
     let value = employee.value;
-    console.log(value);
     this.employeeForCreation.name = value.name;
     this.employeeForCreation.surname = value.surname;
     this.employeeForCreation.email = value.email;
