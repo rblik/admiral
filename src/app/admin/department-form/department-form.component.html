@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-12" style="align-content: center; text-align: center">
     <div class="btn-group" style="margin:  0 auto">
-      <button data-toggle="modal" data-keyboard="true" data-target="#departmentCreationForm" type="button"
+      <button id="openDepartmentFormElem" data-toggle="modal" data-keyboard="true" data-target="#departmentCreationForm" type="button"
               style="outline: none" class="badge">+
       </button>
     </div>
@@ -10,7 +10,7 @@
     <div class="btn-group" style="margin:  0 auto">
       <button (click)="emitChosenDepartment()" type="button" style="outline: none" class="badge">All</button>
       <button (click)="emitChosenDepartment(department.id)" style="outline: none" *ngFor="let department of departments"
-              type="button" class="badge">{{department.name}}
+              type="button" (contextmenu)="openDepartmentEditingMenu(department)" class="badge">{{department.name}}
       </button>
     </div>
   </div>

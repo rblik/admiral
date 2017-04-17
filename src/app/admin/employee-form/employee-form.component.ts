@@ -56,9 +56,9 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
         this.departmentsUi.push({label: editedDepartment.dep.name, value: editedDepartment.dep});
       } else {
         this.departmentsUi.forEach(departmentUi => {
-          if (departmentUi.value.id.toString() == editedDepartment.dep.id.toString()) {
-            departmentUi.label = editedDepartment.dep.name;
-            return;
+            if (departmentUi.value && departmentUi.value.id.toString() == editedDepartment.dep.id.toString()) {
+              departmentUi.label = editedDepartment.dep.name;
+              return;
           }
         });
       }

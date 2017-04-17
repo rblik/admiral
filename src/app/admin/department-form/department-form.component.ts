@@ -62,7 +62,7 @@ export class DepartmentFormComponent implements OnInit, OnChanges{
   submitDepartmentForm(department: any) {
     let value = department.value;
     this.department.name = value.name;
-    this.departmentService.save(value).subscribe(responseDepartment => {
+    this.departmentService.save(this.department).subscribe(responseDepartment => {
       let closeNewDepartmentFormButton = document.getElementById("closeNewDepartmentFormButton");
       if (closeNewDepartmentFormButton) {
         closeNewDepartmentFormButton.click();
@@ -71,7 +71,7 @@ export class DepartmentFormComponent implements OnInit, OnChanges{
       if (closeEditDepartmentFormButton) {
         closeEditDepartmentFormButton.click();
       }
-      let isNew = value.id == null;
+      let isNew = this.department.id == null;
       if (isNew) {
         this.departments.push(responseDepartment);
       } else {
@@ -82,6 +82,7 @@ export class DepartmentFormComponent implements OnInit, OnChanges{
           }
         });
       }
+      this.department = new Department();
       this.localSt.store('formDepartment', JSON.stringify({
         isNew: isNew,
         dep: responseDepartment
@@ -93,5 +94,12 @@ export class DepartmentFormComponent implements OnInit, OnChanges{
     this.departmentService.getAll().subscribe(departments => {
       this.departments = departments;
     })
+  }
+
+  openDepartmentEditingMenu(department: Department){
+    this.department = department;
+    this.fillTheEditingForm();
+    document.getElementById('openDepartmentFormElem').click();
+    return false;
   }
 }
