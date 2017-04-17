@@ -123,7 +123,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
       document.getElementById("closeEditEmployeeFormButton").click();
       this.localSt.store('formEmployee', JSON.stringify({isNew: this.employeeForCreation.id==null, employee: employee}));
       this.errorEmployee = '';
-      // this.employeeCreationForm.reset();
+      this.employeeCreationForm.reset();
     }, error => this.errorEmployee = error);
   }
 

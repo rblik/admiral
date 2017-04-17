@@ -46,6 +46,9 @@ export class EmployeeService {
         if (e.status == 409) {
           let s = e.json().details[0].split('Detail: Key ')[1];
           return Observable.throw(s);
+        } else {
+          let s = e.json().details[0];
+          return Observable.throw(s);
         }
       });
   }
