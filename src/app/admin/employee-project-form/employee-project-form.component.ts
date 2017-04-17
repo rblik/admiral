@@ -10,7 +10,7 @@ import {Client} from "../../model/client";
   templateUrl: './employee-project-form.component.html',
   styleUrls: ['./employee-project-form.component.css']
 })
-export class EmployeeProjectForm implements OnInit, OnChanges {
+export class EmployeeProjectFormComponent implements OnInit, OnChanges {
 
   @Input() employeeId: number;
   @Output() addedProject: EventEmitter<Project> = new EventEmitter<Project>();

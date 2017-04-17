@@ -25,7 +25,8 @@ import {EmployeeDetailComponent} from "./employee-detail/employee-detail.compone
 import {DepartmentService} from "./service/department.service";
 import {EmployeeFormComponent} from "./employee-form/employee-form.component";
 import {ClientFormComponent} from "./client-form/client-form.component";
-import {EmployeeProjectForm} from "./employee-project-form/employee-project-form.component";
+import {EmployeeProjectFormComponent} from "./employee-project-form/employee-project-form.component";
+import {DepartmentFormComponent} from "./department-form/department-form.component";
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import {EmployeeProjectForm} from "./employee-project-form/employee-project-form
     EmployeeDetailComponent,
     EmployeeFormComponent,
     ClientFormComponent,
-    EmployeeProjectForm
+    EmployeeProjectFormComponent,
+    DepartmentFormComponent
   ],
   imports: [
     AdminRoutingModule,

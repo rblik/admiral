@@ -64,8 +64,14 @@ export class ClientFormComponent implements OnInit, OnChanges{
     this.clientForCreation.addresses = value.addresses;
     this.clientForCreation.phones = value.phones;
     this.clientService.save(this.clientForCreation).subscribe(client => {
-      document.getElementById("closeNewClientFormButton").click();
-      document.getElementById("closeEditClientFormButton").click();
+      let closeNewClientFormButton = document.getElementById("closeNewClientFormButton");
+      if (closeNewClientFormButton) {
+        closeNewClientFormButton.click();
+      }
+      let closeEditClientFormButton = document.getElementById("closeEditClientFormButton");
+      if (closeEditClientFormButton) {
+        closeEditClientFormButton.click();
+      }
       this.localSt.store('formClient', JSON.stringify({isNew: this.clientForCreation.id==null, client: client}));
       this.errorClient = '';
       // this.myForm.reset();
