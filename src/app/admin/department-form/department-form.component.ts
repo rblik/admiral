@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {Department} from "../../model/department";
 import {DepartmentService} from "../service/department.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {SessionStorageService} from "ng2-webstorage";
 @Component({
   selector: 'department-form',
   templateUrl: './department-form.component.html',
@@ -10,27 +11,28 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 export class DepartmentFormComponent implements OnInit, OnChanges{
 
   department: Department;
-  @Input() departments: Department[] = [];
-  @Output() persistedDepartment: EventEmitter<any> = new EventEmitter();
+  departments: Department[] = [];
   @Output() departmentChoose: EventEmitter<number> = new EventEmitter();
   private departmentCreationForm: FormGroup;
   private errorDepartment: string;
 
 
   constructor(private departmentService: DepartmentService,
+              private localSt: SessionStorageService,
               private _fb: FormBuilder) {
     this.department = new Department();
   }
 
   ngOnInit(): void {
+    this.getDepartments();
     this.fillTheForm();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['departments']) {
-      this.departments = changes['departments'].currentValue;
-      this.fillTheForm();
-    }
+    // if (changes['departments']) {
+    //   this.departments = changes['departments'].currentValue;
+    //   this.fillTheForm();
+    // }
   }
 
   emitChosenDepartment(departmentId?: number){
@@ -70,11 +72,26 @@ export class DepartmentFormComponent implements OnInit, OnChanges{
         closeEditDepartmentFormButton.click();
       }
       let isNew = value.id == null;
-      this.persistedDepartment.emit({
+      if (isNew) {
+        this.departments.push(responseDepartment);
+      } else {
+        this.departments.forEach(dep => {
+          if (dep.id == responseDepartment.id) {
+            dep.name = responseDepartment.name;
+            return;
+          }
+        });
+      }
+      this.localSt.store('formDepartment', JSON.stringify({
         isNew: isNew,
         dep: responseDepartment
-      });
+      }));
     }, error => this.errorDepartment = error);
+  }
 
+  private getDepartments() {
+    this.departmentService.getAll().subscribe(departments => {
+      this.departments = departments;
+    })
   }
 }

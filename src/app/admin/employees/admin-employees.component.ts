@@ -17,7 +17,6 @@ export class AdminEmployeesComponent implements OnInit{
   private employeesUi: Employee[];
   private employeeForCreation: Employee;
   private errorEmployees: string;
-  private departments: Department[];
 
   constructor(private employeeService: EmployeeService,
               private departmentService: DepartmentService,
@@ -28,7 +27,6 @@ export class AdminEmployeesComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.getDepartments();
     this.getEmployees();
     this.subscribeOnEditedEmployee();
   }
@@ -40,19 +38,6 @@ export class AdminEmployeesComponent implements OnInit{
     }, error => {
       this.errorEmployees = error;
     });
-  }
-
-  refreshDepartments(departmentObj: any) {
-    if (departmentObj.isNew) {
-      this.departments.push(departmentObj.dep);
-    } else {
-      this.departments.forEach(dep => {
-        if (dep.id == departmentObj.dep.id) {
-          dep.name = departmentObj.dep.name;
-          return;
-        }
-      })
-    }
   }
 
   filterByDepartment(departmentId: any){
@@ -77,12 +62,6 @@ export class AdminEmployeesComponent implements OnInit{
 
   toDetail(employeeId: number) {
     this.router.navigate([employeeId], {relativeTo: this.route});
-  }
-
-  getDepartments(){
-      this.departmentService.getAll().subscribe(departments => {
-        this.departments = departments;
-      })
   }
 
   private subscribeOnEditedEmployee() {

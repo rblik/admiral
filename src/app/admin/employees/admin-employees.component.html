@@ -1,7 +1,7 @@
 <div class="container">
   <div class="page-header">
     <p style="text-align: center; font-size: 300%">עובדים</p>
-  <department-form [departments]="departments" (persistedDepartment)="refreshDepartments($event)" (departmentChoose)="filterByDepartment($event)"></department-form>
+  <department-form (departmentChoose)="filterByDepartment($event)"></department-form>
   </div>
   <div class="row">
     <div class="col-sm-12 col-md-4 jumbotron pull-right" style="background-color: rgba(104, 157, 255, 0.32)">
