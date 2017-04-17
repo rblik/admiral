@@ -87,7 +87,7 @@ export class AdminEmployeesComponent implements OnInit{
         this.employeesUi.forEach(employee => {
           if (employee.id.toString() == editedEmployee.employee.id.toString()) {
             employee.name = editedEmployee.employee.name;
-            employee.department.name = editedEmployee.employee.department.name;
+            employee.department = editedEmployee.employee.department;
             return;
           }
         });
