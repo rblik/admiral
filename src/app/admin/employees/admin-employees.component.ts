@@ -29,6 +29,7 @@ export class AdminEmployeesComponent implements OnInit{
   ngOnInit(): void {
     this.getEmployees();
     this.subscribeOnEditedEmployee();
+    this.subscribeOnEditedDepartment();
   }
 
   private getEmployees() {
@@ -62,6 +63,19 @@ export class AdminEmployeesComponent implements OnInit{
 
   toDetail(employeeId: number) {
     this.router.navigate([employeeId], {relativeTo: this.route});
+  }
+
+  private subscribeOnEditedDepartment() {
+    this.localSt.observe('formDepartment').subscribe(edited => {
+      let editedDepartment = JSON.parse(edited);
+      if (!editedDepartment.isNew) {
+        this.employeesUi.forEach(employee => {
+          if (employee.department.id == editedDepartment.dep.id) {
+            employee.department.name = editedDepartment.dep.name;
+          }
+        });
+      }
+    });
   }
 
   private subscribeOnEditedEmployee() {
