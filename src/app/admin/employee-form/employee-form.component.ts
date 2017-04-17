@@ -36,7 +36,6 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
   }
 
   ngOnInit(): void {
-    this.departmentsUi.push({label: "בחר צוות", value: null});
     this.getDepartments();
     this.subscribeOnEditedDepartment();
     this.fillTheForm();
@@ -100,6 +99,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
   }
 
   private getDepartments() {
+    this.departmentsUi.push({label: "בחר צוות", value: null});
     this.departmentService.getAll().subscribe(departments => {
       departments.forEach(department => {
         this.departmentsUi.push({label: department.name, value: department})
