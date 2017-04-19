@@ -27,6 +27,7 @@ import {EmployeeFormComponent} from "./employee-form/employee-form.component";
 import {ClientFormComponent} from "./client-form/client-form.component";
 import {EmployeeProjectFormComponent} from "./employee-project-form/employee-project-form.component";
 import {DepartmentFormComponent} from "./department-form/department-form.component";
+import {MyCommonModule} from "../my-common.module";
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import {DepartmentFormComponent} from "./department-form/department-form.compone
     DropdownModule,
     DataTableModule,
     SpinnerModule,
-    CheckboxModule
+    CheckboxModule,
+    MyCommonModule
   ],
   providers: [
     DownloadService,

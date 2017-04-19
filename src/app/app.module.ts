@@ -28,7 +28,7 @@ import {LoginComponent} from "./login/login.component";
 import {AuthGuardService} from "./service/auth-guard.service";
 import {AdminAuthGuardService} from "./service/admin-auth-guard.service";
 import {DateFormatPipe} from "./pipe/date-format.pipe";
-import {MinutesToHoursPipe} from "./pipe/minutes-to-hours.pipe";
+import {MyCommonModule} from "./my-common.module";
 
 @NgModule({
   declarations: [
@@ -36,8 +36,7 @@ import {MinutesToHoursPipe} from "./pipe/minutes-to-hours.pipe";
     NavBarComponent,
     DashboardComponent,
     HomeComponent,
-    LoginComponent,
-    MinutesToHoursPipe
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +52,8 @@ import {MinutesToHoursPipe} from "./pipe/minutes-to-hours.pipe";
     InputMaskModule,
     DropdownModule,
     InputTextareaModule,
-    Ng2Webstorage
+    Ng2Webstorage,
+    MyCommonModule
   ],
   providers: [
     AuthService,
