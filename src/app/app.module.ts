@@ -28,6 +28,7 @@ import {LoginComponent} from "./login/login.component";
 import {AuthGuardService} from "./service/auth-guard.service";
 import {AdminAuthGuardService} from "./service/admin-auth-guard.service";
 import {DateFormatPipe} from "./pipe/date-format.pipe";
+import {MinutesToHoursPipe} from "./pipe/minutes-to-hours.pipe";
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import {DateFormatPipe} from "./pipe/date-format.pipe";
     NavBarComponent,
     DashboardComponent,
     HomeComponent,
-    LoginComponent
+    LoginComponent,
+    MinutesToHoursPipe
   ],
   imports: [
     BrowserModule,

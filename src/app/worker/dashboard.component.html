@@ -38,8 +38,9 @@
       </td>
       <td *ngFor="let work of item.workInfos">
         <span (click)="showDialog(work, item.clientName)">
+      <!--(work.absenceType==''||work.absenceType==null)?: work.absenceType-->
         <input [ngStyle]="{'width': '100px'}"
-               [ngModel]="(work.absenceType==''||work.absenceType==null)? work.duration: work.absenceType"
+               [ngModel]="work.duration | minutesToHours"
                style="width: inherit; text-align: center; border-style:solid; border-width: 1px; border-radius: 3px; background-color: white"
                disabled>
         </span>
