@@ -34,7 +34,7 @@
     <tbody>
     <tr *ngFor="let item of uiAgreements">
       <td>
-        {{sum(item.workInfos)}}
+        {{sum(item.workInfos) | minutesToHours}}
       </td>
       <td *ngFor="let work of item.workInfos">
         <span (click)="showDialog(work, item.clientName)">
@@ -93,7 +93,7 @@
                 <button type="button" class="btn btn-xs btn-warning" (click)="edit(workInfo)">&nbsp;ערוך&nbsp;<i class="fa fa-pencil fa-fw"></i></button>
               </td>
               <td>{{workInfo.comment}}</td>
-              <td>{{workInfo.duration}}</td>
+              <td>{{workInfo.duration | minutesToHours}}</td>
               <td>{{workInfo.absenceType}}</td>
               <td>{{workInfo.to}}</td>
               <td>{{workInfo.from}}</td>

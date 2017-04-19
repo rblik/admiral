@@ -96,8 +96,7 @@ export class DashboardComponent implements OnInit {
   sum(arr: WorkInfo[]): number {
     let sum = 0;
     arr.forEach((workInfo) => sum += workInfo.duration);
-    sum /= 60;
-    return Number((sum / 60).toFixed(2));
+    return sum;
   }
 
   search(param: string) {
