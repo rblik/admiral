@@ -8,7 +8,7 @@ import {SessionStorageService} from "ng2-webstorage";
   templateUrl: './department-form.component.html',
   styleUrls: ['./department-form.component.css']
 })
-export class DepartmentFormComponent implements OnInit, OnChanges{
+export class DepartmentFormComponent implements OnInit, OnChanges {
 
   department: Department;
   departments: Department[] = [];
@@ -35,12 +35,12 @@ export class DepartmentFormComponent implements OnInit, OnChanges{
     // }
   }
 
-  emitChosenDepartment(departmentId?: number){
+  emitChosenDepartment(departmentId?: number) {
     this.departmentChoose.emit(departmentId);
   }
 
   private fillTheForm() {
-    if (this.department.name==null) {
+    if (this.department.name == null) {
       this.fillTheCreationForm();
     } else {
       this.fillTheEditingForm();
@@ -56,7 +56,8 @@ export class DepartmentFormComponent implements OnInit, OnChanges{
   private fillTheEditingForm() {
     let name = this.department.name;
     this.departmentCreationForm = this._fb.group({
-    name: [name, [Validators.required]]});
+      name: [name, [Validators.required]]
+    });
   }
 
   submitDepartmentForm(department: any) {
@@ -96,10 +97,13 @@ export class DepartmentFormComponent implements OnInit, OnChanges{
     })
   }
 
-  openDepartmentEditingMenu(department: Department){
+  openDepartmentEditingMenu(department: Department) {
     this.department = department;
     this.fillTheEditingForm();
-    document.getElementById('openDepartmentFormElem').click();
+    let openDepartmentFormElem = document.getElementById('openDepartmentFormElem');
+    if (openDepartmentFormElem) {
+      openDepartmentFormElem.click();
+    }
     return false;
   }
 }

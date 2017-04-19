@@ -17,7 +17,7 @@ export class EmployeeDetailComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.route.params.switchMap((params: Params) => params['employeeId']).switchMap((employeeId: number) => {
+    this.route.params.map((params: Params) => params['employeeId']).switchMap((employeeId: number) => {
       return Observable.forkJoin([this.employeeService.getEmployee(employeeId), this.projectService.getProjectsByEmployee(employeeId)]);
     }).catch(e => Observable.throw(e.json().details[0]))
       .subscribe(([employee, projects]) => {

@@ -57,8 +57,8 @@ export class ClientFormComponent implements OnInit, OnChanges{
     });
   }
 
-  submitForm(client: any) {
-    let value = client.value;
+  submitForm(clientSubmitted: any) {
+    let value = clientSubmitted.value;
     this.clientForCreation.name = value.name;
     this.clientForCreation.companyNumber = value.companyNumber;
     this.clientForCreation.addresses = value.addresses;

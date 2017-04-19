@@ -32,19 +32,6 @@ export class ClientDetailComponent implements OnInit {
     });
   }
 
-  updateClient(client: any) {
-    let value = client.value;
-    this.client.name = value.name;
-    this.client.companyNumber = value.companyNumber;
-    this.client.addresses = value.addresses;
-    this.client.phones = value.phones;
-    this.clientService.save(this.client).subscribe(updated => {
-      this.localSt.store('editedClient', JSON.stringify({id: updated.id, name: updated.name}));
-      document.getElementById("closeButton").click();
-      this.errorClient = '';
-    }, error => this.errorClient = error);
-  }
-
   popupEdit(project: Project) {
     this.labelForProjectPopup = 'עריכת פרויקט';
     this.formProject = new Project();
@@ -64,6 +51,7 @@ export class ClientDetailComponent implements OnInit {
       this.formProject = new Project();
       this.displayFormProjectDialog = false;
       if (project.id == null) {
+        if (this.client.projects == null) this.client.projects = [];
         this.client.projects.push(updated);
       } else this.client.projects.forEach(value => {
         if (value.id == project.id) {

@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {DatePipe} from "@angular/common";
+import {DateFormatPipe} from "../pipe/date-format.pipe";
 
 @Injectable()
 export class TimeService {
@@ -7,7 +7,7 @@ export class TimeService {
   public fromDate: Date;
   public toDate: Date;
 
-  constructor(private datepipe: DatePipe) {
+  constructor(private datepipe: DateFormatPipe) {
   }
 
   setDefaultDateRange(offset: number) {

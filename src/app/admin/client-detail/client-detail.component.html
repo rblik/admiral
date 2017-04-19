@@ -6,8 +6,8 @@
         <li class="list-group-item">
           <p style="font-size: small" class="btn btn-xs btn-warning" data-toggle="modal" data-keyboard="true" data-target="#clientEditionForm"><i
                 class="fa fa-pencil-square-o"></i>&nbsp;ערוך</p></li>
-        <li class="list-group-item" *ngFor="let address of client.addresses">{{(address.houseNumber>0? address.houseNumber:'')+'&nbsp;'+address.street+'&nbsp;'+address.city}}<span
-          class="pull-right"><strong>כתובת</strong></span></li>
+        <li class="list-group-item" *ngFor="let address of client.addresses; let i = index" [attr.data-index]="i">{{(address.houseNumber>0? address.houseNumber:'')+'&nbsp;'+address.street+'&nbsp;'+address.city}}<span
+          class="pull-right"><strong>כתובת {{i + 1}}</strong></span></li>
         <li class="list-group-item"><span *ngFor="let phone of client.phones">{{phone}}&nbsp;&nbsp;</span><span
           class="pull-right"><strong>טל</strong></span></li>
       </ul>
