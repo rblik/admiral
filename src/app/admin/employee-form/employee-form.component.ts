@@ -88,7 +88,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
       name: [this.employeeForCreation.name, [Validators.required]],
       surname: [this.employeeForCreation.surname, [Validators.required]],
       email: [this.employeeForCreation.email, Validators.compose([Validators.required])],
-      password: ['', [Validators.required]],
+      password: ['0', [Validators.required]],
       birthday: [this.dateOfBirthday],
       passportId: [this.employeeForCreation.passportId, [Validators.required]],
       privatePhone: [this.employeeForCreation.privatePhone],
