@@ -26,7 +26,11 @@
     <input #gb type="text" pInputText size="50" placeholder="חיפוש">
   </div>
   <p-dataTable [value]="infosUi" [globalFilter]="gb" sortMode="multiple" [style]="{'text-align':'center'}">
-    <p-column field="duration" header="משך" [sortable]="true"></p-column>
+    <p-column field="duration" header="משך" [sortable]="true">
+      <template let-col let-vraag="rowData" pTemplate="body">
+        <span [innerHTML]="vraag[col.field] | minutesToHours"></span>
+      </template>
+    </p-column>
     <p-column field="date" header="תאריך" [sortable]="true"></p-column>
     <p-column field="departmentName" header="צוות" [sortable]="true"></p-column>
     <p-column field="employeeSurname" header="שם משפחה" [sortable]="true"></p-column>
