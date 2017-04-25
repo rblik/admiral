@@ -8,6 +8,7 @@
     <div class="col-md-4 pull-left">
       <input type="text" pInputText #searchBox placeholder="לקוח"
              (keyup)="search(searchBox.value)">
+      <p-checkbox [(ngModel)]="onlyActualAgreements" (onChange)="filterByActivity()" binary="true" label="פרויקטים פעילים"></p-checkbox>
     </div>
     <div class="col-md-4 pull-right">
       <button (click)="moveWeekForward()" class="btn btn-sm btn-info"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;שבוע קדימה&nbsp;</button>
@@ -37,11 +38,11 @@
         {{sum(item.workInfos) | minutesToHours}}
       </td>
       <td *ngFor="let work of item.workInfos">
-        <span (click)="showDialog(work, item.clientName)">
+        <span (click)="showDialog(work, item)">
       <!--(work.absenceType==''||work.absenceType==null)?: work.absenceType-->
-        <input [ngStyle]="{'width': '100px'}"
+        <input [ngStyle]="{'width': '100px', 'background-color': isNotBetween(item.start, item.finish, work.date)? 'rgba(85, 85, 85, 0.5)': 'rgba(255, 255, 255, 0.5)'}"
                [ngModel]="work.duration | minutesToHours"
-               style="width: inherit; text-align: center; border-style:solid; border-width: 1px; border-radius: 3px; background-color: white"
+               style="width: inherit; text-align: center; border-style:solid; border-width: 1px; border-radius: 3px;"
                disabled>
         </span>
       </td>

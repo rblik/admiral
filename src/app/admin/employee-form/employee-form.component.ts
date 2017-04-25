@@ -118,6 +118,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
     this.employeeForCreation.companyPhone = value.companyPhone;
     this.employeeForCreation.roles = (value.isAdmin)? ['ROLE_USER', 'ROLE_ADMIN']: ['ROLE_USER'];
     this.employeeForCreation.password = value.password;
+    this.employeeForCreation.department = value.chosenDepartment;
     this.employeeService.save(value.chosenDepartment.id, this.employeeForCreation).subscribe(employee => {
       let closeNewEmployeeFormButton = document.getElementById("closeNewEmployeeFormButton");
       if (closeNewEmployeeFormButton) {

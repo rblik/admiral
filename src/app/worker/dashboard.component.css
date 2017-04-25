@@ -1,6 +1,11 @@
 th, td {
   text-align: center;
 }
+
+td, th:not(:first-child) {
+  padding-bottom:0.3em;
+}
+
 .customDialog {
   background: green;
 }

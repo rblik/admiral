@@ -15,6 +15,7 @@ import {DatePipe} from "@angular/common";
 import {
   ButtonModule,
   CalendarModule,
+  CheckboxModule,
   DialogModule,
   DropdownModule,
   InputMaskModule,
@@ -53,7 +54,8 @@ import {MyCommonModule} from "./my-common.module";
     DropdownModule,
     InputTextareaModule,
     Ng2Webstorage,
-    MyCommonModule
+    MyCommonModule,
+    CheckboxModule
   ],
   providers: [
     AuthService,

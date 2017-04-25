@@ -1,6 +1,8 @@
 import {WorkInfo} from "./work-info";
 export class Agreement {
   agreementId: number;
+  start: string;
+  finish: string;
   employeeId: number;
   employeeName: string;
   employeeSurname: string;

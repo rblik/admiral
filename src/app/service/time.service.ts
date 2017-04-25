@@ -19,6 +19,11 @@ export class TimeService {
     return this.datepipe.transform(date, 'yyyy-MM-dd');
   }
 
+  public isNotBetween(start: string, finish: string, date: string): boolean{
+    return (new Date(start).getTime() > new Date(date).getTime()
+    || (new Date(finish).getTime() < new Date(date).getTime()));
+  }
+
   public getWeekDay(offset?: number): Date {
     let d = new Date();
     d.setUTCHours(0, 0, 0);

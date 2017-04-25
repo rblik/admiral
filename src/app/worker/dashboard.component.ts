@@ -34,8 +34,10 @@ export class DashboardComponent implements OnInit {
   private dayForCreatingWorkInfos: string;
   private clientForCreatingWorkInfos: string;
   private error: string;
+  private onlyActualAgreements: boolean;
 
   constructor(private timeService: TimeService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
+    this.onlyActualAgreements = true;
     this.absenceTypes = [];
     this.absenceTypes.push({label: 'מחלה', value: "ILLNESS"});
     this.absenceTypes.push({label: 'חג', value: "HOLIDAY"});
@@ -99,18 +101,31 @@ export class DashboardComponent implements OnInit {
     return sum;
   }
 
+  filterByActivity(){
+    this.search('');
+  }
+
   search(param: string) {
     this.transform(this.workInfos, param);
   }
 
-  public transform(value: Array<WorkInfo>, searchParam?: string) {
+  public transform(infos: Array<WorkInfo>, searchParam?: string) {
     let param = (searchParam == undefined) ? '' : searchParam.replace(/\W/g, '');
+    let onlyActual = this.onlyActualAgreements;
+    let nextSunday = this.nextSunday;
+    let currentSunday = this.currentSunday;
+
     this.uiAgreements = this.agreements.filter(function (agreement) {
-      return agreement.clientName.toLowerCase().match(param.toLowerCase());
+      let startAgr = new Date(agreement.start).setHours(0, 0, 0, 0);
+      let finishAgr = new Date(agreement.finish).setHours(0, 0, 0, 0);
+      let nextSun = nextSunday.setHours(0, 0, 0, 0);
+      let currSun = currentSunday.setHours(0, 0, 0, 0);
+      let isActual = (onlyActual) ? !(startAgr >= nextSun || finishAgr < currSun) : true;
+      return agreement.clientName.toLowerCase().match(param.toLowerCase()) && isActual;
     });
 
     this.uiAgreements.forEach(agreement => {
-      let filtered: WorkInfo[] = value.filter(function (workInfo) {
+      let filtered: WorkInfo[] = infos.filter(function (workInfo) {
         return workInfo.agreementId == agreement.agreementId;
       });
 
@@ -133,17 +148,25 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  showDialog(workInfo: WorkInfo, clientName: string) {
-    this.error = '';
-    this.createDialog = false;
-    this.clientForCreatingWorkInfos = clientName;
-    this.dayForCreatingWorkInfos = new Date(workInfo.date).toDateString();
-    this.activeAgreementId = workInfo.agreementId;
-    this.activeDate = workInfo.date;
-    this.workService.getDayWork(workInfo.date, workInfo.agreementId).subscribe(infos => {
-      this.dayWorkInfos = infos;
-    });
-    this.display = true;
+  showDialog(workInfo: WorkInfo, agreement: Agreement) {
+    if (this.isNotBetween(agreement.start, agreement.finish, workInfo.date)){
+      return;
+    } else {
+      this.error = '';
+      this.createDialog = false;
+      this.clientForCreatingWorkInfos = agreement.clientName;
+      this.dayForCreatingWorkInfos = new Date(workInfo.date).toDateString();
+      this.activeAgreementId = workInfo.agreementId;
+      this.activeDate = workInfo.date;
+      this.workService.getDayWork(workInfo.date, workInfo.agreementId).subscribe(infos => {
+        this.dayWorkInfos = infos;
+      });
+      this.display = true;
+    }
+  }
+
+  public isNotBetween(start: string, finish: string, date: string): boolean{
+    return this.timeService.isNotBetween(start, finish, date);
   }
 
   create() {

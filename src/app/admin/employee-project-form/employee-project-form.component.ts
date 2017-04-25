@@ -14,6 +14,8 @@ export class EmployeeProjectFormComponent implements OnInit, OnChanges {
 
   @Input() employeeId: number;
   @Output() addedProject: EventEmitter<Project> = new EventEmitter<Project>();
+  private startDate: Date;
+  private finishDate: Date;
   private errorProject: string;
   private chosenProject: Project;
   private projectsUi: SelectItem[] = [];
@@ -69,8 +71,8 @@ export class EmployeeProjectFormComponent implements OnInit, OnChanges {
     });
   }
 
-  addProject(project: Project) {
-    this.agreementService.save(this.employeeId, project.id).subscribe(agreement => {
+  addProject(startDate: Date, finishDate: Date, project: Project) {
+    this.agreementService.save(this.employeeId, project.id, startDate, finishDate).subscribe(agreement => {
       document.getElementById('closeEmployeeProjectForm').click();
       this.addedProject.emit(project);
     },
