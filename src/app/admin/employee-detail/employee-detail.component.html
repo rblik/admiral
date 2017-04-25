@@ -24,22 +24,26 @@
       <h4 style="text-align: center"><a style="cursor: pointer; margin: 0 auto" data-toggle="modal" data-keyboard="true" data-target="#employeeProjectEditionForm"><i class="module-plus glyphicon glyphicon-plus"
                                                                                                                aria-hidden="true"></i></a>&nbsp;פרויקטים</h4>
 
-      <table class="table table-responsive table-condensed" style="margin: 0 auto;width: 50%">
+      <table class="table table-responsive table-condensed" style="margin: 0 auto;width: 75%">
         <thead>
         <tr>
-          <th>שם פרויקט</th>
+          <th>עד</th>
+          <th>מ</th>
           <th>שם לקוח</th>
+          <th>שם פרויקט</th>
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let project of projects">
-          <td>{{project.name}}</td>
-          <td>{{project.client.name}}</td>
+        <tr *ngFor="let agreement of agreements" [ngStyle]="{'color': (isActive(agreement))? 'green':'red'}">
+          <td>{{agreement.projectName}}</td>
+          <td>{{agreement.clientName}}</td>
+          <td>{{agreement.start}}</td>
+          <td>{{agreement.finish}}</td>
         </tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
-<employee-project-form id="employeeProjectEditionForm" *ngIf="employee" (addedProject)="appendProject($event)" [employeeId]="employee.id" tabindex='-1' class="modal fade" onclose="" role="dialog"></employee-project-form>
+<employee-project-form id="employeeProjectEditionForm" *ngIf="employee" (addedAgreement)="appendAgreement($event)" [employeeId]="employee.id" tabindex='-1' class="modal fade" onclose="" role="dialog"></employee-project-form>
 <employee-form *ngIf="employee" [employeeForCreation]="employee" id="employeeEditionForm" tabindex='-1' class="modal fade" onclose="" role="dialog"></employee-form>

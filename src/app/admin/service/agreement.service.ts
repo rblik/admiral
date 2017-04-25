@@ -24,6 +24,19 @@ export class AgreementService {
       });
   }
 
+  public getAgreementsByEmployee(emplId: number): Observable<Agreement[]>{
+    let params = new URLSearchParams();
+    params.append("employeeId", emplId.toString());
+    return this.http.get(this.agreementsUrl, {
+      search: params,
+      headers: new Headers({'Authorization': this.auth.getToken()})
+    }).map(res => res.json())
+      .catch(e => {
+        let s = e.json().details[0];
+        return Observable.throw(s);
+      });
+  }
+
   public save(employeeId: number, projectId: number, startDate: Date, finishDate: Date): Observable<Agreement> {
     let start = this.timeService.getDateString(startDate);
     let finish = this.timeService.getDateString(finishDate);

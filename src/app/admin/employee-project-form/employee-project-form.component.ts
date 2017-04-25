@@ -4,6 +4,7 @@ import {SelectItem} from "primeng/primeng";
 import {Project} from "../../model/project";
 import {AgreementService} from "../service/agreement.service";
 import {Client} from "../../model/client";
+import {Agreement} from "../../model/agreement";
 
 @Component({
   selector: 'employee-project-form',
@@ -13,7 +14,7 @@ import {Client} from "../../model/client";
 export class EmployeeProjectFormComponent implements OnInit, OnChanges {
 
   @Input() employeeId: number;
-  @Output() addedProject: EventEmitter<Project> = new EventEmitter<Project>();
+  @Output() addedAgreement: EventEmitter<Agreement> = new EventEmitter<Agreement>();
   private startDate: Date;
   private finishDate: Date;
   private errorProject: string;
@@ -73,10 +74,15 @@ export class EmployeeProjectFormComponent implements OnInit, OnChanges {
 
   addProject(startDate: Date, finishDate: Date, project: Project) {
     this.agreementService.save(this.employeeId, project.id, startDate, finishDate).subscribe(agreement => {
-      document.getElementById('closeEmployeeProjectForm').click();
-      this.addedProject.emit(project);
-    },
-    error => this.errorProject = error);
+        document.getElementById('closeEmployeeProjectForm').click();
+        agreement.employeeId = this.employeeId;
+        agreement.projectId = project.id;
+        agreement.projectName = project.name;
+        agreement.clientId = project.client.id;
+        agreement.clientName = project.client.name;
+        this.addedAgreement.emit(agreement);
+      },
+      error => this.errorProject = error);
   }
 
 }
