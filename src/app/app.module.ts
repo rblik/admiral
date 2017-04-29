@@ -30,6 +30,10 @@ import {AuthGuardService} from "./service/auth-guard.service";
 import {AdminAuthGuardService} from "./service/admin-auth-guard.service";
 import {DateFormatPipe} from "./pipe/date-format.pipe";
 import {MyCommonModule} from "./my-common.module";
+import {ReversePipe} from "./pipe/reverse.pipe";
+import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
+import {HebrewDatePipe} from "./pipe/hebrew-date.pipe";
+
 
 @NgModule({
   declarations: [
@@ -37,7 +41,9 @@ import {MyCommonModule} from "./my-common.module";
     NavBarComponent,
     DashboardComponent,
     HomeComponent,
-    LoginComponent
+    LoginComponent,
+    ReversePipe,
+    HebrewDatePipe
   ],
   imports: [
     BrowserModule,
@@ -55,7 +61,8 @@ import {MyCommonModule} from "./my-common.module";
     InputTextareaModule,
     Ng2Webstorage,
     MyCommonModule,
-    CheckboxModule
+    CheckboxModule,
+    MultiselectDropdownModule
   ],
   providers: [
     AuthService,

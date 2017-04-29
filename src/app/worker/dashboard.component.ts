@@ -1,12 +1,12 @@
 import {Component, OnInit} from "@angular/core";
-import {AuthService} from "../service/auth.service";
 import {TimeService} from "../service/time.service";
 import {WorkInfoService} from "../service/work-info.service";
 import {Employee} from "../model/employee";
 import {Agreement} from "../model/agreement";
 import {WorkInfo} from "../model/work-info";
 import {WorkUnit} from "../model/work-unit";
-import {SessionStorageService, SessionStorage} from 'ng2-webstorage';
+import {SessionStorageService} from 'ng2-webstorage';
+import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
 
 @Component({
   selector: 'worker-dashboard',
@@ -31,13 +31,23 @@ export class DashboardComponent implements OnInit {
   private activeDate: string;
   private createDialog: boolean;
   private workInfoItem: WorkInfo;
-  private dayForCreatingWorkInfos: string;
+  private dayForCreatingWorkInfos: Date;
   private clientForCreatingWorkInfos: string;
   private error: string;
-  private onlyActualAgreements: boolean;
+  private sumByDayArr: number[];
+  private sumByWeek: number;
+  private clientsUi: string[];
+  private clientsCheckboxOptions: IMultiSelectOption[];
+  private clientsCheckboxSettings: IMultiSelectSettings;
+  private clientsCheckboxTexts: IMultiSelectTexts;
 
   constructor(private timeService: TimeService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
-    this.onlyActualAgreements = true;
+    this.fillAbsenceTypes();
+    this.sumByDayArr = [];
+    this.fixDropdownCheckbox();
+  }
+
+  private fillAbsenceTypes() {
     this.absenceTypes = [];
     this.absenceTypes.push({label: 'מחלה', value: "ILLNESS"});
     this.absenceTypes.push({label: 'חג', value: "HOLIDAY"});
@@ -45,21 +55,61 @@ export class DashboardComponent implements OnInit {
     this.absenceTypes.push({label: 'מלוים', value: "ARMY"});
   }
 
+  private fixDropdownCheckbox() {
+    this.clientsCheckboxOptions = [];
+    this.clientsUi = [];
+    this.clientsCheckboxSettings = {
+      enableSearch: true,
+      displayAllSelectedText: false,
+      dynamicTitleMaxItems: 0,
+      showCheckAll: true,
+      showUncheckAll: true
+    };
+    this.clientsCheckboxTexts = {
+      checkAll: 'בחר כולם',
+      uncheckAll: 'בטל בחירה',
+      checked: 'לקוח נבחר',
+      checkedPlural: 'לקוחות נבחרו',
+      searchPlaceholder: 'חפש',
+      defaultTitle: 'בחר לקוח',
+      allSelected: 'כלם נבחרו',
+    };
+  }
+
   ngOnInit(): void {
     this.timeOffset = 0;
     this.sessionStorageService.observe('employee')
       .subscribe((employee) => this.employee = JSON.parse(employee));
     this.initWeekBorders(this.timeOffset);
+    this.getAgreementsWithWorkAndRender();
+  }
+
+  private getAgreementsWithWorkAndRender() {
     this.workService.getWorkAgreements().subscribe(agreements => {
       this.agreements = agreements;
-      this.workService.getWeekWork(
-        this.timeService.getDateString(this.currentSunday),
-        this.timeService.getDateString(this.nextSunday))
-        .subscribe(workInfos => {
-          this.workInfos = workInfos;
-          this.transform(this.workInfos);
-        });
+      this.fillDropDownList(agreements);
+      this.getWorkForWeekAndRender();
     });
+  }
+
+  private fillDropDownList(agreements: Agreement[]) {
+    let arr = [];
+    agreements.forEach(agreement => {
+      if (arr.indexOf(agreement.clientName) == -1) {
+        this.clientsCheckboxOptions.push({id: agreement.clientName, name: agreement.clientName});
+        arr.push(agreement.clientName);
+      }
+    });
+  }
+
+  private getWorkForWeekAndRender() {
+    this.workService.getWeekWork(
+      this.timeService.getDateString(this.currentSunday),
+      this.timeService.getDateString(this.nextSunday))
+      .subscribe(workInfos => {
+        this.workInfos = workInfos;
+        this.transform(this.workInfos, this.clientsUi);
+      });
   }
 
   getDayByWeek(sunday: Date, offset: number): Date {
@@ -74,25 +124,13 @@ export class DashboardComponent implements OnInit {
   moveWeekForward() {
     this.timeOffset += 7;
     this.initWeekBorders(this.timeOffset);
-    this.workService.getWeekWork(
-      this.timeService.getDateString(this.currentSunday),
-      this.timeService.getDateString(this.nextSunday))
-      .subscribe(workInfos => {
-        this.workInfos = workInfos;
-        this.transform(this.workInfos);
-      });
+    this.getWorkForWeekAndRender();
   }
 
   moveWeekBack() {
     this.timeOffset -= 7;
     this.initWeekBorders(this.timeOffset);
-    this.workService.getWeekWork(
-      this.timeService.getDateString(this.currentSunday),
-      this.timeService.getDateString(this.nextSunday))
-      .subscribe(workInfos => {
-        this.workInfos = workInfos;
-        this.transform(this.workInfos);
-      });
+    this.getWorkForWeekAndRender();
   }
 
   sum(arr: WorkInfo[]): number {
@@ -101,29 +139,18 @@ export class DashboardComponent implements OnInit {
     return sum;
   }
 
-  filterByActivity(){
-    this.search('');
+  search(params: string[]) {
+    this.transform(this.workInfos, params)
   }
 
-  search(param: string) {
-    this.transform(this.workInfos, param);
-  }
+  public transform(infos: Array<WorkInfo>, searchParams?: string[]) {
+    let params = searchParams? searchParams: [];
+      this.uiAgreements = this.agreements.filter(function (agreement) {
+        return params.length==0 || params.indexOf(agreement.clientName) !== -1;
+      });
 
-  public transform(infos: Array<WorkInfo>, searchParam?: string) {
-    let param = (searchParam == undefined) ? '' : searchParam.replace(/\W/g, '');
-    let onlyActual = this.onlyActualAgreements;
-    let nextSunday = this.nextSunday;
-    let currentSunday = this.currentSunday;
-
-    this.uiAgreements = this.agreements.filter(function (agreement) {
-      let startAgr = new Date(agreement.start).setHours(0, 0, 0, 0);
-      let finishAgr = new Date(agreement.finish).setHours(0, 0, 0, 0);
-      let nextSun = nextSunday.setHours(0, 0, 0, 0);
-      let currSun = currentSunday.setHours(0, 0, 0, 0);
-      let isActual = (onlyActual) ? !(startAgr >= nextSun || finishAgr < currSun) : true;
-      return agreement.clientName.toLowerCase().match(param.toLowerCase()) && isActual;
-    });
-
+    this.sumByDayArr = [0, 0, 0, 0, 0, 0, 0];
+    this.sumByWeek = 0;
     this.uiAgreements.forEach(agreement => {
       let filtered: WorkInfo[] = infos.filter(function (workInfo) {
         return workInfo.agreementId == agreement.agreementId;
@@ -134,6 +161,8 @@ export class DashboardComponent implements OnInit {
       for (let i = 0; i < filtered.length; i++) {
         let day = new Date(filtered[i].date).getDay();
         resultArr[day] = filtered[i];
+        this.sumByDayArr[day] += resultArr[day].duration;
+        this.sumByWeek += resultArr[day].duration;
       }
       for (let i = 0; i < 7; i++) {
         if (resultArr[i] == null) {
@@ -149,24 +178,31 @@ export class DashboardComponent implements OnInit {
   }
 
   showDialog(workInfo: WorkInfo, agreement: Agreement) {
-    if (this.isNotBetween(agreement.start, agreement.finish, workInfo.date)){
-      return;
-    } else {
-      this.error = '';
-      this.createDialog = false;
-      this.clientForCreatingWorkInfos = agreement.clientName;
-      this.dayForCreatingWorkInfos = new Date(workInfo.date).toDateString();
-      this.activeAgreementId = workInfo.agreementId;
-      this.activeDate = workInfo.date;
-      this.workService.getDayWork(workInfo.date, workInfo.agreementId).subscribe(infos => {
-        this.dayWorkInfos = infos;
-      });
-      this.display = true;
+    let currentDate = workInfo.date;
+    this.error = '';
+    this.createDialog = false;
+    this.clientForCreatingWorkInfos = agreement.clientName;
+    this.dayForCreatingWorkInfos = new Date(currentDate);
+    this.activeAgreementId = workInfo.agreementId;
+    this.activeDate = currentDate;
+    this.workService.getDayWork(currentDate, workInfo.agreementId).subscribe(infos => {
+      this.dayWorkInfos = infos;
+    });
+    let openModalButton = document.getElementById('openModalButton');
+    if(!!openModalButton) {
+      openModalButton.click();
     }
   }
 
-  public isNotBetween(start: string, finish: string, date: string): boolean{
-    return this.timeService.isNotBetween(start, finish, date);
+  moveDay(workDate: Date, agreementId: number, step: number) {
+    let currentDate = this.timeService.getDateString(this.getDayByWeek(new Date(workDate), step));
+    this.error = '';
+    this.createDialog = false;
+    this.dayForCreatingWorkInfos = new Date(currentDate);
+    this.activeDate = currentDate;
+    this.workService.getDayWork(currentDate, agreementId).subscribe(infos => {
+      this.dayWorkInfos = infos;
+    });
   }
 
   create() {
@@ -184,9 +220,14 @@ export class DashboardComponent implements OnInit {
 
   closeDialog() {
     this.error = '';
-    this.dayWorkInfos = [new WorkInfo()];
-    this.display = false;
+    let dayWorkInfoFormOpen = document.getElementById('dayWorkInfoFormOpen');
+    if (!!dayWorkInfoFormOpen) {
+      dayWorkInfoFormOpen.click();
+    }
     this.createDialog = false;
+    setTimeout(() => {
+      this.dayWorkInfos = [new WorkInfo()];
+    }, 500);
   }
 
   save(workInfo: WorkInfo) {
@@ -201,7 +242,7 @@ export class DashboardComponent implements OnInit {
         let saved = this.convertToInfo(workUnit, workInfo.agreementId);
         this.replaceInDayWorkInfos(saved);
         this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
-        this.transform(this.workInfos);
+        this.transform(this.workInfos, this.clientsUi);
         this.createDialog = false;
         this.workInfoItem = null;
       }, err => this.error = err);
@@ -219,7 +260,7 @@ export class DashboardComponent implements OnInit {
     this.workService.remove(workInfo.unitId);
     this.removeInDayWorkInfos(workInfo);
     this.removeInAllWorkInfos(workInfo);
-    this.transform(this.workInfos);
+    this.transform(this.workInfos, this.clientsUi);
   }
 
   private removeInDayWorkInfos(workInfo: WorkInfo) {

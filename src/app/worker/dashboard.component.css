@@ -2,6 +2,11 @@ th, td {
   text-align: center;
 }
 
+.hebrew-direct {
+  unicode-bidi: embed;
+  direction: rtl;
+}
+
 td, th:not(:first-child) {
   padding-bottom:0.3em;
 }
@@ -23,4 +28,16 @@ td, th:not(:first-child) {
 
 :-ms-input-placeholder {
   text-align: center;
+}
+
+.modal-dialog .modal-content {
+  position: absolute;
+  display: table;
+  overflow-y: auto;
+  width: 500px;
+}
+
+.work-infos-modal-title {
+ font-weight: bold;
+  font-size: large;
 }
