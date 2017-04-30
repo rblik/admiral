@@ -22,13 +22,13 @@
     <thead>
     <tr class="hebrew-direct">
       <th>סה"כ</th>
-      <th>{{getDayByWeek(currentSunday, 6) | hebrewDate}}</th>
-      <th>{{getDayByWeek(currentSunday, 5) | hebrewDate}}</th>
-      <th>{{getDayByWeek(currentSunday, 4) | hebrewDate}}</th>
-      <th>{{getDayByWeek(currentSunday, 3) | hebrewDate}}</th>
-      <th>{{getDayByWeek(currentSunday, 2) | hebrewDate}}</th>
-      <th>{{getDayByWeek(currentSunday, 1) | hebrewDate}}</th>
-      <th>{{currentSunday | hebrewDate}}</th>
+      <th><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 6))" style="cursor: pointer">{{getDayByWeek(currentSunday, 6) | hebrewDate}}</a></th>
+      <th><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 5))" style="cursor: pointer">{{getDayByWeek(currentSunday, 5) | hebrewDate}}</a></th>
+      <th><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 4))" style="cursor: pointer">{{getDayByWeek(currentSunday, 4) | hebrewDate}}</a></th>
+      <th><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 3))" style="cursor: pointer">{{getDayByWeek(currentSunday, 3) | hebrewDate}}</a></th>
+      <th><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 2))" style="cursor: pointer">{{getDayByWeek(currentSunday, 2) | hebrewDate}}</a></th>
+      <th><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 1))" style="cursor: pointer">{{getDayByWeek(currentSunday, 1) | hebrewDate}}</a></th>
+      <th><a (click)="showPivotalWorkDayDialog(currentSunday)" style="cursor: pointer">{{currentSunday | hebrewDate}}</a></th>
       <th>פרויקט</th>
       <th>לקןח</th>
     </tr>
@@ -39,7 +39,7 @@
         {{sum(item.workInfos) | minutesToHours}}
       </td>
       <td *ngFor="let work of item.workInfos | reverse">
-        <span (click)="showDialog(work, item)">
+        <span (click)="showWorkDayDialog(work, item)">
       <!--(work.absenceType==''||work.absenceType==null)?: work.absenceType-->
         <input [ngStyle]="{'width': '100px', 'background-color': 'rgba(255, 255, 255, 0.5)'}"
                [ngModel]="work.duration | minutesToHours"
@@ -81,7 +81,7 @@
           <div style="min-height: 350px ;max-height: 550px">
             <div style="text-align: center">
               <h3>
-                {{clientForCreatingWorkInfos}}-עבודה יומי ב
+                {{!isPivotal? clientForCreatingWorkInfos + 'עבודה יומי ב':' עבודה יומי'}}
               </h3>
             </div>
             <div>
@@ -96,11 +96,12 @@
                 <tr>
                   <th style="width: 10%"></th>
                   <th style="width: 10%"></th>
-                  <th style="width: 16%">תאור</th>
-                  <th style="width: 16%">משך</th>
-                  <th style="width: 16%">חופשה</th>
-                  <th style="width: 16%">עד-</th>
-                  <th style="width: 16%">מ-</th>
+                  <th style="width: 15%">תאור</th>
+                  <th style="width: 15%">משך</th>
+                  <th style="width: 15%">חופשה</th>
+                  <th style="width: 15%">עד-</th>
+                  <th style="width: 15%">מ-</th>
+                  <th *ngIf="isPivotal" style="width: 15%">לקוח</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -113,9 +114,10 @@
                   </td>
                   <td>{{workInfo.comment}}</td>
                   <td>{{workInfo.duration | minutesToHours}}</td>
-                  <td>{{workInfo.absenceType}}</td>
+                  <td>{{workInfo.absenceType | absenceType}}</td>
                   <td>{{workInfo.to}}</td>
                   <td>{{workInfo.from}}</td>
+                  <td *ngIf="isPivotal">{{workInfo.clientName}}</td>
                 </tr>
                 </tbody>
               </table>
@@ -130,9 +132,12 @@
               </label>
               <button type="button" pButton icon="fa-clock-o" (click)="makeWholeDay()" label="24"></button>
               <br>
-              <label for="dayWorkInfoVacation">
-                <p-dropdown [options]="absenceTypes" [style]="{'text-align':'center'}" id="dayWorkInfoVacation" panelStyleClass="form-control pull-left" placeholder="בחר את סוג"
+              <label for="vacationDropdown">
+                <p-dropdown [options]="absenceTypes" [style]="{'text-align':'center'}" id="vacationDropdown" panelStyleClass="form-control pull-left" placeholder="בחר את סוג"
                             [(ngModel)]="workInfoItem.absenceType"></p-dropdown>&nbsp;בחירת חופשה&nbsp;
+              </label>
+              <label for="clientsDropdown" *ngIf="isPivotal && !isEdit">
+                <p-dropdown [options]="clientsDropdown" [style]="{'text-align':'center'}" id="clientsDropdown" panelStyleClass="form-control pull-right" [(ngModel)]="workInfoItem.agreementId" [filter]="true"></p-dropdown>
               </label>
               <br>
               <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" placeholder="תאור" id="dayWorkInfoComment" class="form-control" [maxlength]="50"></textarea>

@@ -27,9 +27,11 @@ export class WorkInfoService {
       .map(res => res.json());
   }
 
-  public getDayWork(date: string, agreementId: number): Observable<WorkInfo[]>{
+  public getDayWork(date: string, agreementId?: number): Observable<WorkInfo[]>{
     let params = new URLSearchParams();
-    params.append("agreementId", agreementId.toString());
+    if (!!agreementId) {
+      params.append("agreementId", agreementId.toString());
+    }
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.authService.getToken());
     let options = new RequestOptions({headers: headers, search: params});

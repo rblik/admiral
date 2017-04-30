@@ -7,6 +7,7 @@ import {WorkInfo} from "../model/work-info";
 import {WorkUnit} from "../model/work-unit";
 import {SessionStorageService} from 'ng2-webstorage';
 import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
+import {SelectItem} from "primeng/primeng";
 
 @Component({
   selector: 'worker-dashboard',
@@ -40,6 +41,9 @@ export class DashboardComponent implements OnInit {
   private clientsCheckboxOptions: IMultiSelectOption[];
   private clientsCheckboxSettings: IMultiSelectSettings;
   private clientsCheckboxTexts: IMultiSelectTexts;
+  private isPivotal: boolean;
+  private isEdit: boolean;
+  private clientsDropdown: SelectItem[] = [];
 
   constructor(private timeService: TimeService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
     this.fillAbsenceTypes();
@@ -87,6 +91,7 @@ export class DashboardComponent implements OnInit {
   private getAgreementsWithWorkAndRender() {
     this.workService.getWorkAgreements().subscribe(agreements => {
       this.agreements = agreements;
+      this.getClientsUi(agreements);
       this.fillDropDownList(agreements);
       this.getWorkForWeekAndRender();
     });
@@ -177,8 +182,9 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  showDialog(workInfo: WorkInfo, agreement: Agreement) {
+  showWorkDayDialog(workInfo: WorkInfo, agreement: Agreement) {
     let currentDate = workInfo.date;
+    this.isPivotal = false;
     this.error = '';
     this.createDialog = false;
     this.clientForCreatingWorkInfos = agreement.clientName;
@@ -186,6 +192,22 @@ export class DashboardComponent implements OnInit {
     this.activeAgreementId = workInfo.agreementId;
     this.activeDate = currentDate;
     this.workService.getDayWork(currentDate, workInfo.agreementId).subscribe(infos => {
+      this.dayWorkInfos = infos;
+    });
+    let openModalButton = document.getElementById('openModalButton');
+    if(!!openModalButton) {
+      openModalButton.click();
+    }
+  }
+
+  showPivotalWorkDayDialog(date: Date) {
+    let currentDate = this.timeService.getDateString(date);
+    this.isPivotal = true;
+    this.error = '';
+    this.createDialog = false;
+    this.dayForCreatingWorkInfos = new Date(currentDate);
+    this.activeDate = currentDate;
+    this.workService.getDayWork(currentDate).subscribe(infos => {
       this.dayWorkInfos = infos;
     });
     let openModalButton = document.getElementById('openModalButton');
@@ -206,14 +228,16 @@ export class DashboardComponent implements OnInit {
   }
 
   create() {
+    this.isEdit = false;
     this.workInfoItem = new WorkInfo();
-    this.workInfoItem.agreementId = this.activeAgreementId;
+    this.workInfoItem.agreementId = !this.isPivotal? this.activeAgreementId : this.clientsDropdown[0].value;
     this.workInfoItem.date = this.activeDate;
     this.workInfoItem.duration = 0;
     this.createDialog = true;
   }
 
   edit(workInfo: WorkInfo) {
+    this.isEdit = true;
     this.workInfoItem = workInfo;
     this.createDialog = true;
   }
@@ -239,8 +263,9 @@ export class DashboardComponent implements OnInit {
     this.workService.save(workInfo.agreementId, this.convertToUnit(workInfo))
       .subscribe(workUnit => {
         this.error = '';
-        let saved = this.convertToInfo(workUnit, workInfo.agreementId);
-        this.replaceInDayWorkInfos(saved);
+        let saved: WorkInfo = this.convertToInfo(workUnit, workInfo.agreementId);
+        let filter = this.agreements.filter((agreement) => agreement.agreementId==workInfo.agreementId);
+        this.replaceInDayWorkInfos(saved, filter[0]);
         this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
         this.transform(this.workInfos, this.clientsUi);
         this.createDialog = false;
@@ -283,7 +308,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  private replaceInDayWorkInfos(workInfo) {
+  private replaceInDayWorkInfos(workInfo: WorkInfo, agreement?: Agreement) {
     let index = -1;
     for (let i = 0; i < this.dayWorkInfos.length; i++) {
       if (this.dayWorkInfos[i].unitId === workInfo.unitId) {
@@ -291,6 +316,8 @@ export class DashboardComponent implements OnInit {
         break;
       }
     }
+    workInfo.clientId = agreement.clientId;
+    workInfo.clientName = agreement.clientName;
     if (index == -1) {
       this.dayWorkInfos.push(workInfo);
     } else {
@@ -309,6 +336,15 @@ export class DashboardComponent implements OnInit {
       }
     }
     this.workInfos.push(workInfo);
+  }
+
+  private getClientsUi(agreements: Agreement[]) {
+    agreements.forEach(agreement => {
+      this.clientsDropdown.push({
+        label: agreement.projectName + ' - ' + agreement.clientName,
+        value: agreement.agreementId
+      });
+    });
   }
 
   private convertToUnit(workInfo: WorkInfo): WorkUnit {
