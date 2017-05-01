@@ -264,8 +264,7 @@ export class DashboardComponent implements OnInit {
       .subscribe(workUnit => {
         this.error = '';
         let saved: WorkInfo = this.convertToInfo(workUnit, workInfo.agreementId);
-        let filter = this.agreements.filter((agreement) => agreement.agreementId==workInfo.agreementId);
-        this.replaceInDayWorkInfos(saved, filter[0]);
+        this.replaceInDayWorkInfos(saved);
         this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
         this.transform(this.workInfos, this.clientsUi);
         this.createDialog = false;
@@ -308,7 +307,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  private replaceInDayWorkInfos(workInfo: WorkInfo, agreement?: Agreement) {
+  private replaceInDayWorkInfos(workInfo: WorkInfo) {
     let index = -1;
     for (let i = 0; i < this.dayWorkInfos.length; i++) {
       if (this.dayWorkInfos[i].unitId === workInfo.unitId) {
@@ -316,8 +315,6 @@ export class DashboardComponent implements OnInit {
         break;
       }
     }
-    workInfo.clientId = agreement.clientId;
-    workInfo.clientName = agreement.clientName;
     if (index == -1) {
       this.dayWorkInfos.push(workInfo);
     } else {

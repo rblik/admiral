@@ -55,7 +55,7 @@ export class WorkInfoService {
     return this.http.post(this.unitsUrl, JSON.stringify(workUnit), options)
       .map(res => res.json())
       .catch(e => {
-        let s: string = e.json().details[0];
+        let s: string = e.json().cause=='TimeOverlappingException'? 'רקורד על פרק הזמן הזה כבר קיימת.' : e.json().details[0];
         return Observable.throw(s);
       });
   }
