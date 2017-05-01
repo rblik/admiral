@@ -73,10 +73,10 @@ export class MissingDaysComponent implements OnInit {
     this.employeesCheckboxTexts = {
       checkAll: 'בחר כולם',
       uncheckAll: 'בטל בחירה',
-      checked: 'לקוח נבחר',
-      checkedPlural: 'לקוחות נבחרו',
+      checked: 'עובד נבחר',
+      checkedPlural: 'עובדים נבחרו',
       searchPlaceholder: 'חפש',
-      defaultTitle: 'בחר לקוח',
+      defaultTitle: 'בחר עובד',
       allSelected: 'כלם נבחרו',
     };
   }
@@ -124,21 +124,25 @@ export class MissingDaysComponent implements OnInit {
   }
 
   sendAndCloseMissingMailDialog(email: string, message: string) {
-    let mailingFormClose = document.getElementById('mailingFormClose');
-    if (!!mailingFormClose) {
-      mailingFormClose.click();
+    if (this.employeeIds.length == 0) {
+      this.mailError = 'אנא בחר עובד'
+    } else {
+      let mailingFormClose = document.getElementById('mailingFormClose');
+      if (!!mailingFormClose) {
+        mailingFormClose.click();
+      }
+      this.mailService.sendMissingByEmail(
+        this.timeService.getDateString(this.timeService.fromDate),
+        this.timeService.getDateString(this.timeService.toDate),
+        this.employeeIds, email, message
+      ).subscribe(approveMsg => {
+        this.approveMsg = approveMsg;
+        this.notificationBarService.create({message: 'הדוח נשלח בהצלחה', type: NotificationType.Success});
+      }, err => {
+        this.notificationBarService.create({message: 'הדוח לא נשלח', type: NotificationType.Error});
+        this.mailError = err;
+      });
     }
-    this.mailService.sendMissingByEmail(
-      this.timeService.getDateString(this.timeService.fromDate),
-      this.timeService.getDateString(this.timeService.toDate),
-      this.employeeIds, email, message
-    ).subscribe(approveMsg => {
-      this.approveMsg = approveMsg;
-      this.notificationBarService.create({message: 'הדוח נשלח בהצלחה', type: NotificationType.Success});
-    }, err => {
-      this.notificationBarService.create({message: 'הדוח לא נשלח', type: NotificationType.Error});
-      this.mailError = err;
-    });
   }
 
   closeMissingMailDialog() {

@@ -49,6 +49,13 @@
         </span>
       </div>
       <div class="modal-body">
+        <div class="row">
+          <div class="col-md-2"></div>
+          <div *ngIf="mailError" style="text-align: center" class="alert alert-danger col-md-8">
+            {{mailError}}
+          </div>
+          <div class="col-md-2"></div>
+        </div>
         <div class="row col-md-12 form-group">
           <div class="col-md-6 pull-left">
             <input type="email" [disabled]="!showReceiverEmail" placeholder="ד''א מסוים" [(ngModel)]="missingReportEmail" style="direction: ltr; text-align: center" class="form-control hebrew-direct">
