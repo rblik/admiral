@@ -9,15 +9,15 @@
       <div *ngIf="errorProject" style="text-align: center" class="alert alert-danger">
         {{errorProject}}</div>
       <div class="form-group">
-        <p-dropdown [options]="clientsUi" [style]="{'width':'inherit'}" (onChange)="initProjects(chosenClient)" [(ngModel)]="chosenClient" [filter]="true"></p-dropdown>
-        <p-dropdown [options]="projectsUi" [style]="{'width':'inherit'}" [(ngModel)]="chosenProject" [filter]="true"></p-dropdown>
+        <p-dropdown [options]="clientsUi" [required]="true" [style]="{'width':'inherit'}" (onChange)="initProjects(chosenClient)" [(ngModel)]="chosenClient" [filter]="true"></p-dropdown>
+        <p-dropdown [options]="projectsUi" [required]="true" [style]="{'width':'inherit'}" [(ngModel)]="chosenProject" [filter]="true"></p-dropdown>
       </div>
       <div class="form-group">
         <label for="endDateId">
-          <p-calendar [(ngModel)]="finishDate" id="endDateId" inputStyleClass="form-control"></p-calendar>&nbsp;עד תעריך&nbsp;
+          <p-calendar [(ngModel)]="finishDate" id="endDateId" [required]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2030" inputStyleClass="form-control"></p-calendar>&nbsp;עד תעריך&nbsp;
         </label>
         <label for="startDateId">
-          <p-calendar [(ngModel)]="startDate" id="startDateId" inputStyleClass="form-control"></p-calendar>&nbsp;מתאריך&nbsp;
+          <p-calendar [(ngModel)]="startDate" id="startDateId" [required]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2030" inputStyleClass="form-control"></p-calendar>&nbsp;מתאריך&nbsp;
         </label>
       </div>
     </div>

@@ -7,6 +7,11 @@ body {
   background-image: url("diamond.png");
 }
 
+.hebrew-direct {
+  unicode-bidi: embed;
+  direction: rtl;
+}
+
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */

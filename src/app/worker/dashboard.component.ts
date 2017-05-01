@@ -244,9 +244,9 @@ export class DashboardComponent implements OnInit {
 
   closeDialog() {
     this.error = '';
-    let dayWorkInfoFormOpen = document.getElementById('dayWorkInfoFormOpen');
-    if (!!dayWorkInfoFormOpen) {
-      dayWorkInfoFormOpen.click();
+    let dayWorkInfoFormClose = document.getElementById('dayWorkInfoFormClose');
+    if (!!dayWorkInfoFormClose) {
+      dayWorkInfoFormClose.click();
     }
     this.createDialog = false;
     setTimeout(() => {

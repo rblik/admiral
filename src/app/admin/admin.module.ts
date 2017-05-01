@@ -28,6 +28,9 @@ import {ClientFormComponent} from "./client-form/client-form.component";
 import {EmployeeProjectFormComponent} from "./employee-project-form/employee-project-form.component";
 import {DepartmentFormComponent} from "./department-form/department-form.component";
 import {MyCommonModule} from "../my-common.module";
+import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
+import {MailService} from "./service/mail.service";
+import {NotificationBarModule} from "angular2-notification-bar";
 
 @NgModule({
   declarations: [
@@ -59,7 +62,9 @@ import {MyCommonModule} from "../my-common.module";
     DataTableModule,
     SpinnerModule,
     CheckboxModule,
-    MyCommonModule
+    MyCommonModule,
+    MultiselectDropdownModule,
+    NotificationBarModule
   ],
   providers: [
     DownloadService,
@@ -68,7 +73,8 @@ import {MyCommonModule} from "../my-common.module";
     AgreementService,
     ProjectService,
     ClientService,
-    DepartmentService
+    DepartmentService,
+    MailService
   ]
 })
 export class AdminModule {

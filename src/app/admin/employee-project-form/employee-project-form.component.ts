@@ -35,6 +35,9 @@ export class EmployeeProjectFormComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    this.startDate = new Date();
+    this.finishDate = new Date(this.startDate);
+    this.finishDate.setFullYear(this.startDate.getFullYear()+1);
     this.chosenProject = null;
     this.chosenClient = null;
     this.projectService.getProjects().subscribe(projects => {
@@ -73,16 +76,22 @@ export class EmployeeProjectFormComponent implements OnInit, OnChanges {
   }
 
   addProject(startDate: Date, finishDate: Date, project: Project) {
-    this.agreementService.save(this.employeeId, project.id, startDate, finishDate).subscribe(agreement => {
-        document.getElementById('closeEmployeeProjectForm').click();
-        agreement.employeeId = this.employeeId;
-        agreement.projectId = project.id;
-        agreement.projectName = project.name;
-        agreement.clientId = project.client.id;
-        agreement.clientName = project.client.name;
-        this.addedAgreement.emit(agreement);
-      },
-      error => this.errorProject = error);
+    if (finishDate<=startDate){
+      this.errorProject = 'טווח זמן לא תקין';
+      return;
+    } else {
+      this.agreementService.save(this.employeeId, project.id, startDate, finishDate).subscribe(agreement => {
+          document.getElementById('closeEmployeeProjectForm').click();
+          agreement.employeeId = this.employeeId;
+          agreement.projectId = project.id;
+          agreement.projectName = project.name;
+          agreement.clientId = project.client.id;
+          agreement.clientName = project.client.name;
+          this.errorProject = '';
+          this.addedAgreement.emit(agreement);
+        },
+        error => this.errorProject = error);
+    }
   }
 
 }

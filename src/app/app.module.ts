@@ -28,12 +28,10 @@ import {Ng2Webstorage} from "ng2-webstorage";
 import {LoginComponent} from "./login/login.component";
 import {AuthGuardService} from "./service/auth-guard.service";
 import {AdminAuthGuardService} from "./service/admin-auth-guard.service";
-import {DateFormatPipe} from "./pipe/date-format.pipe";
 import {MyCommonModule} from "./my-common.module";
 import {ReversePipe} from "./pipe/reverse.pipe";
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
-import {HebrewDatePipe} from "./pipe/hebrew-date.pipe";
-
+import {NotificationBarModule} from "angular2-notification-bar";
 
 @NgModule({
   declarations: [
@@ -42,8 +40,7 @@ import {HebrewDatePipe} from "./pipe/hebrew-date.pipe";
     DashboardComponent,
     HomeComponent,
     LoginComponent,
-    ReversePipe,
-    HebrewDatePipe
+    ReversePipe
   ],
   imports: [
     BrowserModule,
@@ -62,7 +59,8 @@ import {HebrewDatePipe} from "./pipe/hebrew-date.pipe";
     Ng2Webstorage,
     MyCommonModule,
     CheckboxModule,
-    MultiselectDropdownModule
+    MultiselectDropdownModule,
+    NotificationBarModule
   ],
   providers: [
     AuthService,
@@ -70,8 +68,7 @@ import {HebrewDatePipe} from "./pipe/hebrew-date.pipe";
     WorkInfoService,
     DatePipe,
     AuthGuardService,
-    AdminAuthGuardService,
-    DateFormatPipe
+    AdminAuthGuardService
   ],
   bootstrap: [AppComponent]
 })

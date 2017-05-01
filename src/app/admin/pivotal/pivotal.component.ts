@@ -7,6 +7,7 @@ import {TimeService} from "../../service/time.service";
 import {AgreementService} from "../service/agreement.service";
 import {Agreement} from "../../model/agreement";
 import {ReportService} from "../service/report.service";
+import {NotificationBarService, NotificationType} from "angular2-notification-bar";
 
 @Component({
   selector: 'pivotal',
@@ -14,7 +15,7 @@ import {ReportService} from "../service/report.service";
 })
 export class PivotalComponent implements OnInit {
 
-  constructor(private downloadService: DownloadService, private reportService: ReportService, private agreementService: AgreementService, private timeService: TimeService) {
+  constructor(private notificationBarService: NotificationBarService, private downloadService: DownloadService, private reportService: ReportService, private agreementService: AgreementService, private timeService: TimeService) {
     this.types = [];
     this.types.push({label: 'PDF', value: 'pdf'});
     this.types.push({label: 'Excel', value: 'xlsx'});
@@ -152,6 +153,7 @@ export class PivotalComponent implements OnInit {
           fileSaver.saveAs(blob, 'pivotal.' + this.selectedType);
         },
         err => {
+          this.notificationBarService.create({message: 'הורדה נכשלה', type: NotificationType.Error});
           this.error = err;
         });
   }

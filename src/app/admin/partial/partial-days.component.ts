@@ -8,6 +8,7 @@ import {Employee} from "../../model/employee";
 import {Department} from "../../model/department";
 import {WorkInfo} from "../../model/work-info";
 import * as fileSaver from "file-saver";
+import {NotificationBarService, NotificationType} from "angular2-notification-bar";
 
 @Component({
   selector: 'partial-days',
@@ -29,7 +30,7 @@ export class PartialDaysComponent implements OnInit{
   private limit: number;
   private durationFilter: number;
 
-  constructor(private downloadService: DownloadService, private reportService: ReportService, private employeeService: EmployeeService, private timeService: TimeService) {
+  constructor(private notificationBarService: NotificationBarService, private downloadService: DownloadService, private reportService: ReportService, private employeeService: EmployeeService, private timeService: TimeService) {
     this.limit = 9;
     this.types = [];
     this.types.push({label: 'PDF', value: 'pdf'});
@@ -101,6 +102,7 @@ export class PartialDaysComponent implements OnInit{
           fileSaver.saveAs(blob, 'partial.' + this.selectedType);
         },
         err => {
+          this.notificationBarService.create({message: 'הורדה נכשלה', type: NotificationType.Error});
           this.error = err;
         });
   }

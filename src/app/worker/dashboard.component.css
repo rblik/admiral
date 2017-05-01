@@ -2,11 +2,6 @@ th, td {
   text-align: center;
 }
 
-.hebrew-direct {
-  unicode-bidi: embed;
-  direction: rtl;
-}
-
 td, th:not(:first-child) {
   padding-bottom:0.3em;
 }
