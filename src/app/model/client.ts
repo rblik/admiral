@@ -3,7 +3,8 @@ import {Project} from "./project";
 
 export class Client {
   id: number;
-  companyNumber: number;
+  companyNumber: string;
+  clientNumber: string;
   name: string;
   phones: string[];
   projects: Project[];

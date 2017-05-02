@@ -28,7 +28,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-      // only run when property "data" changed
+      // only run when property employeeForCreation changed
       if (changes['employeeForCreation']) {
         this.employeeForCreation = changes['employeeForCreation'].currentValue;
         this.fillTheForm();
@@ -73,7 +73,8 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
       email: ['', Validators.compose([Validators.required])],
       password: ['', [Validators.required]],
       birthday: [this.dateOfBirthday],
-      passportId: ['', [Validators.required]],
+      passportId: [''],
+      employeeNumber: [''],
       privatePhone: [''],
       companyPhone: [''],
       isAdmin: [false],
@@ -82,7 +83,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
   }
 
   private fillTheEditingForm() {
-    this.dateOfBirthday = new Date(this.employeeForCreation.birthday);
+    this.dateOfBirthday = (!!this.employeeForCreation.birthday) ? new Date(this.employeeForCreation.birthday) : null;
     this.isAdmin = this.employeeForCreation.roles.indexOf('ROLE_ADMIN') != -1;
     this.employeeCreationForm = this._fb.group({
       name: [this.employeeForCreation.name, [Validators.required]],
@@ -90,7 +91,8 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
       email: [this.employeeForCreation.email, Validators.compose([Validators.required])],
       password: ['0', [Validators.required]],
       birthday: [this.dateOfBirthday],
-      passportId: [this.employeeForCreation.passportId, [Validators.required]],
+      passportId: [this.employeeForCreation.passportId],
+      employeeNumber: [this.employeeForCreation.employeeNumber],
       privatePhone: [this.employeeForCreation.privatePhone],
       companyPhone: [this.employeeForCreation.companyPhone],
       isAdmin: [this.isAdmin],
@@ -114,6 +116,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
     this.employeeForCreation.email = value.email;
     this.employeeForCreation.birthday = this.timeService.getDateString(value.birthday);
     this.employeeForCreation.passportId = value.passportId;
+    this.employeeForCreation.employeeNumber = value.employeeNumber;
     this.employeeForCreation.privatePhone = value.privatePhone;
     this.employeeForCreation.companyPhone = value.companyPhone;
     this.employeeForCreation.roles = (value.isAdmin)? ['ROLE_USER', 'ROLE_ADMIN']: ['ROLE_USER'];
@@ -128,6 +131,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
       if (closeEditEmployeeFormButton) {
         closeEditEmployeeFormButton.click();
       }
+
       let isNew = this.employeeForCreation.id==null;
       this.localSt.store('formEmployee', JSON.stringify({isNew: isNew, employee: employee}));
       this.errorEmployee = '';

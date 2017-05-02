@@ -15,10 +15,13 @@
 
         <div class="row col-md-12">
           <div class="form-group col-md-6 pull-left">
-            <input type="text" placeholder="מס. חברה *" class="form-control" formControlName="companyNumber">
+            <input type="text" placeholder="מס. חברה" class="form-control" formControlName="companyNumber">
           </div>
           <div class="form-group col-md-6 pull-right">
             <input type="text" placeholder="שם *" class="form-control" formControlName="name">
+          </div>
+          <div class="form-group col-md-6 pull-right">
+            <input type="text" placeholder="מס. לקוח" class="form-control" formControlName="clientNumber">
           </div>
         </div>
 
@@ -31,13 +34,13 @@
           <div *ngFor="let phone of clientCreationForm.controls.phones.controls; let i=index">
             <!-- address header, show remove button when more than one address available -->
             <div class="row pull-right col-md-12">
-              <a *ngIf="clientCreationForm.controls.phones.controls.length > 1" (click)="removePhones(i)">מחק טלפון</a>
+              <a *ngIf="clientCreationForm.controls.phones.controls.length > 0" (click)="removePhones(i)">מחק טלפון</a>
               <span class="col-md-6 pull-right"><strong>טלפון {{i + 1}}</strong></span>
             </div>
             <!-- Angular assigns array index as group name by default 0, 1, 2, ... -->
             <div class="row col-md-12">
               <div class="pull-right col-md-6">
-                <input type="text" class="form-control" placeholder="טל *" formControlName="{{i}}">
+                <input type="text" class="form-control" placeholder="טל" formControlName="{{i}}">
               </div>
             </div>
           </div>
@@ -52,7 +55,7 @@
           <div *ngFor="let address of clientCreationForm.controls.addresses.controls; let i=index">
             <!-- address header, show remove button when more than one address available -->
             <div class="row pull-right col-md-12">
-              <a *ngIf="clientCreationForm.controls.addresses.controls.length > 1" (click)="removeAddress(i)">מחק כתובת</a>
+              <a *ngIf="clientCreationForm.controls.addresses.controls.length > 0" (click)="removeAddress(i)">מחק כתובת</a>
               <span class="col-md-6 pull-right"><strong>כתובת {{i + 1}}</strong></span>
             </div>
 
@@ -61,17 +64,17 @@
               <!--area-->
               <div class="row col-md-12">
                 <div class="pull-right col-md-6">
-                  <input type="text" class="form-control" placeholder="אזור *" formControlName="area">
+                  <input type="text" class="form-control" placeholder="אזור" formControlName="area">
                 </div>
                 <!--city-->
                 <div class="col-md-6 pull-left">
-                  <input type="text" class="form-control" placeholder="עיר *" formControlName="city">
+                  <input type="text" class="form-control" placeholder="עיר" formControlName="city">
                 </div>
               </div>
               <div class="row col-md-12">
                 <!--street-->
                 <div class="pull-right col-md-6">
-                  <input type="text" class="form-control" placeholder="רחוב *" formControlName="street">
+                  <input type="text" class="form-control" placeholder="רחוב" formControlName="street">
                 </div>
                 <!--houseNumber-->
                 <div class="pull-left col-md-6">

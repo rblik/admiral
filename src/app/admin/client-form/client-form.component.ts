@@ -49,11 +49,10 @@ export class ClientFormComponent implements OnInit, OnChanges{
     this.clientForCreation = new Client();
     this.clientCreationForm = this._fb.group({
       name: ['', [Validators.required]],
-      companyNumber: ['', [Validators.required]],
-      phones: this._fb.array(['']),
-      addresses: this._fb.array([
-        this.initAddress(),
-      ])
+      companyNumber: [''],
+      clientNumber: [''],
+      phones: this._fb.array([]),
+      addresses: this._fb.array([])
     });
   }
 
@@ -61,6 +60,7 @@ export class ClientFormComponent implements OnInit, OnChanges{
     let value = clientSubmitted.value;
     this.clientForCreation.name = value.name;
     this.clientForCreation.companyNumber = value.companyNumber;
+    this.clientForCreation.clientNumber = value.clientNumber;
     this.clientForCreation.addresses = value.addresses;
     this.clientForCreation.phones = value.phones;
     this.clientService.save(this.clientForCreation).subscribe(client => {
@@ -81,7 +81,8 @@ export class ClientFormComponent implements OnInit, OnChanges{
   private populateClient(client) {
     this.clientCreationForm = this._fb.group({
       name: [client.name, [Validators.required]],
-      companyNumber: [client.companyNumber, [Validators.required]],
+      companyNumber: [client.companyNumber],
+      clientNumber: [client.clientNumber],
       phones: this._fb.array(client.phones),
       addresses: this._fb.array([])
     });
@@ -94,9 +95,9 @@ export class ClientFormComponent implements OnInit, OnChanges{
   private populateAddresses(address: Address): FormGroup {
     return this._fb.group({
       id: address.id,
-      area: [address.area, Validators.required],
-      city: [address.city, Validators.required],
-      street: [address.street, Validators.required],
+      area: [address.area],
+      city: [address.city],
+      street: [address.street],
       houseNumber: [address.houseNumber],
     });
   }
@@ -105,9 +106,9 @@ export class ClientFormComponent implements OnInit, OnChanges{
   initAddress() {
     // initialize our address
     return this._fb.group({
-      area: ['', Validators.required],
-      city: ['', Validators.required],
-      street: ['', Validators.required],
+      area: [''],
+      city: [''],
+      street: [''],
       houseNumber: [''],
     });
   }

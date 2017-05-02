@@ -6,6 +6,8 @@
         <li class="list-group-item">
           <p style="font-size: small" class="btn btn-xs btn-warning" data-toggle="modal" data-keyboard="true" data-target="#employeeEditionForm"><i
             class="fa fa-pencil-square-o"></i>&nbsp;ערוך</p></li>
+        <li class="list-group-item">&nbsp;{{employee.employeeNumber}}
+          <span class="pull-right"><strong>מספר עובד</strong></span></li>
         <li *ngIf="employee.department" class="list-group-item">&nbsp;{{employee.department.name}}
           <span class="pull-right"><strong>צוות</strong></span></li>
         <li class="list-group-item">&nbsp;{{employee.birthday}}

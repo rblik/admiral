@@ -16,10 +16,10 @@ export class TimeService {
   }
 
   public getDateString(date: Date): string {
-    return this.datepipe.transform(date, 'yyyy-MM-dd');
+    return date == null ? null : this.datepipe.transform(date, 'yyyy-MM-dd');
   }
 
-  public isNotBetween(start: string, finish: string, date: string): boolean{
+  public isNotBetween(start: string, finish: string, date: string): boolean {
     return (new Date(start).getTime() > new Date(date).getTime()
     || (new Date(finish).getTime() < new Date(date).getTime()));
   }

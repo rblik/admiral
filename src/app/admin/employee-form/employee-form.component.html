@@ -28,21 +28,24 @@
             </label>
           </div>
           <div class="form-group col-md-5 pull-right">
-            <p-calendar formControlName="birthday" [required]="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2030" id="birthdayDate" placeholder="תאריך לידה *" inputStyleClass="form-control"></p-calendar>
+            <p-calendar formControlName="birthday" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2030" id="birthdayDate" placeholder="תאריך לידה *" inputStyleClass="form-control"></p-calendar>
           </div>
           <div class="form-group col-md-6 pull-left">
-            <input type="text" placeholder="תעודת זהות *" class="form-control" formControlName="passportId">
+            <input type="text" placeholder="תעודת זהות" class="form-control" formControlName="passportId">
           </div>
           <div class="form-group col-md-6 pull-right">
+            <input type="text" placeholder="מספר עובד" class="form-control" formControlName="employeeNumber">
+          </div>
+          <div class="form-group col-md-6 pull-left">
             <input type="text" placeholder="טל פרטי" class="form-control" formControlName="privatePhone">
           </div>
-          <div class="form-group col-md-6 pull-left">
+          <div class="form-group col-md-6 pull-right">
             <input type="text" placeholder="טל עבודה" class="form-control" formControlName="companyPhone">
           </div>
-          <div [hidden]="!!employeeForCreation.id" class="form-group col-md-6 pull-right">
+          <div [hidden]="!!employeeForCreation.id" class="form-group col-md-6 pull-left">
             <input type="password" placeholder="סיסמה *" class="form-control" formControlName="password">
           </div>
-          <div class="form-group col-md-6 pull-left">
+          <div class="form-group col-md-6 pull-right">
             <p-dropdown [options]="departmentsUi" [style]="{'width':'inherit'}" formControlName="chosenDepartment" [filter]="true"></p-dropdown>
           </div>
 
