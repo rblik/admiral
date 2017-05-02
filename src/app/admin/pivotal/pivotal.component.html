@@ -21,18 +21,40 @@
     <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
     <input #gb type="text" pInputText size="50" placeholder="חיפוש">
   </div>
-  <p-dataTable [value]="infosUi" [globalFilter]="gb" sortMode="multiple" [style]="{'text-align':'center'}">
+  <p-dataTable [value]="infosUi" [globalFilter]="gb" selectionMode="multiple" sortMode="multiple" [style]="{'text-align':'center', 'font-size':'8px'}">
     <p-column field="duration" header="משך" [sortable]="true">
       <template let-col let-vraag="rowData" pTemplate="body">
         <span [innerHTML]="vraag[col.field] | minutesToHours"></span>
       </template>
     </p-column>
-    <p-column field="absenceType" header="חופשה" [sortable]="true"></p-column>
+    <p-column field="to" header="עד" [sortable]="true">
+      <template let-col let-vraag="rowData" pTemplate="body">
+        <span [innerHTML]="vraag[col.field] | time"></span>
+      </template>
+    </p-column><p-column field="from" header="מ" [sortable]="true">
+      <template let-col let-vraag="rowData" pTemplate="body">
+        <span [innerHTML]="vraag[col.field] | time"></span>
+      </template>
+    </p-column>
+    <p-column field="absenceType" header="חופשה" [sortable]="true">
+      <template let-col let-vraag="rowData" pTemplate="body">
+        <span [innerHTML]="vraag[col.field] | absenceType"></span>
+      </template>
+    </p-column>
+    <p-column header="יום" [sortable]="true">
+      <template let-col let-vraag="rowData" pTemplate="body">
+        <span [innerHTML]="vraag['date'] | weekDay"></span>
+      </template>
+    </p-column>
     <p-column field="date" header="תאריך" [sortable]="true"></p-column>
-    <p-column field="clientName" header="לקוח" [sortable]="true"></p-column>
-    <p-column field="projectName" header="פרויקט" [sortable]="true"></p-column>
+    <p-column field="employeeName" header="עובד" [sortable]="true">
+      <template let-col let-vraag="rowData" pTemplate="body">
+        <span [innerHTML]="vraag['employeeSurname'] + ' ' + vraag[col.field]"></span>
+      </template>
+    </p-column>
+    <p-column field="employeeNumber" header="מספר לקוח" [sortable]="true"></p-column>
     <p-column field="departmentName" header="צוות" [sortable]="true"></p-column>
-    <p-column field="employeeSurname" header="שם משפחה" [sortable]="true"></p-column>
-    <p-column field="employeeName" header="שם" [sortable]="true"></p-column>
+    <p-column field="projectName" header="פרויקט" [sortable]="true"></p-column>
+    <p-column field="clientName" header="לקוח" [sortable]="true"></p-column>
   </p-dataTable>
 </div>
