@@ -13,36 +13,61 @@
           class="pull-right"><strong>טל</strong></span></li>
       </ul>
       <h4 style="text-align: center">פרויקטים</h4>
-      <table class="table table-responsive table-condensed" style="margin: 0 auto;width: 50%">
+      <table class="table table-responsive table-condensed" style="margin: 0 auto;width: 80%">
         <thead>
         <tr>
-          <td colspan="2"><a style="cursor: pointer" (click)="popupCreate()"><i class="module-plus glyphicon glyphicon-plus" aria-hidden="true"></i></a></td>
+          <td colspan="3"><a style="cursor: pointer" (click)="popupCreate()"><i class="module-plus glyphicon glyphicon-plus" aria-hidden="true"></i></a></td>
         </tr>
         </thead>
         <tbody>
           <tr *ngFor="let project of client.projects">
-            <td>{{project.name}}</td>
             <td><a style="cursor: pointer" (click)="popupEdit(project)"><i class="fa fa-pencil" aria-hidden="true"></i></a> </td>
+            <td class="hebrew-direct" style="font-size: smaller">{{project.tariff.amount}} {{project.tariff.currency | currencyPipe}} {{project.tariff.type | tariffType}}</td>
+            <td style="font-weight: bold">{{project.name}}</td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
-
-<p-dialog header="{{labelForProjectPopup}}" modal="modal" width="300" responsive="true" [(visible)]="displayFormProjectDialog">
-    <input type="text" id="projName" pInputText [(ngModel)]="formProject.name"/>
-  <label for="projName">&nbsp;שם פרויקט
-  </label>
-  <p-footer>
-    <div *ngIf="errorClient" style="text-align: center" class="alert alert-danger">
-      {{errorClient}}</div>
-    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix pull-left">
-      <button type="button" pButton icon="fa-check" (click)="updateOrCreateProject(formProject)" label="כן"></button>
-      <button type="button" class="ui-button-danger" pButton icon="fa-close" (click)="displayFormProjectDialog=false" label="לא"></button>
+<button id="openProjectFormElem" [hidden]="true" data-toggle="modal" data-target="#projectCreationForm"></button>
+<div id="projectCreationForm" tabindex='-1' class="modal fade" onclose="" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="text-align: center">
+        <button type="button" id="closeProjectFormElem" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"> {{labelForProjectPopup}} </h4>
+      </div>
+        <form [formGroup]="projectCreationForm" (ngSubmit)="updateOrCreateProject(projectCreationForm)">
+      <div class="modal-body">
+        <div *ngIf="errorClient" style="text-align: center" class="alert alert-danger">
+          {{errorClient}}
+        </div>
+          <div class="row col-md-12">
+            <div class="form-group col-md-6 pull-right">
+              <input type="text" placeholder="שם פרויקט *" class="form-control" formControlName="name">
+            </div>
+          </div>
+          <div formGroupName="tariff" class="row col-md-12">
+            <div class="form-group">
+              <div class="col-md-6 pull-right">
+                <input type="number" placeholder="סכום *" class="form-control" formControlName="amount">
+              </div>
+              <p-dropdown [options]="currenciesUi" [style]="{'width':'20%'}" formControlName="currency"></p-dropdown>
+              <p-dropdown [options]="tariffTypesUi" [style]="{'width':'20%'}" formControlName="type"></p-dropdown>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer pull-left">
+        <div class="pull-left">
+          <button type="submit" pButton [disabled]="!projectCreationForm.valid" icon="fa-check" label="כן"></button>
+          <button type="button" class="ui-button-danger" pButton icon="fa-close" data-dismiss="modal" (click)="displayFormProjectDialog=false" label="לא"></button>
+        </div>
+      </div>
+      </form>
     </div>
-  </p-footer>
-</p-dialog>
+  </div>
+</div>
 
 <client-form id="clientEditionForm" [clientForCreation]="client" tabindex='-1' class="modal fade" onclose="" role="dialog">
 

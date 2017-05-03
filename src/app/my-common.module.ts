@@ -5,9 +5,29 @@ import {HebrewDatePipe} from "./pipe/hebrew-date.pipe";
 import {DateFormatPipe} from "./pipe/date-format.pipe";
 import {WeekDayPipe} from "./pipe/week-day.pipe";
 import {TimePipe} from "./pipe/time.pipe";
+import {CurrencyPipe} from "./pipe/currency.pipe";
+import {TariffTypePipe} from "./pipe/tariff-type.pipe";
 @NgModule({
-  declarations: [MinutesToHoursPipe, AbsenceTypePipe, HebrewDatePipe, DateFormatPipe, WeekDayPipe, TimePipe],
-  exports: [MinutesToHoursPipe, AbsenceTypePipe, HebrewDatePipe, DateFormatPipe, WeekDayPipe, TimePipe],
+  declarations: [
+    MinutesToHoursPipe,
+    AbsenceTypePipe,
+    HebrewDatePipe,
+    DateFormatPipe,
+    WeekDayPipe,
+    TimePipe,
+    CurrencyPipe,
+    TariffTypePipe
+  ],
+  exports: [
+    MinutesToHoursPipe,
+    AbsenceTypePipe,
+    HebrewDatePipe,
+    DateFormatPipe,
+    WeekDayPipe,
+    TimePipe,
+    CurrencyPipe,
+    TariffTypePipe
+  ],
   providers: [DateFormatPipe]
 })
 export class MyCommonModule {
