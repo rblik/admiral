@@ -1,5 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from "@angular/core";
-import {AgreementDto} from "../../model/agreement-dto";
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
 import {Project} from "../../model/project";
 import {Employee} from "../../model/employee";
 import {SelectItem} from "primeng/primeng";
@@ -7,7 +6,6 @@ import {AgreementService} from "../service/agreement.service";
 import {EmployeeService} from "../service/employee.service";
 import {Agreement} from "../../model/agreement";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Department} from "../../model/department";
 
 @Component({
   selector: 'project-employee-form',
