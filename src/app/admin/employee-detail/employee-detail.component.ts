@@ -2,12 +2,9 @@ import {Component, OnInit} from "@angular/core";
 import {Employee} from "../../model/employee";
 import {ActivatedRoute, Params} from "@angular/router";
 import {EmployeeService} from "../service/employee.service";
-import {ProjectService} from "../service/project.service";
-import {Project} from "../../model/project";
 import {Observable} from "rxjs/Observable";
-import {Agreement} from "../../model/agreement";
+import {AgreementDto} from "../../model/agreement-dto";
 import {AgreementService} from "../service/agreement.service";
-import {TimeService} from "../../service/time.service";
 @Component({
   selector: 'employee-detail',
   templateUrl: './employee-detail.component.html',
@@ -15,9 +12,8 @@ import {TimeService} from "../../service/time.service";
 })
 export class EmployeeDetailComponent implements OnInit{
   private employee: Employee;
-  private projects: Project[];
-  private agreements: Agreement[];
-  constructor(private employeeService: EmployeeService, private timeService: TimeService, private projectService: ProjectService, private agreementService: AgreementService, private route: ActivatedRoute) {
+  private agreements: AgreementDto[];
+  constructor(private employeeService: EmployeeService, private agreementService: AgreementService, private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
@@ -28,17 +24,6 @@ export class EmployeeDetailComponent implements OnInit{
         this.employee = employee;
         this.agreements = agreements;
       });
-  }
-
-  isActive(agreement: Agreement):boolean{
-    let now = this.timeService.getDateString(new Date());
-    return agreement.start <= now && agreement.finish>=now;
-  }
-
-  appendAgreement(agreement){
-    if (agreement != null) {
-    this.agreements.push(agreement);
-    }
   }
 
 }

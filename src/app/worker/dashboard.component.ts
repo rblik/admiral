@@ -2,7 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {TimeService} from "../service/time.service";
 import {WorkInfoService} from "../service/work-info.service";
 import {Employee} from "../model/employee";
-import {Agreement} from "../model/agreement";
+import {AgreementDto} from "../model/agreement-dto";
 import {WorkInfo} from "../model/work-info";
 import {WorkUnit} from "../model/work-unit";
 import {SessionStorageService} from 'ng2-webstorage';
@@ -23,10 +23,10 @@ export class DashboardComponent implements OnInit {
   private currentSunday: Date;
   private nextSunday: Date;
   private timeOffset: number;
-  private agreements: Agreement[];
+  private agreements: AgreementDto[];
   private workInfos: WorkInfo[];
   private dayWorkInfos: WorkInfo[];
-  private uiAgreements: Agreement[];
+  private uiAgreements: AgreementDto[];
   private display: boolean;
   private activeAgreementId: number;
   private activeDate: string;
@@ -97,7 +97,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  private fillDropDownList(agreements: Agreement[]) {
+  private fillDropDownList(agreements: AgreementDto[]) {
     let arr = [];
     agreements.forEach(agreement => {
       if (arr.indexOf(agreement.clientName) == -1) {
@@ -182,7 +182,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  showWorkDayDialog(workInfo: WorkInfo, agreement: Agreement) {
+  showWorkDayDialog(workInfo: WorkInfo, agreement: AgreementDto) {
     let currentDate = workInfo.date;
     this.isPivotal = false;
     this.error = '';
@@ -335,7 +335,7 @@ export class DashboardComponent implements OnInit {
     this.workInfos.push(workInfo);
   }
 
-  private getClientsUi(agreements: Agreement[]) {
+  private getClientsUi(agreements: AgreementDto[]) {
     agreements.forEach(agreement => {
       this.clientsDropdown.push({
         label: agreement.projectName + ' - ' + agreement.clientName,

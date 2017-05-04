@@ -3,7 +3,7 @@ import {Headers, Http, RequestOptions, URLSearchParams} from "@angular/http";
 import {Observable} from "rxjs";
 import {WorkInfo} from "../model/work-info";
 import {WorkUnit} from "../model/work-unit";
-import {Agreement} from "../model/agreement";
+import {AgreementDto} from "../model/agreement-dto";
 import {AuthService} from "./auth.service";
 import {Url} from "../url";
 
@@ -39,7 +39,7 @@ export class WorkInfoService {
       .map(res => res.json());
   }
 
-  public getWorkAgreements(): Observable<Agreement[]>{
+  public getWorkAgreements(): Observable<AgreementDto[]>{
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.authService.getToken());
     let options = new RequestOptions({headers: headers});

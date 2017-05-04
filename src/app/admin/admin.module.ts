@@ -25,12 +25,12 @@ import {EmployeeDetailComponent} from "./employee-detail/employee-detail.compone
 import {DepartmentService} from "./service/department.service";
 import {EmployeeFormComponent} from "./employee-form/employee-form.component";
 import {ClientFormComponent} from "./client-form/client-form.component";
-import {EmployeeProjectFormComponent} from "./employee-project-form/employee-project-form.component";
 import {DepartmentFormComponent} from "./department-form/department-form.component";
 import {MyCommonModule} from "../my-common.module";
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import {MailService} from "./service/mail.service";
 import {NotificationBarModule} from "angular2-notification-bar";
+import {ProjectEmployeeFormComponent} from "./project-employee-form/project-employee-form.component";
 
 @NgModule({
   declarations: [
@@ -44,7 +44,7 @@ import {NotificationBarModule} from "angular2-notification-bar";
     EmployeeDetailComponent,
     EmployeeFormComponent,
     ClientFormComponent,
-    EmployeeProjectFormComponent,
+    ProjectEmployeeFormComponent,
     DepartmentFormComponent
   ],
   imports: [

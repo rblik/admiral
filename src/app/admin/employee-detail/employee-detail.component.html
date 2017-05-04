@@ -23,29 +23,25 @@
         <li *ngIf="employee.roles" class="list-group-item">{{(employee.roles.indexOf('ROLE_ADMIN')!=-1)?'&nbsp;Admin':'&nbsp;User'}}
           <span class="pull-right"><strong>סוג משתמש</strong></span></li>
       </ul>
-      <h4 style="text-align: center"><a style="cursor: pointer; margin: 0 auto" data-toggle="modal" data-keyboard="true" data-target="#employeeProjectEditionForm"><i class="module-plus glyphicon glyphicon-plus"
-                                                                                                               aria-hidden="true"></i></a>&nbsp;פרויקטים</h4>
+      <h4 style="text-align: center">&nbsp;פרויקטים</h4>
 
       <table class="table table-responsive table-condensed" style="margin: 0 auto;width: 75%">
         <thead>
         <tr>
-          <th>עד</th>
-          <th>מ</th>
+          <th>תעריף</th>
           <th>שם לקוח</th>
           <th>שם פרויקט</th>
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let agreement of agreements" [ngStyle]="{'color': (isActive(agreement))? 'green':'red'}">
-          <td>{{agreement.projectName}}</td>
-          <td>{{agreement.clientName}}</td>
-          <td>{{agreement.start}}</td>
-          <td>{{agreement.finish}}</td>
+        <tr *ngFor="let agreement of agreements" [ngStyle]="{'color': (agreement.active)? 'black':'red'}">
+          <td class="hebrew-direct" style="font-size: smaller">{{agreement.tariffAmount}} {{agreement.tariffCurrency | currencyPipe}} {{agreement.tariffType | tariffType}}</td>
+          <td style="font-weight: bold">{{agreement.projectName}}</td>
+          <td style="font-weight: bold">{{agreement.clientName}}</td>
         </tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
-<employee-project-form id="employeeProjectEditionForm" *ngIf="employee" (addedAgreement)="appendAgreement($event)" [employeeId]="employee.id" tabindex='-1' class="modal fade" onclose="" role="dialog"></employee-project-form>
 <employee-form *ngIf="employee" [employeeForCreation]="employee" id="employeeEditionForm" tabindex='-1' class="modal fade" onclose="" role="dialog"></employee-form>

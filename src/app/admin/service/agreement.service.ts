@@ -1,10 +1,11 @@
 import {Injectable} from "@angular/core";
 import {Http, Headers, RequestOptions, URLSearchParams} from "@angular/http";
 import {AuthService} from "../../service/auth.service";
-import {Agreement} from "../../model/agreement";
+import {AgreementDto} from "../../model/agreement-dto";
 import {Observable} from "rxjs";
 import {Url} from "../../url";
 import {TimeService} from "../../service/time.service";
+import {Agreement} from "../../model/agreement";
 
 @Injectable()
 export class AgreementService {
@@ -14,7 +15,7 @@ export class AgreementService {
     this.agreementsUrl = Url.getUrl("/admin/agreements");
   }
 
-  public getAgreements(): Observable<Agreement[]> {
+  public getAgreements(): Observable<AgreementDto[]> {
     return this.http.get(this.agreementsUrl, {
       headers: new Headers({'Authorization': this.auth.getToken()})
     }).map(res => res.json())
@@ -24,7 +25,7 @@ export class AgreementService {
       });
   }
 
-  public getAgreementsByEmployee(emplId: number): Observable<Agreement[]>{
+  public getAgreementsByEmployee(emplId: number): Observable<AgreementDto[]>{
     let params = new URLSearchParams();
     params.append("employeeId", emplId.toString());
     return this.http.get(this.agreementsUrl, {
@@ -37,16 +38,14 @@ export class AgreementService {
       });
   }
 
-  public save(employeeId: number, projectId: number, startDate: Date, finishDate: Date): Observable<Agreement> {
-    let start = this.timeService.getDateString(startDate);
-    let finish = this.timeService.getDateString(finishDate);
+  public save(employeeId: number, projectId: number, agreement: any): Observable<Agreement> {
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.auth.getToken());
     let params = new URLSearchParams();
     params.append('employeeId', employeeId.toString());
     params.append('projectId', projectId.toString());
     let options = new RequestOptions({headers: headers, search: params});
-    return this.http.post(this.agreementsUrl, JSON.stringify({'start': start, 'finish':finish}), options)
+    return this.http.post(this.agreementsUrl, JSON.stringify(agreement), options)
       .map(res => res.json())
       .catch(e => Observable.throw(e.json().details[0]));
   }

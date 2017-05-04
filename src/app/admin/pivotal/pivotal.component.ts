@@ -5,7 +5,7 @@ import {SelectItem} from "primeng/primeng";
 import {DownloadService} from "../service/download.service";
 import {TimeService} from "../../service/time.service";
 import {AgreementService} from "../service/agreement.service";
-import {Agreement} from "../../model/agreement";
+import {AgreementDto} from "../../model/agreement-dto";
 import {ReportService} from "../service/report.service";
 import {NotificationBarService, NotificationType} from "angular2-notification-bar";
 
@@ -39,8 +39,8 @@ export class PivotalComponent implements OnInit {
   private types: SelectItem[];
   private error: string;
   private tableVisible: boolean;
-  private agreements: Agreement[];
-  private agreementsUi: Agreement[];
+  private agreements: AgreementDto[];
+  private agreementsUi: AgreementDto[];
   private employeesUi: SelectItem[] = [];
   private departmentsUi: SelectItem[] = [];
   private projectUi: SelectItem[] = [];

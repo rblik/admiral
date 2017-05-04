@@ -7,6 +7,7 @@ import {Project} from "../../model/project";
 import {Tariff} from "../../model/tariff";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SelectItem} from "primeng/primeng";
+import {Agreement} from "../../model/agreement";
 
 @Component({
   selector: 'client-detail',
@@ -18,13 +19,19 @@ export class ClientDetailComponent implements OnInit {
   private client: Client;
   private errorClient: string;
   private errorProject: string;
+
   private projectCreationForm: FormGroup;
   private formProject: Project;
   public displayFormProjectDialog: boolean;
   private labelForProjectPopup: string;
 
+  private agreement: Agreement;
+  private clientName: string;
+
+
   private tariffTypesUi: SelectItem[] = [];
   private currenciesUi: SelectItem[] = [];
+  private project: Project;
 
   constructor(private clientService: ClientService,
               private _fb: FormBuilder,
@@ -33,6 +40,7 @@ export class ClientDetailComponent implements OnInit {
     this.formProject = new Project();
     this.fillCreationForm();
     this.fillDropDowns();
+    this.initAgreementForEdition();
   }
 
   private fillDropDowns() {
@@ -58,6 +66,10 @@ export class ClientDetailComponent implements OnInit {
     });
   }
 
+  private collapseProj(project: Project) {
+
+  }
+
   private fillEditingForm(project: Project) {
     this.projectCreationForm = this._fb.group({
       id: [project.id],
@@ -75,6 +87,7 @@ export class ClientDetailComponent implements OnInit {
     this.route.params.switchMap((params: Params) =>
       this.clientService.get(params['clientId'])).subscribe(client => {
       this.client = client;
+      this.clientName = client.name;
     });
   }
 
@@ -125,5 +138,28 @@ export class ClientDetailComponent implements OnInit {
         }
       });
     }, error => this.errorProject = error);
+  }
+
+  popupCreateAgreement(project: Project) {
+    this.project = project;
+    this.initAgreementForEdition();
+    let projectEmployeeFormOpen = document.getElementById('projectEmployeeFormOpen');
+    if (projectEmployeeFormOpen != null) {
+      projectEmployeeFormOpen.click();
+    }
+  }
+
+  popupEditAgreement(project: Project, agreement: Agreement) {
+    this.project = project;
+    this.agreement = agreement;
+    let projectEmployeeFormOpen = document.getElementById('projectEmployeeFormOpen');
+    if (projectEmployeeFormOpen != null) {
+      projectEmployeeFormOpen.click();
+    }
+  }
+
+  private initAgreementForEdition() {
+    this.agreement = new Agreement();
+    this.agreement.tariff = new Tariff();
   }
 }

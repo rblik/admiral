@@ -1,16 +1,8 @@
-import {WorkInfo} from "./work-info";
+import {Employee} from "./employee";
+import {Tariff} from "./tariff";
 export class Agreement {
-  agreementId: number;
-  start: string;
-  finish: string;
-  employeeId: number;
-  employeeName: string;
-  employeeSurname: string;
-  departmentId: number;
-  departmentName: string;
-  projectId: number;
-  projectName: string;
-  clientId: number;
-  clientName: string;
-  workInfos: WorkInfo[];
+  id: number;
+  active: boolean;
+  employee: Employee;
+  tariff: Tariff;
 }

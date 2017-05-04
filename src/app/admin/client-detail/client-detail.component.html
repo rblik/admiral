@@ -13,23 +13,49 @@
           class="pull-right"><strong>טל</strong></span></li>
       </ul>
       <h4 style="text-align: center">פרויקטים</h4>
-      <table class="table table-responsive table-condensed" style="margin: 0 auto;width: 80%">
-        <thead>
-        <tr>
-          <td colspan="3"><a style="cursor: pointer" (click)="popupCreate()"><i class="module-plus glyphicon glyphicon-plus" aria-hidden="true"></i></a></td>
-        </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let project of client.projects">
-            <td><a style="cursor: pointer" (click)="popupEdit(project)"><i class="fa fa-pencil" aria-hidden="true"></i></a> </td>
-            <td class="hebrew-direct" style="font-size: smaller">{{project.tariff.amount}} {{project.tariff.currency | currencyPipe}} {{project.tariff.type | tariffType}}</td>
-            <td style="font-weight: bold">{{project.name}}</td>
-          </tr>
-        </tbody>
-      </table>
+
+      <div class="col-md-12" style="text-align: center">
+        <p-header><a style="cursor: pointer; color: #1a1a1a" (click)="popupCreate()"><i class="module-plus glyphicon glyphicon-plus" aria-hidden="true"></i></a></p-header>
+        <p-dataTable [value]="client.projects" expandableRows="true" [style]="{'text-align':'center', 'font-size':'12px', 'width':'100%', 'margin':'0 auto'}">
+          <p-column expander="true" styleClass="col-icon" [style]="{'width':'7%'}"></p-column>
+          <p-column header="ערוך" [style]="{'width':'7%'}">
+            <template let-col let-proj="rowData" pTemplate="body">
+              <span><a style="cursor: pointer" (click)="popupEdit(proj)"><i class="fa fa-pencil" aria-hidden="true"></i></a></span>
+            </template>
+          </p-column>
+          <p-column header="תעריף" [sortable]="true">
+            <template let-col let-proj="rowData" pTemplate="body">
+              <span class="hebrew-direct">{{proj.tariff.amount}} {{proj.tariff.currency | currencyPipe}} {{proj.tariff.type | tariffType}}</span>
+            </template>
+          </p-column>
+          <p-column field="name" header="שם פרויקט" [sortable]="true"></p-column>
+          <template let-proj pTemplate="rowexpansion">
+            <table class="table table-responsive table-condensed hebrew-direct" style="margin: 0 auto;width: 75%; border: none">
+              <thead>
+              <tr>
+                <td colspan="9"><a style="cursor: pointer; color: #1a1a1a" (click)="popupCreateAgreement(proj)"><i class="module-plus glyphicon glyphicon-plus" aria-hidden="true"></i></a></td>
+              </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let agreement of proj.workAgreements" class="hebrew-direct">
+                    <td colspan="5">{{agreement.employee.name + ' ' + agreement.employee.surname}}</td>
+                    <td colspan="4">{{agreement.tariff.amount}} {{agreement.tariff.currency | currencyPipe}} {{agreement.tariff.type | tariffType}}</td>
+                    <td colspan="1"><a style="cursor: pointer; text-align: center" (click)="popupEditAgreement(proj, agreement)"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+                  </tr>
+              </tbody>
+            </table>
+          </template>
+        </p-dataTable>
+      </div>
     </div>
   </div>
 </div>
+<button id="projectEmployeeFormOpen" style="visibility: hidden" data-toggle="modal" data-keyboard="true" data-target="#employeeProjectEditionForm"></button>
+<project-employee-form id="employeeProjectEditionForm"
+                       *ngIf="agreement"
+                       [agreement]="agreement" [project]="project" [clientName]="clientName"
+                       tabindex='-1' class="modal fade" onclose="" role="dialog"></project-employee-form>
+
 <button id="openProjectFormElem" [hidden]="true" data-toggle="modal" data-target="#projectCreationForm"></button>
 <div id="projectCreationForm" tabindex='-1' class="modal fade" onclose="" role="dialog">
   <div class="modal-dialog">

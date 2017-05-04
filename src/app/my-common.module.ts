@@ -7,6 +7,7 @@ import {WeekDayPipe} from "./pipe/week-day.pipe";
 import {TimePipe} from "./pipe/time.pipe";
 import {CurrencyPipe} from "./pipe/currency.pipe";
 import {TariffTypePipe} from "./pipe/tariff-type.pipe";
+import {OnlyNumberDirective} from "./directives/only-number.directive";
 @NgModule({
   declarations: [
     MinutesToHoursPipe,
@@ -16,7 +17,8 @@ import {TariffTypePipe} from "./pipe/tariff-type.pipe";
     WeekDayPipe,
     TimePipe,
     CurrencyPipe,
-    TariffTypePipe
+    TariffTypePipe,
+    OnlyNumberDirective
   ],
   exports: [
     MinutesToHoursPipe,
