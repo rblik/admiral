@@ -54,11 +54,14 @@ export class ProjectEmployeeFormComponent implements OnInit, OnChanges {
     if (changes['agreement']) {
       this.agreement = changes['agreement'].currentValue;
       this.fillTheForm(this.agreement);
+      this.initDepartments();
+      this.initEmployees(null);
     }
   }
 
   initDepartments() {
     let arr = [];
+    this.departmentsUi = [];
     this.departmentsUi.push({label: "בחר צוות", value: null});
     this.employees.forEach(employee => {
       if (arr.indexOf(employee.department.id) == -1) {
