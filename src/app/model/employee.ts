@@ -2,6 +2,7 @@ import {Department} from "./department";
 
 export class Employee {
   id: number;
+  enabled: boolean;
   name: string;
   surname: string;
   passportId: string;

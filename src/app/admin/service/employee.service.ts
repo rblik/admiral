@@ -34,6 +34,19 @@ export class EmployeeService {
       });
   }
 
+  public changePass(employeeId: number, newPass: string): Observable<any> {
+    let params = new URLSearchParams();
+    params.append('password', newPass);
+    let headers = new Headers({'Authorization': this.auth.getToken()});
+    headers.append('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.put(this.employeesUrl+ '/' + employeeId, params.toString(), {
+      headers: headers,
+    }).catch(e => {
+      let s = e.json().details[0];
+      return Observable.throw(s);
+    })
+  }
+
   public save(departmentId: number, employee: Employee): Observable<Employee> {
     let params = new URLSearchParams();
     params.append('departmentId', departmentId.toString());

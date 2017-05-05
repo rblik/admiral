@@ -72,6 +72,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
       surname: ['', [Validators.required]],
       email: ['', Validators.compose([Validators.required])],
       password: ['', [Validators.required]],
+      enabled: [true],
       birthday: [this.dateOfBirthday],
       passportId: [''],
       employeeNumber: [''],
@@ -92,6 +93,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
       password: ['0', [Validators.required]],
       birthday: [this.dateOfBirthday],
       passportId: [this.employeeForCreation.passportId],
+      enabled: [this.employeeForCreation.enabled],
       employeeNumber: [this.employeeForCreation.employeeNumber],
       privatePhone: [this.employeeForCreation.privatePhone],
       companyPhone: [this.employeeForCreation.companyPhone],
@@ -116,6 +118,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
     this.employeeForCreation.email = value.email;
     this.employeeForCreation.birthday = this.timeService.getDateString(value.birthday);
     this.employeeForCreation.passportId = value.passportId;
+    this.employeeForCreation.enabled = value.enabled;
     this.employeeForCreation.employeeNumber = value.employeeNumber;
     this.employeeForCreation.privatePhone = value.privatePhone;
     this.employeeForCreation.companyPhone = value.companyPhone;

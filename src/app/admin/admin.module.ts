@@ -3,7 +3,7 @@ import {MissingDaysComponent} from "./missing/missing-days.component";
 import {ReportComponent} from "./report/report.component";
 import {AdminRoutingModule} from "./admin-routing.module";
 import {
-  CalendarModule, CheckboxModule, DataTableModule, DialogModule, DropdownModule, InputMaskModule,
+  CalendarModule, CheckboxModule, DataTableModule, DialogModule, DropdownModule, InputMaskModule, OverlayPanelModule,
   SelectButtonModule,
   SharedModule, SpinnerModule
 } from "primeng/primeng";
@@ -64,7 +64,8 @@ import {ProjectEmployeeFormComponent} from "./project-employee-form/project-empl
     CheckboxModule,
     MyCommonModule,
     MultiselectDropdownModule,
-    NotificationBarModule
+    NotificationBarModule,
+    OverlayPanelModule
   ],
   providers: [
     DownloadService,

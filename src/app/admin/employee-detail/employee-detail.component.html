@@ -1,11 +1,12 @@
 <div *ngIf="employee" class="col-sm-12 col-md-7 jumbotron pull-left" style="background-color: rgba(104, 157, 255, 0.32)">
   <div class="card">
     <div class="card-block">
-      <h4 class="card-title" style="font-weight: bold; text-align: center">{{employee.surname+'&nbsp;'+employee.name}}</h4>
+      <h4 class="card-title hebrew-direct" style="font-weight: bold; text-align: center">{{employee.surname+'&nbsp;'+employee.name}}<span style="font-size: 50%" class="{{employee.enabled? 'label label-success': 'label label-danger'}}">{{employee.enabled? 'פעיל':'לא פעול'}}</span></h4>
       <ul class="list-group">
         <li class="list-group-item">
-          <p style="font-size: small" class="btn btn-xs btn-warning" data-toggle="modal" data-keyboard="true" data-target="#employeeEditionForm"><i
-            class="fa fa-pencil-square-o"></i>&nbsp;ערוך</p></li>
+          <a style="font-size: small" pButton icon="fa-pencil-square-o" data-toggle="modal" data-keyboard="true" data-target="#employeeEditionForm"></a>
+          <a style="font-size: small" pButton icon="fa-lock" class="ui-button-danger" (click)="preparePasswordForm(); op.toggle($event)"></a>
+        </li>
         <li class="list-group-item">&nbsp;{{employee.employeeNumber}}
           <span class="pull-right"><strong>מספר עובד</strong></span></li>
         <li *ngIf="employee.department" class="list-group-item">&nbsp;{{employee.department.name}}
@@ -44,4 +45,24 @@
     </div>
   </div>
 </div>
+<p-overlayPanel #op>
+  <h4 style="text-align: center">שינוי סיסמה</h4>
+  <div style="text-align: center" *ngIf="passwordChangeSuccess" class="alert alert-success">
+    הסיסמה עודכנה בהצלחה
+  </div>
+  <div style="text-align: center" *ngIf="passwordChangeFailure" class="alert alert-success">
+{{passwordChangeFailure}}
+  </div>
+  <div *ngIf="!passwordChangeSuccess" class="row">
+    <div class="form-group">
+     <div class="col-md-2 pull-left">
+        <a class="btn btn-warning" (click)="updatePassword(updatePassInput.value); updatePassInput.value=''"><i style="font-size: large; color: white"
+                                     class="fa fa-cog {{requstStarted?'fa-spin':''}}"></i></a>
+      </div>
+      <div class="col-md-9 pull-right">
+        <input #updatePassInput required type="password" class="form-control">
+      </div>
+    </div>
+  </div>
+</p-overlayPanel>
 <employee-form *ngIf="employee" [employeeForCreation]="employee" id="employeeEditionForm" tabindex='-1' class="modal fade" onclose="" role="dialog"></employee-form>

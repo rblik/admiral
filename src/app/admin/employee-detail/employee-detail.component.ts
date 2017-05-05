@@ -13,6 +13,10 @@ import {AgreementService} from "../service/agreement.service";
 export class EmployeeDetailComponent implements OnInit{
   private employee: Employee;
   private agreements: AgreementDto[];
+  private requstStarted: boolean;
+  private passwordChangeSuccess: any;
+  private passwordChangeFailure: any;
+
   constructor(private employeeService: EmployeeService, private agreementService: AgreementService, private route: ActivatedRoute) {
   }
 
@@ -26,4 +30,22 @@ export class EmployeeDetailComponent implements OnInit{
       });
   }
 
+  preparePasswordForm() {
+    this.passwordChangeSuccess = null;
+    this.passwordChangeFailure = null;
+  }
+
+  updatePassword(newPass: string){
+    if (!!newPass) {
+      if (newPass != '') {
+        this.requstStarted = true;
+        this.employeeService.changePass(this.employee.id, newPass).subscribe(response => {
+          this.requstStarted = false;
+          this.passwordChangeSuccess = 'הסיסמה עודכנה בהצלחה';
+        }, e=> {
+          this.passwordChangeFailure = e;
+        });
+      }
+    }
+  }
 }

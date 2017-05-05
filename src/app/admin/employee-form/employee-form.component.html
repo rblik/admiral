@@ -2,10 +2,10 @@
 
   <div class="modal-content">
     <div class="modal-header" style="text-align: center">
-      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <button type="button" class="close pull-left" data-dismiss="modal">&times;</button>
       <h4 class="modal-title">עובד חדש</h4>
     </div>
-    <div class="modal-body">
+    <div class="modal-body hebrew-direct">
       <div *ngIf="errorEmployee" style="text-align: center" class="alert alert-danger">
         {{errorEmployee}}
       </div>
@@ -27,7 +27,13 @@
               האם מנהל
             </label>
           </div>
-          <div class="form-group col-md-5 pull-right">
+          <div class="form-group col-md-1 pull-left">
+            <label for="isEnabled">
+              <p-checkbox id="isEnabled" formControlName="enabled" binary="true"></p-checkbox>
+פעיל
+            </label>
+          </div>
+          <div class="form-group col-md-4 pull-right">
             <p-calendar formControlName="birthday" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2030" id="birthdayDate" placeholder="תאריך לידה *" inputStyleClass="form-control"></p-calendar>
           </div>
           <div class="form-group col-md-6 pull-left">
@@ -48,12 +54,10 @@
           <div class="form-group col-md-6 pull-right">
             <p-dropdown [options]="departmentsUi" [style]="{'width':'inherit'}" formControlName="chosenDepartment" [filter]="true"></p-dropdown>
           </div>
-
         </div>
-
-        <div class="modal-footer pull-left col-md-12">
-          <button id="{{employeeForCreation.id? 'closeEditEmployeeFormButton':'closeNewEmployeeFormButton'}}" type="button" class="btn btn-default" data-dismiss="modal">סגור</button>
-          <button type="submit" [disabled]="!employeeCreationForm.valid" class="btn btn-primary">שמור</button>
+        <div class="modal-footer col-md-12">
+          <button id="{{employeeForCreation.id? 'closeEditEmployeeFormButton':'closeNewEmployeeFormButton'}}" type="button" class="btn btn-default pull-left" data-dismiss="modal">סגור</button>
+          <button type="submit" [disabled]="!employeeCreationForm.valid" class="btn btn-primary pull-left">שמור</button>
         </div>
       </form>
       <div *ngIf="warning" class="alert alert-danger">
