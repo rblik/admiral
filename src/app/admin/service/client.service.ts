@@ -40,10 +40,8 @@ export class ClientService {
     return this.http.post(this.clientUrl, JSON.stringify(client), options)
       .map(res => res.json())
       .catch(e => {
-        if (e.status == 409) {
-          let s = e.json().details[0].split('Detail: Key ')[1];
+          let s = e.json().details[0];
           return Observable.throw(s);
-        }
       });
   }
 }

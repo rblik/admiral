@@ -58,7 +58,10 @@ export class EmployeeService {
       .catch(e => {
         let error = e.json();
         if (e.status == 409) {
-          let s = error.details[0].split('Detail: Key ')[1];
+          let s = error.details[0].split(' ');
+          if ('email'==s[0]) {
+            s = 'עובד עם ד"א ' + s[1] + ' כבר קיים';
+          }
           return Observable.throw(s);
         } else if (error.cause == 'ValidationException'){
           return Observable.throw('ד"א לא תקין');
