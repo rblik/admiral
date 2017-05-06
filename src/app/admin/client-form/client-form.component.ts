@@ -34,11 +34,15 @@ export class ClientFormComponent implements OnInit, OnChanges{
   }
 
   private fillTheForm() {
-    if (this.clientForCreation == null || this.clientForCreation.name==null) {
+    if (this.isCreate()) {
       this.fillTheCreationForm();
     } else {
       this.fillTheEditingForm();
     }
+  }
+
+  private isCreate() {
+    return this.clientForCreation == null || this.clientForCreation.name == null;
   }
 
   private fillTheEditingForm() {
@@ -83,13 +87,15 @@ export class ClientFormComponent implements OnInit, OnChanges{
       name: [client.name, [Validators.required]],
       companyNumber: [client.companyNumber],
       clientNumber: [client.clientNumber],
-      phones: this._fb.array(client.phones),
+      phones: this._fb.array(!!client.phones? client.phones: []),
       addresses: this._fb.array([])
     });
     const control = <FormArray>this.clientCreationForm.controls['addresses'];
-    client.addresses.forEach(address => {
-      control.push(this.populateAddresses(address));
-    });
+    if (!!client.addresses) {
+      client.addresses.forEach(address => {
+        control.push(this.populateAddresses(address));
+      });
+    }
   }
 
   private populateAddresses(address: Address): FormGroup {

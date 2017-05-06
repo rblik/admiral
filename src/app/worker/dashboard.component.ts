@@ -200,6 +200,10 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  isEmptyDay(): boolean {
+    return !!this.dayWorkInfos ? this.dayWorkInfos.length == 0 : false;
+  }
+
   showPivotalWorkDayDialog(date: Date) {
     let currentDate = this.timeService.getDateString(date);
     this.isPivotal = true;

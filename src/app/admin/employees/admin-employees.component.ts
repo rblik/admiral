@@ -82,13 +82,15 @@ export class AdminEmployeesComponent implements OnInit{
     this.localSt.observe('formEmployee').subscribe(edited => {
       let editedEmployee = JSON.parse(edited);
       if (editedEmployee.isNew) {
-        this.employeesUi.push(editedEmployee.employee);
+        this.employees.push(editedEmployee.employee);
+        this.filterByDepartment(null);
       } else {
-        this.employeesUi.forEach(employee => {
+        this.employees.forEach(employee => {
           if (employee.id.toString() == editedEmployee.employee.id.toString()) {
             employee.name = editedEmployee.employee.name;
             employee.surname = editedEmployee.employee.surname;
             employee.department = editedEmployee.employee.department;
+            this.filterByDepartment(null);
             return;
           }
         });

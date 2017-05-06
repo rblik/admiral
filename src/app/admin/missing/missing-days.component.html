@@ -1,21 +1,22 @@
-<h3 style="text-align: center">ימים חסרים</h3>
 <notification-bar></notification-bar>
+<h3 style="text-align: center">ימים חסרים</h3>
 <div class="container">
-  <div class="row">
+  <div class="row hebrew-direct">
+
     <div class="col-md-2 pull-left">
-      <button class="btn btn-sm btn-info" (click)="getMissedDays()">&nbsp;חפש&nbsp;<i
-        class="fa fa-chevron-circle-down" aria-hidden="true"></i></button>
-    </div>
-    <div class="col-md-2 pull-left">
-      <button class="btn btn-sm btn-default" (click)="openMissingMailDialog()">דיוור&nbsp;<i class="fa fa-envelope" aria-hidden="true"></i></button>
+      <button class="btn btn-sm btn-default" (click)="openMissingMailDialog()"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;דיוור</button>
       <button id="mailingFormOpen" [hidden]="true" data-toggle="modal" data-target="#mailingForm"></button>
     </div>
     <p-dropdown [options]="departmentsUi" [(ngModel)]="chosenDepartment" [filter]="true"
                 (onChange)="getEmployeesUi(chosenDepartment)"></p-dropdown>
     <p-dropdown [options]="employeesUi" [(ngModel)]="chosenEmployee" [filter]="true"></p-dropdown>
-    <div class="col-md-4 pull-right">
+    <div class="col-md-4">
       <p-selectButton [options]="types" [(ngModel)]="selectedType"></p-selectButton>
-      <button class="btn btn-sm btn-default" (click)="missingDaysReport()">הורדה&nbsp;<i class="fa fa fa-save" aria-hidden="true"></i></button>
+      <button class="btn btn-sm btn-default" (click)="missingDaysReport()"><i class="fa fa fa-save" aria-hidden="true"></i>&nbsp;הורדה</button>
+    </div>
+    <div class="col-md-2 pull-right">
+      <button class="btn btn-sm btn-info" (click)="getMissedDays()"><i
+        class="fa fa-chevron-circle-down" aria-hidden="true"></i>&nbsp;חפש&nbsp;</button>
     </div>
   </div>
 </div>
@@ -26,7 +27,7 @@
     <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
     <input #gb type="text" pInputText size="50" placeholder="חיפוש">
   </div>
-  <p-dataTable [value]="infosUi" [globalFilter]="gb" sortMode="multiple" [style]="{'text-align':'center'}">
+  <p-dataTable emptyMessage="אין נתונים" [value]="infosUi" [globalFilter]="gb" sortMode="multiple" [style]="{'text-align':'center'}">
     <p-column field="date" header="תאריך" [sortable]="true"></p-column>
     <p-column field="departmentName" header="צוות" [sortable]="true"></p-column>
     <p-column field="employeeSurname" header="שם משפחה" [sortable]="true"></p-column>

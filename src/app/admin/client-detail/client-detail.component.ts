@@ -66,10 +66,6 @@ export class ClientDetailComponent implements OnInit {
     });
   }
 
-  private collapseProj(project: Project) {
-
-  }
-
   private fillEditingForm(project: Project) {
     this.projectCreationForm = this._fb.group({
       id: [project.id],
@@ -109,7 +105,7 @@ export class ClientDetailComponent implements OnInit {
   }
 
   popupCreate() {
-    this.labelForProjectPopup = 'יצירת פרויקט';
+    this.labelForProjectPopup = 'פרויקט חדש';
     this.formProject = new Project();
     this.formProject.tariff = new Tariff();
     this.fillCreationForm();

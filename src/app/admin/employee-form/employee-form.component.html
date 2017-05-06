@@ -3,7 +3,7 @@
   <div class="modal-content">
     <div class="modal-header" style="text-align: center">
       <button type="button" class="close pull-left" data-dismiss="modal">&times;</button>
-      <h4 class="modal-title">עובד חדש</h4>
+      <h4 class="modal-title">{{employeeForCreation.id? 'ערוך עובד':'עובד חדש'}}</h4>
     </div>
     <div class="modal-body hebrew-direct">
       <div *ngIf="errorEmployee" style="text-align: center" class="alert alert-danger">
@@ -11,39 +11,39 @@
       </div>
       <form [formGroup]="employeeCreationForm" novalidate (ngSubmit)="submitForm(employeeCreationForm)">
 
-        <div class="row col-md-12">
-          <div class="form-group col-md-6 pull-left">
-            <input type="text" placeholder="שם משפחה *" class="form-control" formControlName="surname">
-          </div>
+        <div class="row col-md-12 hebrew-direct">
           <div class="form-group col-md-6 pull-right">
             <input type="text" placeholder="שם *" class="form-control" formControlName="name">
           </div>
           <div class="form-group col-md-6 pull-left">
-            <input type="text" placeholder="דואר *" class="form-control" formControlName="email">
+            <input type="text" placeholder="שם משפחה *" class="form-control" formControlName="surname">
           </div>
-          <div class="form-group col-md-1 pull-left">
-            <label for="isAdmin">
-              <p-checkbox id="isAdmin" formControlName="isAdmin" binary="true"></p-checkbox>
-              האם מנהל
-            </label>
+          <div class="form-group col-md-4 pull-right">
+            <p-calendar formControlName="birthday" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2030" id="birthdayDate" placeholder="תאריך לידה" inputStyleClass="form-control"></p-calendar>
           </div>
-          <div class="form-group col-md-1 pull-left">
+          <div class="form-group col-md-1 pull-right">
             <label for="isEnabled">
               <p-checkbox id="isEnabled" formControlName="enabled" binary="true"></p-checkbox>
 פעיל
             </label>
           </div>
-          <div class="form-group col-md-4 pull-right">
-            <p-calendar formControlName="birthday" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2030" id="birthdayDate" placeholder="תאריך לידה *" inputStyleClass="form-control"></p-calendar>
+          <div class="form-group col-md-1 pull-right">
+            <label for="isAdmin">
+              <p-checkbox id="isAdmin" formControlName="isAdmin" binary="true"></p-checkbox>
+              האם מנהל
+            </label>
           </div>
           <div class="form-group col-md-6 pull-left">
-            <input type="text" placeholder="תעודת זהות" class="form-control" formControlName="passportId">
+            <input type="text" placeholder="דואר *" class="form-control" formControlName="email">
           </div>
           <div class="form-group col-md-6 pull-right">
             <input type="text" placeholder="מספר עובד" class="form-control" formControlName="employeeNumber">
           </div>
-          <div class="form-group col-md-6 pull-left">
+          <div class="form-group col-md-6 pull-right">
             <input type="text" placeholder="טל פרטי" class="form-control" formControlName="privatePhone">
+          </div>
+          <div class="form-group col-md-6 pull-left">
+            <input type="text" placeholder="תעודת זהות" class="form-control" formControlName="passportId">
           </div>
           <div class="form-group col-md-6 pull-right">
             <input type="text" placeholder="טל עבודה" class="form-control" formControlName="companyPhone">

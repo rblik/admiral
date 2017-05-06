@@ -1,36 +1,42 @@
 <div class="page-header">
-  <p style="text-align: center; font-size: 300%">דוחות</p>
+  <h6 style="text-align: center; font-size: 300%">דוחות</h6>
 </div>
 <div class="container">
   <div class="row">
-    <div class="col-md-12 pull-left">
 
-      <a class="btn btn-sm btn-info" [routerLink]="['missing']">
-        <i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;ימים חסרים&nbsp;<i class="fa fa-star-o" aria-hidden="true"></i>
-      </a>
-      <a class="btn btn-sm btn-info" [routerLink]="['partial']">
-        <i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;ימים חלקיים&nbsp;<i class="fa fa-star-half-o" aria-hidden="true"></i>
-      </a>
-      <a class="btn btn-sm btn-info" [routerLink]="['pivotal']">
-        <i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;שעות גולמי&nbsp;<i class="fa fa-star" aria-hidden="true"></i>
-      </a>
-    </div>
-    <div class="col-md-12" style="alignment: center">
-      <h3></h3>
-      <div class="form-group">
-        <label for="endDateId">
-          <p-calendar [(ngModel)]="endDate" id="endDateId" inputStyleClass="form-control"
-                      (onSelect)="populateTimeServiceWithDates()"></p-calendar>&nbsp;עד תעריך&nbsp;
-        </label>
+    <div class="col-md-12 hebrew-direct" style="text-align: center">
+      <div class="form-group" style="margin: 0 auto; display: inline-block">
         <label for="startDateId">
-          <p-calendar [(ngModel)]="startDate" id="startDateId" inputStyleClass="form-control"
-                      (onSelect)="populateTimeServiceWithDates()"></p-calendar>&nbsp;מתאריך&nbsp;
+          &nbsp;מ-
+          <p-calendar [(ngModel)]="startDate" id="startDateId"
+                      (onSelect)="populateTimeServiceWithDates()"></p-calendar>
+        </label>
+        <label for="endDateId">
+          &nbsp;עד-
+          <p-calendar [(ngModel)]="endDate" id="endDateId"
+                      (onSelect)="populateTimeServiceWithDates()"></p-calendar>
         </label>
       </div>
     </div>
-    <div class="col-md-12 pull-left">
-      <button class="btn btn-sm btn-default" (click)="moveMonth(-1)"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;חודש אחורה&nbsp;</button>
-      <button class="btn btn-sm btn-default" (click)="moveMonth(1)">&nbsp;חודש קדימה&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+    <div class="col-md-12 hebrew-direct" style="text-align: center">
+      <div class="btn-group" style="margin: 0 auto; display: inline-block">
+      <button class="btn btn-sm btn-default" (click)="moveMonth(1)">&nbsp;חודש קדימה&nbsp;<i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+      <button class="btn btn-sm btn-default" (click)="moveMonth(-1)"><i class="fa fa-chevron-right" aria-hidden="true"></i>&nbsp;חודש אחורה&nbsp;</button>
+
+      </div>
+    </div>
+    <div class="col-md-12" style="text-align: center; margin-top: 0.5em">
+      <div class="btn-group" style="margin: 0 auto; display: inline-block">
+        <a class="btn btn-sm btn-info" [routerLink]="['missing']">
+          <i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;ימים חסרים&nbsp;<i class="fa fa-star-o" aria-hidden="true"></i>
+        </a>
+        <a class="btn btn-sm btn-info" [routerLink]="['partial']">
+          <i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;ימים חלקיים&nbsp;<i class="fa fa-star-half-o" aria-hidden="true"></i>
+        </a>
+        <a class="btn btn-sm btn-info" [routerLink]="['pivotal']">
+          <i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;שעות גולמי&nbsp;<i class="fa fa-star" aria-hidden="true"></i>
+        </a>
+      </div>
     </div>
   </div>
   <div *ngIf="error" style="text-align: center" class="alert alert-danger">

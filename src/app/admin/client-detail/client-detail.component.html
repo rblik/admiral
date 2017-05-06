@@ -4,19 +4,20 @@
       <h4 class="card-title" style="font-weight: bold; text-align: center">{{client.name}}</h4>
       <ul class="list-group">
         <li class="list-group-item">
-          <p style="font-size: small" class="btn btn-xs btn-warning" data-toggle="modal" data-keyboard="true" data-target="#clientEditionForm"><i
-                class="fa fa-pencil-square-o"></i>&nbsp;ערוך</p></li>
-        <li class="list-group-item">{{client.clientNumber}}<span class="pull-right"><strong>מספר לקוח</strong></span></li>
+          <p style="font-size: small" class="btn btn-xs btn-warning" data-toggle="modal" data-keyboard="true" data-target="#clientEditionForm">ערוך&nbsp;<i
+                class="fa fa-pencil-square-o"></i></p></li>
+        <li class="list-group-item" *ngIf="client.clientNumber">{{client.clientNumber}}<span class="pull-right"><strong>מספר לקוח</strong></span></li>
         <li class="list-group-item" *ngFor="let address of client.addresses; let i = index" [attr.data-index]="i">{{(address.houseNumber>0? address.houseNumber:'')+'&nbsp;'+address.street+'&nbsp;'+address.city}}<span
           class="pull-right"><strong>כתובת {{i + 1}}</strong></span></li>
-        <li class="list-group-item"><span *ngFor="let phone of client.phones">{{phone}}&nbsp;&nbsp;</span><span
+        <li *ngIf="client.phones" class="list-group-item"><span *ngFor="let phone of client.phones">{{phone}}&nbsp;&nbsp;</span><span
           class="pull-right"><strong>טל</strong></span></li>
       </ul>
       <h4 style="text-align: center">פרויקטים</h4>
 
       <div class="col-md-12" style="text-align: center">
         <p-header><a style="cursor: pointer; color: #1a1a1a" (click)="popupCreate()"><i class="module-plus glyphicon glyphicon-plus" aria-hidden="true"></i></a></p-header>
-        <p-dataTable [value]="client.projects" expandableRows="true" [style]="{'text-align':'center', 'font-size':'12px', 'width':'100%', 'margin':'0 auto'}">
+        <div *ngIf="client.projects">
+        <p-dataTable [value]="client.projects" emptyMessage="אין נתונים" expandableRows="true" [style]="{'text-align':'center', 'font-size':'12px', 'width':'100%', 'margin':'0 auto'}">
           <p-column expander="true" styleClass="col-icon" [style]="{'width':'7%'}"></p-column>
           <p-column header="ערוך" [style]="{'width':'7%'}">
             <template let-col let-proj="rowData" pTemplate="body">
@@ -46,6 +47,7 @@
             </table>
           </template>
         </p-dataTable>
+        </div>
       </div>
     </div>
   </div>
@@ -59,9 +61,9 @@
 <button id="openProjectFormElem" [hidden]="true" data-toggle="modal" data-target="#projectCreationForm"></button>
 <div id="projectCreationForm" tabindex='-1' class="modal fade" onclose="" role="dialog">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content hebrew-direct">
       <div class="modal-header" style="text-align: center">
-        <button type="button" id="closeProjectFormElem" class="close" data-dismiss="modal">&times;</button>
+        <button type="button" id="closeProjectFormElem" class="close pull-left" data-dismiss="modal">&times;</button>
         <h4 class="modal-title"> {{labelForProjectPopup}} </h4>
       </div>
         <form [formGroup]="projectCreationForm" (ngSubmit)="updateOrCreateProject(projectCreationForm)">

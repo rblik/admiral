@@ -56,12 +56,14 @@ export class EmployeeService {
     return this.http.post(this.employeesUrl, JSON.stringify(employee), options)
       .map(res => res.json())
       .catch(e => {
+        let error = e.json();
         if (e.status == 409) {
-          let s = e.json().details[0].split('Detail: Key ')[1];
+          let s = error.details[0].split('Detail: Key ')[1];
           return Observable.throw(s);
-        } else {
-          let s = e.json().details[0];
-          return Observable.throw(s);
+        } else if (error.cause == 'ValidationException'){
+          return Observable.throw('ד"א לא תקין');
+        }else {
+          return Observable.throw(error.details[0]);
         }
       });
   }
