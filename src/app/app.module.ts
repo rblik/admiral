@@ -32,6 +32,7 @@ import {MyCommonModule} from "./my-common.module";
 import {ReversePipe} from "./pipe/reverse.pipe";
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import {NotificationBarModule} from "angular2-notification-bar";
+import {SlimLoadingBarModule} from "ng2-slim-loading-bar";
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import {NotificationBarModule} from "angular2-notification-bar";
     MyCommonModule,
     CheckboxModule,
     MultiselectDropdownModule,
-    NotificationBarModule
+    NotificationBarModule,
+    SlimLoadingBarModule.forRoot()
   ],
   providers: [
     AuthService,
