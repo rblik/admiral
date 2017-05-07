@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from "@angular/core";
 import {Project} from "../../model/project";
 import {Employee} from "../../model/employee";
 import {SelectItem} from "primeng/primeng";
@@ -6,13 +6,18 @@ import {AgreementService} from "../service/agreement.service";
 import {EmployeeService} from "../service/employee.service";
 import {Agreement} from "../../model/agreement";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'project-employee-form',
   templateUrl: './project-employee-form.component.html',
   styleUrls: ['./project-employee-form.component.css']
 })
-export class ProjectEmployeeFormComponent implements OnInit, OnChanges {
+export class ProjectEmployeeFormComponent implements OnInit, OnChanges, OnDestroy {
+  ngOnDestroy(): void {
+    if (this.getEmployeesSubscription) this.getEmployeesSubscription.unsubscribe();
+    if (this.upsertAgreementSubscription) this.upsertAgreementSubscription.unsubscribe();
+  }
 
   @Input() project: Project;
   @Input() agreement: Agreement;
@@ -25,6 +30,8 @@ export class ProjectEmployeeFormComponent implements OnInit, OnChanges {
   private agreementCreationForm: FormGroup;
   private currenciesUi: SelectItem[] = [];
   private tariffTypesUi: SelectItem[] = [];
+  private getEmployeesSubscription: Subscription;
+  private upsertAgreementSubscription: Subscription;
 
 
   constructor(private employeeService: EmployeeService, private agreementService: AgreementService, private _fb: FormBuilder) {
@@ -38,7 +45,7 @@ export class ProjectEmployeeFormComponent implements OnInit, OnChanges {
   }
 
   private getEmployeesWithDepartments() {
-    this.employeeService.getAllEmployees().subscribe(employees => {
+    this.getEmployeesSubscription = this.employeeService.getAllEmployees().subscribe(employees => {
       this.employees = employees;
       this.initDepartments();
       this.initEmployees(null);
@@ -91,7 +98,7 @@ export class ProjectEmployeeFormComponent implements OnInit, OnChanges {
       let employeeId = agreement.employee;
       agreement.department = null;
       agreement.employee = null;
-    this.agreementService.save(employeeId, this.project.id, agreement).subscribe(saved => {
+    this.upsertAgreementSubscription = this.agreementService.save(employeeId, this.project.id, agreement).subscribe(saved => {
         if (agreement.id == null) {
           if (!this.project.workAgreements) {
             this.project.workAgreements = [];

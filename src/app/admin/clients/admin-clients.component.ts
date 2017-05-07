@@ -1,26 +1,27 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ClientService} from "../service/client.service";
 import {Client} from "../../model/client";
 import {ActivatedRoute, Router} from "@angular/router";
-import {Validators, FormGroup, FormArray, FormBuilder, FormControl} from '@angular/forms';
 import {SessionStorageService} from "ng2-webstorage";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'admin-clients',
   templateUrl: './admin-clients.component.html',
   styleUrls: ['./admin-clients.component.css']
 })
-export class AdminClientsComponent implements OnInit {
+export class AdminClientsComponent implements OnInit, OnDestroy {
   private clients: Client[];
   private clientsUi: Client[];
   private clientForCreation: Client;
   private errorClients: string;
+  private getClientsSubscription: Subscription;
+  private localStSubscription: Subscription;
 
   constructor(private clientService: ClientService,
               private router: Router,
               private localSt: SessionStorageService,
-              private route: ActivatedRoute,
-              private _fb: FormBuilder) {
+              private route: ActivatedRoute) {
     this.clientForCreation = new Client();
 
   }
@@ -30,8 +31,12 @@ export class AdminClientsComponent implements OnInit {
     this.subscribeOnEditedClient();
   }
 
+  ngOnDestroy(): void {
+    if (this.localStSubscription) this.localStSubscription.unsubscribe();
+  }
+
   private subscribeOnEditedClient() {
-    this.localSt.observe('formClient').subscribe(edited => {
+    this.localStSubscription = this.localSt.observe('formClient').subscribe(edited => {
       let editedClient = JSON.parse(edited);
       if (editedClient.isNew) {
         this.clientsUi.push(editedClient.client);
@@ -47,7 +52,7 @@ export class AdminClientsComponent implements OnInit {
   }
 
   getClients() {
-    this.clientService.getClients().subscribe(clients => {
+    this.getClientsSubscription = this.clientService.getClients().subscribe(clients => {
       this.clients = clients;
       this.clientsUi = clients;
     }, error => {

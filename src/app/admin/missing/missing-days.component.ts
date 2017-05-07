@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ReportService} from "../service/report.service";
 import {TimeService} from "../../service/time.service";
 import {WorkInfo} from "../../model/work-info";
@@ -11,6 +11,7 @@ import {DownloadService} from "../service/download.service";
 import {IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings} from 'angular-2-dropdown-multiselect';
 import {MailService} from "../service/mail.service";
 import {NotificationBarService, NotificationType} from "angular2-notification-bar";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'missing-days',
@@ -19,7 +20,7 @@ import {NotificationBarService, NotificationType} from "angular2-notification-ba
     './missing-days.component.css'
   ]
 })
-export class MissingDaysComponent implements OnInit {
+export class MissingDaysComponent implements OnInit, OnDestroy {
 
   private selectedType: string = 'xlsx';
   private chosenEmployee: Employee;
@@ -44,6 +45,10 @@ export class MissingDaysComponent implements OnInit {
   private missingReportEmail: string;
   private missingReportMessage: string;
   private showReceiverEmail: boolean;
+  private getEmployeesSubscription: Subscription;
+  private missedDaysSubscription: Subscription;
+  private downloadMissingSubscription: Subscription;
+  private mailSendingSubscription: Subscription;
 
   constructor(private notificationBarService: NotificationBarService, private downloadService: DownloadService, private reportService: ReportService, private mailService: MailService, private employeeService: EmployeeService, private timeService: TimeService) {
     this.types = [];
@@ -58,6 +63,13 @@ export class MissingDaysComponent implements OnInit {
     this.departmentsUi.push({label: "בחר צוות", value: null});
     this.employeesUi.push({label: "בחר עובד", value: null});
     this.getEmployees();
+  }
+
+  ngOnDestroy(): void {
+    if (this.downloadMissingSubscription) this.downloadMissingSubscription.unsubscribe();
+    if (this.getEmployeesSubscription) this.getEmployeesSubscription.unsubscribe();
+    if (this.mailSendingSubscription) this.mailSendingSubscription.unsubscribe();
+    if (this.missedDaysSubscription) this.missedDaysSubscription.unsubscribe();
   }
 
   private fixDropdownCheckbox() {
@@ -88,7 +100,7 @@ export class MissingDaysComponent implements OnInit {
   }
 
   getEmployees(): void {
-    this.employeeService.getAllEmployees().subscribe(employees => {
+    this.getEmployeesSubscription = this.employeeService.getAllEmployees().subscribe(employees => {
       this.employees = employees;
       this.fillDropDownList(employees);
       this.getEmployeesUi(this.chosenDepartment);
@@ -103,7 +115,7 @@ export class MissingDaysComponent implements OnInit {
     let to = this.timeService.getDateString(this.timeService.toDate);
     let employeeId = this.chosenEmployee != null ? this.chosenEmployee.id.toString() : null;
     let departmentId = this.chosenDepartment != null ? this.chosenDepartment.id.toString() : null;
-    this.reportService.getMissedDaysForPeriod(from, to, employeeId, departmentId)
+    this.missedDaysSubscription = this.reportService.getMissedDaysForPeriod(from, to, employeeId, departmentId)
       .subscribe(infos => {
         this.infosUi = infos;
         this.tableVisible = true;
@@ -131,7 +143,7 @@ export class MissingDaysComponent implements OnInit {
       if (!!mailingFormClose) {
         mailingFormClose.click();
       }
-      this.mailService.sendMissingByEmail(
+      this.mailSendingSubscription = this.mailService.sendMissingByEmail(
         this.timeService.getDateString(this.timeService.fromDate),
         this.timeService.getDateString(this.timeService.toDate),
         this.employeeIds, email, message
@@ -180,7 +192,7 @@ export class MissingDaysComponent implements OnInit {
     let departmentId = this.chosenDepartment != null ? this.chosenDepartment.id.toString() : null;
     let fromDate = this.timeService.getDateString(this.timeService.fromDate);
     let toDate = this.timeService.getDateString(this.timeService.toDate);
-    this.downloadService.downloadMissing(this.selectedType, fromDate, toDate, employeeId, departmentId)
+    this.downloadMissingSubscription = this.downloadService.downloadMissing(this.selectedType, fromDate, toDate, employeeId, departmentId)
       .subscribe(res => {
           let appType = this.downloadService.getMimeType(this.selectedType);
           let blob = new Blob([res.blob()], {type: appType});

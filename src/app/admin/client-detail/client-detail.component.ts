@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ClientService} from "../service/client.service";
 import {ProjectService} from "../service/project.service";
 import {ActivatedRoute, Params} from "@angular/router";
@@ -8,13 +8,16 @@ import {Tariff} from "../../model/tariff";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SelectItem} from "primeng/primeng";
 import {Agreement} from "../../model/agreement";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'client-detail',
   templateUrl: './client-detail.component.html',
   styleUrls: ['./client-detail.component.css']
 })
-export class ClientDetailComponent implements OnInit {
+export class ClientDetailComponent implements OnInit, OnDestroy {
+  private upsertProjectSubscription: Subscription;
+  private routeParamsSubscription: Subscription;
 
   private client: Client;
   private errorClient: string;
@@ -41,6 +44,19 @@ export class ClientDetailComponent implements OnInit {
     this.fillCreationForm();
     this.fillDropDowns();
     this.initAgreementForEdition();
+  }
+
+  ngOnInit(): void {
+    this.routeParamsSubscription = this.route.params.switchMap((params: Params) =>
+      this.clientService.get(params['clientId'])).subscribe(client => {
+      this.client = client;
+      this.clientName = client.name;
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.routeParamsSubscription) this.routeParamsSubscription.unsubscribe();
+    if (this.upsertProjectSubscription) this.upsertProjectSubscription.unsubscribe();
   }
 
   private fillDropDowns() {
@@ -79,14 +95,6 @@ export class ClientDetailComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.route.params.switchMap((params: Params) =>
-      this.clientService.get(params['clientId'])).subscribe(client => {
-      this.client = client;
-      this.clientName = client.name;
-    });
-  }
-
   popupEdit(project: Project) {
     this.labelForProjectPopup = 'עריכת פרויקט';
     this.formProject = new Project();
@@ -117,7 +125,7 @@ export class ClientDetailComponent implements OnInit {
 
   updateOrCreateProject(project: any) {
     let value = project.value;
-    this.projectService.save(this.client.id, value).subscribe(updated => {
+    this.upsertProjectSubscription = this.projectService.save(this.client.id, value).subscribe(updated => {
       this.formProject = new Project();
       let closeProjForm = document.getElementById('closeProjectFormElem');
       if (closeProjForm) {

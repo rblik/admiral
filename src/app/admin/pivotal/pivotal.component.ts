@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import * as fileSaver from "file-saver";
 import {WorkInfo} from "../../model/work-info";
 import {SelectItem} from "primeng/primeng";
@@ -8,12 +8,21 @@ import {AgreementService} from "../service/agreement.service";
 import {AgreementDto} from "../../model/agreement-dto";
 import {ReportService} from "../service/report.service";
 import {NotificationBarService, NotificationType} from "angular2-notification-bar";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'pivotal',
   templateUrl: './pivotal.component.html'
 })
-export class PivotalComponent implements OnInit {
+export class PivotalComponent implements OnInit, OnDestroy {
+  ngOnDestroy(): void {
+    if (this.getAgreementsSubscription) this.getAgreementsSubscription.unsubscribe();
+    if (this.downloadPivotalSubscription) this.downloadPivotalSubscription.unsubscribe();
+    if (this.getPivotalSubscription) this.getPivotalSubscription.unsubscribe();
+  }
+  private getAgreementsSubscription: Subscription;
+  private getPivotalSubscription: Subscription;
+  private downloadPivotalSubscription: Subscription;
 
   constructor(private notificationBarService: NotificationBarService, private downloadService: DownloadService, private reportService: ReportService, private agreementService: AgreementService, private timeService: TimeService) {
     this.types = [];
@@ -47,7 +56,7 @@ export class PivotalComponent implements OnInit {
   private clientUi: SelectItem[] = [];
 
   getAgreements() {
-    this.agreementService.getAgreements().subscribe(agreements => {
+    this.getAgreementsSubscription = this.agreementService.getAgreements().subscribe(agreements => {
       this.agreements = agreements;
       this.agreementsUi = agreements;
       this.getEmployeesUi(this.chosenDepartment);
@@ -130,7 +139,7 @@ export class PivotalComponent implements OnInit {
     let departmentId = this.chosenDepartment != null ? this.chosenDepartment.toString() : null;
     let projectId = this.chosenProject != null ? this.chosenProject.toString() : null;
     let clientId = this.chosenClient != null ? this.chosenClient.toString() : null;
-    this.reportService.getPivotalForPeriod(from, to, employeeId, departmentId, projectId, clientId)
+    this.getPivotalSubscription = this.reportService.getPivotalForPeriod(from, to, employeeId, departmentId, projectId, clientId)
       .subscribe(infos => {
         this.infosUi = infos;
         this.tableVisible = true;
@@ -146,7 +155,7 @@ export class PivotalComponent implements OnInit {
     let departmentId = this.chosenDepartment != null ? this.chosenDepartment.toString() : null;
     let projectId = this.chosenProject != null ? this.chosenProject.toString() : null;
     let clientId = this.chosenClient != null ? this.chosenClient.toString() : null;
-    this.downloadService.downloadPivotal(this.selectedType, from, to, employeeId, departmentId, projectId, clientId)
+    this.downloadPivotalSubscription = this.downloadService.downloadPivotal(this.selectedType, from, to, employeeId, departmentId, projectId, clientId)
       .subscribe(res => {
           let appType = this.downloadService.getMimeType(this.selectedType);
           let blob = new Blob([res.blob()], {type: appType});

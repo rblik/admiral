@@ -1,20 +1,22 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from "@angular/core";
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Client} from "../../model/client";
 import {SessionStorageService} from "ng2-webstorage";
 import {ClientService} from "../service/client.service";
 import {Address} from "../../model/address";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'client-form',
   templateUrl: './client-form.component.html',
   styleUrls: ['./client-form.component.css']
 })
-export class ClientFormComponent implements OnInit, OnChanges{
+export class ClientFormComponent implements OnInit, OnChanges, OnDestroy{
 
   @Input() private clientForCreation: Client;
   public clientCreationForm: FormGroup;
   private errorClient: string;
+  private upsertClientSubscription: Subscription;
 
   constructor(private clientService: ClientService,
               private localSt: SessionStorageService,
@@ -31,6 +33,10 @@ export class ClientFormComponent implements OnInit, OnChanges{
       this.clientForCreation = changes['clientForCreation'].currentValue;
       this.fillTheForm();
     }
+  }
+
+  ngOnDestroy(): void {
+    if (this.upsertClientSubscription) this.upsertClientSubscription.unsubscribe();
   }
 
   private fillTheForm() {
@@ -67,7 +73,7 @@ export class ClientFormComponent implements OnInit, OnChanges{
     this.clientForCreation.clientNumber = value.clientNumber;
     this.clientForCreation.addresses = value.addresses;
     this.clientForCreation.phones = value.phones;
-    this.clientService.save(this.clientForCreation).subscribe(client => {
+    this.upsertClientSubscription = this.clientService.save(this.clientForCreation).subscribe(client => {
       let closeNewClientFormButton = document.getElementById("closeNewClientFormButton");
       if (closeNewClientFormButton) {
         closeNewClientFormButton.click();

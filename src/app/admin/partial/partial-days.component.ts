@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {TimeService} from "../../service/time.service";
 import {EmployeeService} from "../service/employee.service";
 import {ReportService} from "../service/report.service";
@@ -9,12 +9,18 @@ import {Department} from "../../model/department";
 import {WorkInfo} from "../../model/work-info";
 import * as fileSaver from "file-saver";
 import {NotificationBarService, NotificationType} from "angular2-notification-bar";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'partial-days',
   templateUrl: './partial-days.component.html'
 })
-export class PartialDaysComponent implements OnInit{
+export class PartialDaysComponent implements OnInit, OnDestroy{
+  ngOnDestroy(): void {
+    if (this.getEmployeesSubscription) this.getEmployeesSubscription.unsubscribe();
+    if (this.downloadPartialSubscription) this.downloadPartialSubscription.unsubscribe();
+    if (this.getPartialSubscription) this.getPartialSubscription.unsubscribe();
+  }
 
   private selectedType: string = 'xlsx';
   private chosenEmployee: Employee;
@@ -29,6 +35,9 @@ export class PartialDaysComponent implements OnInit{
   private departmentsUi: SelectItem[] = [];
   private limit: number;
   private durationFilter: number;
+  private getEmployeesSubscription: Subscription;
+  private getPartialSubscription: Subscription;
+  private downloadPartialSubscription: Subscription;
 
   constructor(private notificationBarService: NotificationBarService, private downloadService: DownloadService, private reportService: ReportService, private employeeService: EmployeeService, private timeService: TimeService) {
     this.limit = 9;
@@ -44,7 +53,7 @@ export class PartialDaysComponent implements OnInit{
   }
 
   getEmployees(): void {
-    this.employeeService.getAllEmployees().subscribe(employees => {
+    this.getEmployeesSubscription = this.employeeService.getAllEmployees().subscribe(employees => {
       this.employees = employees;
       this.getEmployeesUi(this.chosenDepartment);
       this.getDepartmentsUi(this.employees);
@@ -58,7 +67,7 @@ export class PartialDaysComponent implements OnInit{
     let to = this.timeService.getDateString(this.timeService.toDate);
     let employeeId = this.chosenEmployee != null ? this.chosenEmployee.id.toString() : null;
     let departmentId = this.chosenDepartment != null ? this.chosenDepartment.id.toString() : null;
-    this.reportService.getPartialDaysForPeriodAndLimit(from, to, this.limit, employeeId, departmentId)
+    this.getPartialSubscription = this.reportService.getPartialDaysForPeriodAndLimit(from, to, this.limit, employeeId, departmentId)
       .subscribe(infos => {
         this.infosUi = infos;
         this.tableVisible = true;
@@ -95,7 +104,7 @@ export class PartialDaysComponent implements OnInit{
     let departmentId = this.chosenDepartment != null ? this.chosenDepartment.id.toString() : null;
     let fromDate = this.timeService.getDateString(this.timeService.fromDate);
     let toDate = this.timeService.getDateString(this.timeService.toDate);
-    this.downloadService.downloadPartial(this.selectedType, fromDate, toDate, employeeId, departmentId)
+    this.downloadPartialSubscription = this.downloadService.downloadPartial(this.selectedType, fromDate, toDate, employeeId, departmentId)
       .subscribe(res => {
           let appType = this.downloadService.getMimeType(this.selectedType);
           let blob = new Blob([res.blob()], {type: appType});

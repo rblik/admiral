@@ -1,25 +1,27 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {Employee} from "../../model/employee";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SessionStorageService} from "ng2-webstorage";
 import {EmployeeService} from "../service/employee.service";
 import {DepartmentService} from "../service/department.service";
 import {Department} from "../../model/department";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'admin-employees',
   templateUrl: './admin-employees.component.html',
   styleUrls: ['./admin-employees.component.css']
 })
-export class AdminEmployeesComponent implements OnInit{
-
+export class AdminEmployeesComponent implements OnInit, OnDestroy{
   private employees: Employee[];
   private employeesUi: Employee[];
   private employeeForCreation: Employee;
   private errorEmployees: string;
+  private getEmployeesSubscription: Subscription;
+  private localStDepSubscription: Subscription;
+  private localStEmplSubscription: Subscription;
 
   constructor(private employeeService: EmployeeService,
-              private departmentService: DepartmentService,
               private router: Router,
               private localSt: SessionStorageService,
               private route: ActivatedRoute) {
@@ -32,8 +34,14 @@ export class AdminEmployeesComponent implements OnInit{
     this.subscribeOnEditedDepartment();
   }
 
+  ngOnDestroy(): void {
+    if (this.localStDepSubscription) this.localStDepSubscription.unsubscribe();
+    if (this.getEmployeesSubscription) this.getEmployeesSubscription.unsubscribe();
+    if (this.localStDepSubscription) this.localStEmplSubscription.unsubscribe();
+  }
+
   private getEmployees() {
-    this.employeeService.getAllEmployees().subscribe(employees => {
+    this.getEmployeesSubscription = this.employeeService.getAllEmployees().subscribe(employees => {
       this.employees = employees;
       this.employeesUi = employees;
     }, error => {
@@ -66,7 +74,7 @@ export class AdminEmployeesComponent implements OnInit{
   }
 
   private subscribeOnEditedDepartment() {
-    this.localSt.observe('formDepartment').subscribe(edited => {
+    this.localStDepSubscription = this.localSt.observe('formDepartment').subscribe(edited => {
       let editedDepartment = JSON.parse(edited);
       if (!editedDepartment.isNew) {
         this.employeesUi.forEach(employee => {
@@ -79,7 +87,7 @@ export class AdminEmployeesComponent implements OnInit{
   }
 
   private subscribeOnEditedEmployee() {
-    this.localSt.observe('formEmployee').subscribe(edited => {
+    this.localStEmplSubscription = this.localSt.observe('formEmployee').subscribe(edited => {
       let editedEmployee = JSON.parse(edited);
       if (editedEmployee.isNew) {
         this.employees.push(editedEmployee.employee);

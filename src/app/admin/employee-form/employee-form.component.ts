@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Employee} from "../../model/employee";
 import {SelectItem} from "primeng/primeng";
@@ -6,12 +6,13 @@ import {TimeService} from "../../service/time.service";
 import {DepartmentService} from "../service/department.service";
 import {EmployeeService} from "../service/employee.service";
 import {SessionStorageService} from "ng2-webstorage";
+import {Subscription} from "rxjs/Subscription";
 @Component({
   selector: 'employee-form',
   templateUrl: './employee-form.component.html',
   styleUrls: ['./employee-form.component.css']
 })
-export class EmployeeFormComponent implements OnInit, OnChanges{
+export class EmployeeFormComponent implements OnInit, OnChanges, OnDestroy{
 
   @Input() private employeeForCreation: Employee;
   public employeeCreationForm: FormGroup;
@@ -19,6 +20,9 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
   private isAdmin: boolean;
   private dateOfBirthday: Date;
   private departmentsUi: SelectItem[] = [];
+  private localStDepSubscription: Subscription;
+  private getDepartmentsSubscription: Subscription;
+  private upsertEmployeeSubscription: Subscription;
 
   constructor(private departmentService: DepartmentService,
               private timeService: TimeService,
@@ -33,6 +37,12 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
         this.employeeForCreation = changes['employeeForCreation'].currentValue;
         this.fillTheForm();
     }
+  }
+
+  ngOnDestroy(): void {
+    if (this.getDepartmentsSubscription) this.getDepartmentsSubscription.unsubscribe();
+    if (this.localStDepSubscription) this.localStDepSubscription.unsubscribe();
+    if (this.upsertEmployeeSubscription) this.upsertEmployeeSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -50,7 +60,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
   }
 
   private subscribeOnEditedDepartment() {
-    this.localSt.observe('formDepartment').subscribe(edited => {
+    this.localStDepSubscription = this.localSt.observe('formDepartment').subscribe(edited => {
       let editedDepartment = JSON.parse(edited);
       if (editedDepartment.isNew) {
         this.departmentsUi.push({label: editedDepartment.dep.name, value: editedDepartment.dep});
@@ -104,11 +114,11 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
 
   private getDepartments() {
     this.departmentsUi.push({label: "בחר צוות", value: null});
-    this.departmentService.getAll().subscribe(departments => {
+    this.getDepartmentsSubscription = this.departmentService.getAll().subscribe(departments => {
       departments.forEach(department => {
         this.departmentsUi.push({label: department.name, value: department})
       });
-    })
+    });
   }
 
   submitForm(employee: any) {
@@ -125,7 +135,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges{
     this.employeeForCreation.roles = (value.isAdmin)? ['ROLE_USER', 'ROLE_ADMIN']: ['ROLE_USER'];
     this.employeeForCreation.password = value.password;
     this.employeeForCreation.department = value.chosenDepartment;
-    this.employeeService.save(value.chosenDepartment.id, this.employeeForCreation).subscribe(employee => {
+    this.upsertEmployeeSubscription = this.employeeService.save(value.chosenDepartment.id, this.employeeForCreation).subscribe(employee => {
       let closeNewEmployeeFormButton = document.getElementById("closeNewEmployeeFormButton");
       if (closeNewEmployeeFormButton) {
         closeNewEmployeeFormButton.click();

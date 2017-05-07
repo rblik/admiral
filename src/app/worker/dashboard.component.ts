@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {TimeService} from "../service/time.service";
 import {WorkInfoService} from "../service/work-info.service";
 import {Employee} from "../model/employee";
@@ -8,6 +8,7 @@ import {WorkUnit} from "../model/work-unit";
 import {SessionStorageService} from 'ng2-webstorage';
 import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
 import {SelectItem} from "primeng/primeng";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'worker-dashboard',
@@ -16,7 +17,7 @@ import {SelectItem} from "primeng/primeng";
     './dashboard.component.css'
   ]
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
 
   private absenceTypes;
   private employee: Employee;
@@ -44,11 +45,36 @@ export class DashboardComponent implements OnInit {
   private isPivotal: boolean;
   private isEdit: boolean;
   private clientsDropdown: SelectItem[] = [];
+  private localStSubscription: Subscription;
+  private getAgreementsSubscription: Subscription;
+  private weekWorkSubscription: Subscription;
+  private dayWorkSubscription: Subscription;
+  private allDayWorkSubscription: Subscription;
+  private moveDaySubscription: Subscription;
+  private upsertWorkInfoSubscription: Subscription;
 
   constructor(private timeService: TimeService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
     this.fillAbsenceTypes();
     this.sumByDayArr = [];
     this.fixDropdownCheckbox();
+  }
+
+  ngOnInit(): void {
+    this.timeOffset = 0;
+    this.localStSubscription = this.sessionStorageService.observe('employee')
+      .subscribe((employee) => this.employee = JSON.parse(employee));
+    this.initWeekBorders(this.timeOffset);
+    this.getAgreementsWithWorkAndRender();
+  }
+
+  ngOnDestroy(): void {
+    if (this.getAgreementsSubscription) this.getAgreementsSubscription.unsubscribe();
+    if (this.localStSubscription) this.localStSubscription.unsubscribe();
+    if (this.allDayWorkSubscription) this.allDayWorkSubscription.unsubscribe();
+    if (this.dayWorkSubscription) this.dayWorkSubscription.unsubscribe();
+    if (this.moveDaySubscription) this.moveDaySubscription.unsubscribe();
+    if (this.upsertWorkInfoSubscription) this.upsertWorkInfoSubscription.unsubscribe();
+    if (this.weekWorkSubscription) this.weekWorkSubscription.unsubscribe();
   }
 
   private fillAbsenceTypes() {
@@ -80,16 +106,8 @@ export class DashboardComponent implements OnInit {
     };
   }
 
-  ngOnInit(): void {
-    this.timeOffset = 0;
-    this.sessionStorageService.observe('employee')
-      .subscribe((employee) => this.employee = JSON.parse(employee));
-    this.initWeekBorders(this.timeOffset);
-    this.getAgreementsWithWorkAndRender();
-  }
-
   private getAgreementsWithWorkAndRender() {
-    this.workService.getWorkAgreements().subscribe(agreements => {
+    this.getAgreementsSubscription = this.workService.getWorkAgreements().subscribe(agreements => {
       this.agreements = agreements;
       this.getClientsUi(agreements);
       this.fillDropDownList(agreements);
@@ -108,7 +126,7 @@ export class DashboardComponent implements OnInit {
   }
 
   private getWorkForWeekAndRender() {
-    this.workService.getWeekWork(
+    this.weekWorkSubscription = this.workService.getWeekWork(
       this.timeService.getDateString(this.currentSunday),
       this.timeService.getDateString(this.nextSunday))
       .subscribe(workInfos => {
@@ -191,7 +209,7 @@ export class DashboardComponent implements OnInit {
     this.dayForCreatingWorkInfos = new Date(currentDate);
     this.activeAgreementId = workInfo.agreementId;
     this.activeDate = currentDate;
-    this.workService.getDayWork(currentDate, workInfo.agreementId).subscribe(infos => {
+    this.dayWorkSubscription = this.workService.getDayWork(currentDate, workInfo.agreementId).subscribe(infos => {
       this.dayWorkInfos = infos;
     });
     let openModalButton = document.getElementById('openModalButton');
@@ -211,7 +229,7 @@ export class DashboardComponent implements OnInit {
     this.createDialog = false;
     this.dayForCreatingWorkInfos = new Date(currentDate);
     this.activeDate = currentDate;
-    this.workService.getDayWork(currentDate).subscribe(infos => {
+    this.allDayWorkSubscription = this.workService.getDayWork(currentDate).subscribe(infos => {
       this.dayWorkInfos = infos;
     });
     let openModalButton = document.getElementById('openModalButton');
@@ -226,7 +244,7 @@ export class DashboardComponent implements OnInit {
     this.createDialog = false;
     this.dayForCreatingWorkInfos = new Date(currentDate);
     this.activeDate = currentDate;
-    this.workService.getDayWork(currentDate, agreementId).subscribe(infos => {
+    this.moveDaySubscription = this.workService.getDayWork(currentDate, agreementId).subscribe(infos => {
       this.dayWorkInfos = infos;
     });
   }
@@ -264,7 +282,7 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    this.workService.save(workInfo.agreementId, this.convertToUnit(workInfo))
+    this.upsertWorkInfoSubscription = this.workService.save(workInfo.agreementId, this.convertToUnit(workInfo))
       .subscribe(workUnit => {
         this.error = '';
         let saved: WorkInfo = this.convertToInfo(workUnit, workInfo.agreementId);

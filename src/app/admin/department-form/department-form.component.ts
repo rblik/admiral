@@ -1,20 +1,24 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from "@angular/core";
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from "@angular/core";
 import {Department} from "../../model/department";
 import {DepartmentService} from "../service/department.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SessionStorageService} from "ng2-webstorage";
+import {Subscription} from "rxjs/Subscription";
+
 @Component({
   selector: 'department-form',
   templateUrl: './department-form.component.html',
   styleUrls: ['./department-form.component.css']
 })
-export class DepartmentFormComponent implements OnInit, OnChanges {
+export class DepartmentFormComponent implements OnInit, OnChanges, OnDestroy {
 
   department: Department;
   departments: Department[] = [];
   @Output() departmentChoose: EventEmitter<number> = new EventEmitter();
   private departmentCreationForm: FormGroup;
   private errorDepartment: string;
+  private upsertDepartmentSubscription: Subscription;
+  private getDepartmentsSubscription: Subscription;
 
 
   constructor(private departmentService: DepartmentService,
@@ -33,6 +37,11 @@ export class DepartmentFormComponent implements OnInit, OnChanges {
     //   this.departments = changes['departments'].currentValue;
     //   this.fillTheForm();
     // }
+  }
+
+  ngOnDestroy(): void {
+    if (this.getDepartmentsSubscription) this.getDepartmentsSubscription.unsubscribe();
+    if (this.upsertDepartmentSubscription) this.upsertDepartmentSubscription.unsubscribe();
   }
 
   emitChosenDepartment(departmentId?: number) {
@@ -63,7 +72,7 @@ export class DepartmentFormComponent implements OnInit, OnChanges {
   submitDepartmentForm(department: any) {
     let value = department.value;
     this.department.name = value.name;
-    this.departmentService.save(this.department).subscribe(responseDepartment => {
+    this.upsertDepartmentSubscription = this.departmentService.save(this.department).subscribe(responseDepartment => {
       let closeNewDepartmentFormButton = document.getElementById("closeNewDepartmentFormButton");
       if (closeNewDepartmentFormButton) {
         closeNewDepartmentFormButton.click();
@@ -92,9 +101,9 @@ export class DepartmentFormComponent implements OnInit, OnChanges {
   }
 
   private getDepartments() {
-    this.departmentService.getAll().subscribe(departments => {
+    this.getDepartmentsSubscription = this.departmentService.getAll().subscribe(departments => {
       this.departments = departments;
-    })
+    });
   }
 
   openDepartmentEditingMenu(department: Department) {
