@@ -1,4 +1,4 @@
-<div *ngIf="client" class="col-sm-12 col-md-7 jumbotron pull-left" style="background-color: rgba(104, 157, 255, 0.32)">
+<div *ngIf="client" class="col-sm-12 col-md-7 jumbotron pull-left app-block">
   <div class="card">
     <div class="card-block">
       <h4 class="card-title" style="font-weight: bold; text-align: center">{{client.name}}</h4>
@@ -7,6 +7,7 @@
           <p style="font-size: small" class="btn btn-xs btn-warning" data-toggle="modal" data-keyboard="true" data-target="#clientEditionForm">ערוך&nbsp;<i
                 class="fa fa-pencil-square-o"></i></p></li>
         <li class="list-group-item" *ngIf="client.clientNumber">{{client.clientNumber}}<span class="pull-right"><strong>מספר לקוח</strong></span></li>
+        <li class="list-group-item" *ngIf="client.companyNumber">{{client.companyNumber}}<span class="pull-right"><strong>מספר חברה</strong></span></li>
         <li class="list-group-item" *ngFor="let address of client.addresses; let i = index" [attr.data-index]="i">{{(address.houseNumber>0? address.houseNumber:'')+'&nbsp;'+address.street+'&nbsp;'+address.city}}<span
           class="pull-right"><strong>כתובת {{i + 1}}</strong></span></li>
         <li *ngIf="client.phones" class="list-group-item"><span *ngFor="let phone of client.phones">{{phone}}&nbsp;&nbsp;</span><span

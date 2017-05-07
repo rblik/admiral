@@ -10,6 +10,7 @@ import {Employee} from "../model/employee";
 })
 export class NavBarComponent implements OnInit {
   profile: Employee;
+  LOGO = require("../../assets/logo-naya-little.gif");
 
   constructor(private authService: AuthService) {
   }

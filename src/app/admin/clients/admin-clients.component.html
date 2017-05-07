@@ -3,17 +3,17 @@
     <p style="text-align: center; font-size: 300%">לקוחות</p>
   </div>
   <div class="row">
-    <div class="col-sm-12 col-md-4 jumbotron pull-right" style="background-color: rgba(104, 157, 255, 0.32)">
+    <div class="col-sm-12 col-md-4 jumbotron-n pull-right app-block">
       <div class="list-group">
         <div>
           <p><i data-toggle="modal" data-keyboard="true" data-target="#clientCreationForm"
-                class="module-plus glyphicon glyphicon-plus"></i></p>
+                class="module module-plus glyphicon glyphicon-plus"></i></p>
         </div>
         <p><input type="text" style="text-align: center" class="form-control" #searchBox placeholder="חפש"
                   (keyup)="search(searchBox.value)"></p>
-        <p class="module" *ngFor="let client of clientsUi" style="font-size: small"
+        <div class="module" *ngFor="let client of clientsUi" style="font-size: 75%; margin-bottom: 3%"
            (click)="toDetail(client.id)">{{client.name}}
-        </p>
+        </div>
       </div>
       <div *ngIf="errorClients" style="text-align: center" class="alert alert-danger">
         {{errorClients}}

@@ -7,6 +7,7 @@ import {AuthService} from "../service/auth.service";
 export class HomeComponent implements OnInit{
   isRegistered: boolean;
   token: string;
+  LOGO = require("../../assets/logo-naya.gif");
 
   constructor(private authService: AuthService) {
   }

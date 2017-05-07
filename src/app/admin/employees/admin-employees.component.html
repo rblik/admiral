@@ -4,17 +4,17 @@
   <department-form (departmentChoose)="filterByDepartment($event)"></department-form>
   </div>
   <div class="row">
-    <div class="col-sm-12 col-md-4 jumbotron pull-right" style="background-color: rgba(104, 157, 255, 0.32)">
+    <div class="col-sm-12 col-md-4 jumbotron-n pull-right app-block">
       <div class="list-group">
         <div>
           <p><i data-toggle="modal" data-keyboard="true" data-target="#employeeCreationForm"
-                class="module-plus glyphicon glyphicon-plus"></i></p>
+                class="module-plus module glyphicon glyphicon-plus"></i></p>
         </div>
         <p><input type="text" style="text-align: center" class="form-control" #searchBox placeholder="חפש"
                   (keyup)="search(searchBox.value)"></p>
-        <p class="module" *ngFor="let employee of employeesUi" style="font-size: small; text-align: left"
-           (click)="toDetail(employee.id)">{{employee.surname+'&nbsp;'+employee.name}}<span class="badge pull-right">{{employee.department.name}}</span>
-        </p>
+        <div class="module" *ngFor="let employee of employeesUi" style="font-size: 75%; margin-bottom: 3%; text-align: left" position="relative"
+           (click)="toDetail(employee.id)">&nbsp;{{employee.surname+'&nbsp;'+employee.name}}<span class="badge pull-right" style="font-size: 75%; margin-top: 0.5%">{{employee.department.name}}</span>
+        </div>
       </div>
       <div *ngIf="errorEmployees" class="alert alert-danger pull-right">
         {{errorEmployees}}

@@ -1,4 +1,4 @@
-<div *ngIf="employee" class="col-sm-12 col-md-7 jumbotron pull-left" style="background-color: rgba(104, 157, 255, 0.32)">
+<div *ngIf="employee" class="col-sm-12 col-md-7 jumbotron pull-left app-block">
   <div class="card">
     <div class="card-block">
       <h4 class="card-title hebrew-direct" style="font-weight: bold; text-align: center">{{employee.surname+'&nbsp;'+employee.name}}<span style="font-size: 50%" class="{{employee.enabled? 'label label-success': 'label label-danger'}}">{{employee.enabled? 'פעיל':'לא פעול'}}</span></h4>
@@ -7,19 +7,19 @@
           <a style="font-size: small" pButton icon="fa-pencil-square-o" data-toggle="modal" data-keyboard="true" data-target="#employeeEditionForm"></a>
           <a style="font-size: small" pButton icon="fa-lock" class="ui-button-danger" (click)="preparePasswordForm(); op.toggle($event)"></a>
         </li>
-        <li class="list-group-item">&nbsp;{{employee.employeeNumber}}
+        <li *ngIf="employee.employeeNumber" class="list-group-item">&nbsp;{{employee.employeeNumber}}
           <span class="pull-right"><strong>מספר עובד</strong></span></li>
         <li *ngIf="employee.department" class="list-group-item">&nbsp;{{employee.department.name}}
           <span class="pull-right"><strong>צוות</strong></span></li>
-        <li class="list-group-item">&nbsp;{{employee.birthday}}
+        <li *ngIf="employee.birthday" class="list-group-item">&nbsp;{{employee.birthday}}
           <span class="pull-right"><strong>תאריך לידה</strong></span></li>
-        <li class="list-group-item">&nbsp;{{employee.email}}
+        <li *ngIf="employee.email" class="list-group-item">&nbsp;{{employee.email}}
           <span class="pull-right"><strong>ד''א</strong></span></li>
-        <li class="list-group-item">&nbsp;{{employee.privatePhone}}
+        <li *ngIf="employee.privatePhone" class="list-group-item">&nbsp;{{employee.privatePhone}}
           <span class="pull-right"><strong>טל. פרטי</strong></span></li>
-        <li class="list-group-item">&nbsp;{{employee.companyPhone}}
+        <li *ngIf="employee.companyPhone" class="list-group-item">&nbsp;{{employee.companyPhone}}
           <span class="pull-right"><strong>טל. עבודה</strong></span></li>
-        <li class="list-group-item">&nbsp;{{employee.passportId}}
+        <li *ngIf="employee.passportId" class="list-group-item">&nbsp;{{employee.passportId}}
           <span class="pull-right"><strong>ת''ז</strong></span></li>
         <li *ngIf="employee.roles" class="list-group-item">{{(employee.roles.indexOf('ROLE_ADMIN')!=-1)?'&nbsp;Admin':'&nbsp;User'}}
           <span class="pull-right"><strong>סוג משתמש</strong></span></li>
