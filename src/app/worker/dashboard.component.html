@@ -72,9 +72,9 @@
         <div class="modal-header noselect" style="text-align: center">
           <a id="dayWorkInfoFormClose" style="float: left"  data-dismiss="modal"><span class="fa fa-fw fa-close" style="color: #1a1a1a; cursor: pointer; font-size: large"></span></a>
           <span class="work-infos-modal-title hebrew-direct">
-          <i (click)="moveDay(dayForCreatingWorkInfos, activeAgreementId, -1)" title="יום אחורה" class="fa fa-arrow-circle-right" style="cursor: pointer" aria-hidden="true"></i>
+          <i (click)="moveDay(dayForCreatingWorkInfos, -1, activeAgreementId)" title="יום אחורה" class="fa fa-arrow-circle-right" style="cursor: pointer" aria-hidden="true"></i>
             {{dayForCreatingWorkInfos | hebrewDate}}
-          <i (click)="moveDay(dayForCreatingWorkInfos, activeAgreementId, 1)" title="יום קדימה" class="fa fa-arrow-circle-left" style="cursor: pointer" aria-hidden="true"></i>
+          <i (click)="moveDay(dayForCreatingWorkInfos, 1, activeAgreementId)" title="יום קדימה" class="fa fa-arrow-circle-left" style="cursor: pointer" aria-hidden="true"></i>
           </span>
         </div>
         <div class="modal-body" style="width: 90%; margin: 0 auto">

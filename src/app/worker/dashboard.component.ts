@@ -227,6 +227,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.isPivotal = true;
     this.error = '';
     this.createDialog = false;
+    this.activeAgreementId = null;
     this.dayForCreatingWorkInfos = new Date(currentDate);
     this.activeDate = currentDate;
     this.allDayWorkSubscription = this.workService.getDayWork(currentDate).subscribe(infos => {
@@ -238,7 +239,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  moveDay(workDate: Date, agreementId: number, step: number) {
+  moveDay(workDate: Date, step: number, agreementId?: number) {
     let currentDate = this.timeService.getDateString(this.getDayByWeek(new Date(workDate), step));
     this.error = '';
     this.createDialog = false;
@@ -286,6 +287,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe(workUnit => {
         this.error = '';
         let saved: WorkInfo = this.convertToInfo(workUnit, workInfo.agreementId);
+        saved.clientName = this.getClientNameByAgreementId(workInfo.agreementId);
         this.replaceInDayWorkInfos(saved);
         this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
         this.transform(this.workInfos, this.clientsUi);
@@ -364,6 +366,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         value: agreement.agreementId
       });
     });
+  }
+
+  private getClientNameByAgreementId(agreementId: number): string {
+    return (agreementId) ? this.clientsDropdown.filter(client => client.value == agreementId)[0].label.split(" - ")[1] : '';
   }
 
   private convertToUnit(workInfo: WorkInfo): WorkUnit {

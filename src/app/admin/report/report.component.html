@@ -8,12 +8,12 @@
       <div class="form-group" style="margin: 0 auto; display: inline-block">
         <label for="startDateId">
           &nbsp;מ-
-          <p-calendar [(ngModel)]="startDate" id="startDateId"
+          <p-calendar [(ngModel)]="startDate" id="startDateId" dateFormat="dd.mm.yy"
                       (onSelect)="populateTimeServiceWithDates()"></p-calendar>
         </label>
         <label for="endDateId">
           &nbsp;עד-
-          <p-calendar [(ngModel)]="endDate" id="endDateId"
+          <p-calendar [(ngModel)]="endDate" id="endDateId" dateFormat="dd.mm.yy"
                       (onSelect)="populateTimeServiceWithDates()"></p-calendar>
         </label>
       </div>
