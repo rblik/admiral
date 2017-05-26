@@ -40,8 +40,7 @@
       </td>
       <td *ngFor="let work of item.workInfos | reverse">
         <span (click)="showWorkDayDialog(work, item)">
-      <!--(work.absenceType==''||work.absenceType==null)?: work.absenceType-->
-        <input [ngStyle]="{'width': '90%', 'background-color': 'rgba(255, 255, 255, 0.5)'}"
+        <input [ngStyle]="{'width': '90%', 'background-color': work.editable? '#FFFFFF' : '#CDFFFF'}"
                [ngModel]="work.duration | minutesToHours"
                style="width: inherit; text-align: center; border-style:solid; border-width: 1px; border-radius: 3px;"
                disabled>
@@ -100,11 +99,6 @@
                 </label>
                 <button type="button" iconPos="right" pButton icon="fa-clock-o" (click)="makeWholeDay()" label="24"></button>
                 <br>
-                <label for="vacationDropdown">
-                  &nbsp;בחירת חופשה&nbsp;
-                  <p-dropdown [options]="absenceTypes" [style]="{'text-align':'center'}" id="vacationDropdown" panelStyleClass="form-control pull-left" placeholder="בחר את סוג"
-                              [(ngModel)]="workInfoItem.absenceType"></p-dropdown>
-                </label>
                 <label for="clientsDropdown" *ngIf="isPivotal && !isEdit">
                   <p-dropdown [options]="clientsDropdown" [style]="{'text-align':'center'}" id="clientsDropdown" panelStyleClass="form-control pull-right" [(ngModel)]="workInfoItem.agreementId" [filter]="true"></p-dropdown>
                 </label>
@@ -124,7 +118,6 @@
                   <th *ngIf="isPivotal" style="width: 10%">לקוח</th>
                   <th style="width: 10%">מ-</th>
                   <th style="width: 10%">עד-</th>
-                  <th style="width: 10%">חופשה</th>
                   <th style="width: 10%">משך</th>
                   <th style="width: 20%">תאור</th>
                   <th style="width: 10%"></th>
@@ -133,12 +126,11 @@
                 </thead>
                 <tbody>
                 <tr *ngFor="let workInfo of dayWorkInfos">
-                  <td width="15%" *ngIf="isPivotal">{{workInfo.clientName}}</td>
+                  <td width="20%" *ngIf="isPivotal">{{workInfo.clientName}}</td>
                   <td width="10%">{{workInfo.from | time}}</td>
                   <td width="10%">{{workInfo.to | time}}</td>
-                  <td width="10%">{{workInfo.absenceType | absenceType}}</td>
                   <td width="10%" class="english-direct">{{workInfo.duration | minutesToHours}}</td>
-                  <td width="50%">{{workInfo.comment}}</td>
+                  <td width="55%">{{workInfo.comment}}</td>
                   <td width="10%">
                     <button title="לערוך" type="button" class="btn btn-xs btn-warning" (click)="edit(workInfo)"><i class="fa fa-pencil fa-fw"></i>&nbsp;ערוך&nbsp;</button>
                   </td>

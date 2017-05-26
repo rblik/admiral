@@ -4,6 +4,5 @@ export class WorkUnit {
   start: string;
   finish: string;
   duration: number;
-  absenceType: string;
   comment: string;
 }

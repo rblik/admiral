@@ -9,6 +9,9 @@ import {SessionStorageService} from 'ng2-webstorage';
 import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
 import {SelectItem} from "primeng/primeng";
 import {Subscription} from "rxjs/Subscription";
+import {Observable} from "rxjs/Observable";
+import {LockService} from "../service/lock.service";
+import {DateLock} from "../model/date-lock";
 
 @Component({
   selector: 'worker-dashboard',
@@ -19,13 +22,13 @@ import {Subscription} from "rxjs/Subscription";
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 
-  private absenceTypes;
   private employee: Employee;
   private currentSunday: Date;
   private nextSunday: Date;
   private timeOffset: number;
   private agreements: AgreementDto[];
   private workInfos: WorkInfo[];
+  private locks: DateLock[];
   private dayWorkInfos: WorkInfo[];
   private uiAgreements: AgreementDto[];
   private display: boolean;
@@ -53,8 +56,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private moveDaySubscription: Subscription;
   private upsertWorkInfoSubscription: Subscription;
 
-  constructor(private timeService: TimeService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
-    this.fillAbsenceTypes();
+  constructor(private timeService: TimeService, private lockService: LockService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
     this.sumByDayArr = [];
     this.fixDropdownCheckbox();
   }
@@ -75,14 +77,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (this.moveDaySubscription) this.moveDaySubscription.unsubscribe();
     if (this.upsertWorkInfoSubscription) this.upsertWorkInfoSubscription.unsubscribe();
     if (this.weekWorkSubscription) this.weekWorkSubscription.unsubscribe();
-  }
-
-  private fillAbsenceTypes() {
-    this.absenceTypes = [];
-    this.absenceTypes.push({label: 'מחלה', value: "ILLNESS"});
-    this.absenceTypes.push({label: 'חג', value: "HOLIDAY"});
-    this.absenceTypes.push({label: 'חופשה', value: "VACATION"});
-    this.absenceTypes.push({label: 'מלוים', value: "ARMY"});
   }
 
   private fixDropdownCheckbox() {
@@ -126,13 +120,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getWorkForWeekAndRender() {
-    this.weekWorkSubscription = this.workService.getWeekWork(
+    Observable.forkJoin(
+      [
+        this.workService.getWeekWork(
+          this.timeService.getDateString(this.currentSunday),
+          this.timeService.getDateString(this.nextSunday)),
+        this.lockService.getLocksForPeriod(
+          this.timeService.getDateString(this.currentSunday),
+          this.timeService.getDateString(this.nextSunday))
+      ]).subscribe(([workInfos, locks]) => {
+      this.workInfos = workInfos;
+      this.locks = locks;
+      this.transform(this.workInfos, this.clientsUi);
+    });
+    /*this.weekWorkSubscription = this.workService.getWeekWork(
       this.timeService.getDateString(this.currentSunday),
       this.timeService.getDateString(this.nextSunday))
       .subscribe(workInfos => {
         this.workInfos = workInfos;
         this.transform(this.workInfos, this.clientsUi);
-      });
+      });*/
   }
 
   getDayByWeek(sunday: Date, offset: number): Date {
@@ -193,7 +200,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
           info.date = this.timeService.getDateString(this.timeService.getRelativeWeekDay(this.currentSunday, i));
           info.agreementId = agreement.agreementId;
           info.duration = 0;
+          info.editable = !this.lockService.isLocked(this.locks, info);
           resultArr[i] = info;
+        }
+        else {
+          resultArr[i].editable = !this.lockService.isLocked(this.locks, resultArr[i]);
         }
       }
       agreement.workInfos = resultArr;
@@ -201,20 +212,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   showWorkDayDialog(workInfo: WorkInfo, agreement: AgreementDto) {
-    let currentDate = workInfo.date;
-    this.isPivotal = false;
-    this.error = '';
-    this.createDialog = false;
-    this.clientForCreatingWorkInfos = agreement.clientName;
-    this.dayForCreatingWorkInfos = new Date(currentDate);
-    this.activeAgreementId = workInfo.agreementId;
-    this.activeDate = currentDate;
-    this.dayWorkSubscription = this.workService.getDayWork(currentDate, workInfo.agreementId).subscribe(infos => {
-      this.dayWorkInfos = infos;
-    });
-    let openModalButton = document.getElementById('openModalButton');
-    if(!!openModalButton) {
-      openModalButton.click();
+    if (workInfo.editable === false) {
+      return;
+    } else {
+      let currentDate = workInfo.date;
+      this.isPivotal = false;
+      this.error = '';
+      this.createDialog = false;
+      this.clientForCreatingWorkInfos = agreement.clientName;
+      this.dayForCreatingWorkInfos = new Date(currentDate);
+      this.activeAgreementId = workInfo.agreementId;
+      this.activeDate = currentDate;
+      this.dayWorkSubscription = this.workService.getDayWork(currentDate, workInfo.agreementId).subscribe(infos => {
+        this.dayWorkInfos = infos;
+      });
+      let openModalButton = document.getElementById('openModalButton');
+      if (!!openModalButton) {
+        openModalButton.click();
+      }
     }
   }
 
@@ -378,7 +393,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     workUnit2.date = workInfo.date;
     workUnit2.start = workInfo.from;
     workUnit2.finish = workInfo.to;
-    workUnit2.absenceType = workInfo.absenceType;
     workUnit2.comment = workInfo.comment;
     return workUnit2;
   }
@@ -390,7 +404,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     workInfo2.from = workUnit.start;
     workInfo2.to = workUnit.finish;
     workInfo2.duration = workUnit.duration;
-    workInfo2.absenceType = workUnit.absenceType;
     workInfo2.comment = workUnit.comment;
     workInfo2.agreementId = isNaN(agreementId) ? NaN : agreementId;
     return workInfo2;

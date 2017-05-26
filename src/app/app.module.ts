@@ -33,6 +33,7 @@ import {ReversePipe} from "./pipe/reverse.pipe";
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import {NotificationBarModule} from "angular2-notification-bar";
 import {SlimLoadingBarModule} from "ng2-slim-loading-bar";
+import {LockService} from "./service/lock.service";
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import {SlimLoadingBarModule} from "ng2-slim-loading-bar";
     AuthService,
     TimeService,
     WorkInfoService,
+    LockService,
     DatePipe,
     AuthGuardService,
     AdminAuthGuardService

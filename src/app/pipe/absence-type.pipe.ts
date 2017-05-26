@@ -1,3 +1,4 @@
+/*
 import {Pipe, PipeTransform} from "@angular/core";
 @Pipe({name: 'absenceType'})
 export class AbsenceTypePipe implements PipeTransform {
@@ -22,3 +23,4 @@ export class AbsenceTypePipe implements PipeTransform {
     return type;
   }
 }
+*/

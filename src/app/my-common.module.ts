@@ -1,6 +1,5 @@
 import {NgModule} from "@angular/core";
 import {MinutesToHoursPipe} from "./pipe/minutes-to-hours.pipe";
-import {AbsenceTypePipe} from "./pipe/absence-type.pipe";
 import {HebrewDatePipe} from "./pipe/hebrew-date.pipe";
 import {DateFormatPipe} from "./pipe/date-format.pipe";
 import {WeekDayPipe} from "./pipe/week-day.pipe";
@@ -11,7 +10,6 @@ import {OnlyNumberDirective} from "./directives/only-number.directive";
 @NgModule({
   declarations: [
     MinutesToHoursPipe,
-    AbsenceTypePipe,
     HebrewDatePipe,
     DateFormatPipe,
     WeekDayPipe,
@@ -22,7 +20,6 @@ import {OnlyNumberDirective} from "./directives/only-number.directive";
   ],
   exports: [
     MinutesToHoursPipe,
-    AbsenceTypePipe,
     HebrewDatePipe,
     DateFormatPipe,
     WeekDayPipe,

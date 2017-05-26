@@ -18,7 +18,7 @@
       </div>
     <ul class="nav navbar-nav navbar-right" [ngSwitch]="profile">
       <li *ngIf="profile != null">
-        <a routerLink="/app/dashboard" routerLinkActive="active">דיווח שעות</a>
+        <a routerLink="/app/dashboard" routerLinkActive="active">דיווח שעות שלי</a>
       </li>
       <li *ngIf="profile != null">
         <a routerLink="/app/admin/employees" routerLinkActive="active" *ngIf="profile.roles.indexOf('ROLE_ADMIN') != -1">עובדים</a>

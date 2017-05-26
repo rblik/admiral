@@ -11,9 +11,9 @@ export class WorkInfo {
   clientId: number;
   clientName: string;
   date: string;
-  absenceType: string;
   from: string;
   to: string;
   duration: number;
   comment: string;
+  editable: boolean;
 }

@@ -36,11 +36,6 @@
         <span [innerHTML]="vraag[col.field] | time"></span>
       </template>
     </p-column>
-    <p-column field="absenceType" header="חופשה" [sortable]="true">
-      <template let-col let-vraag="rowData" pTemplate="body">
-        <span [innerHTML]="vraag[col.field] | absenceType"></span>
-      </template>
-    </p-column>
     <p-column header="יום" [sortable]="true">
       <template let-col let-vraag="rowData" pTemplate="body">
         <span [innerHTML]="vraag['date'] | weekDay"></span>
