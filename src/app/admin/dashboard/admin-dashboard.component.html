@@ -1,4 +1,4 @@
-<h3 style="text-align: center" *ngIf="employee">{{employee.surname}} {{employee.name}} <a style="cursor: pointer" (click)="lockUnlock(currentSunday)"><i style="color: black" [ngClass]="'fa ' + lockClass" aria-hidden="true"></i></a></h3>
+<h3 style="text-align: center" *ngIf="employee"><a style="cursor: pointer" (click)="lockUnlock(currentSunday)"><i style="color: black" [ngClass]="'fa ' + lockClass" aria-hidden="true"></i></a> {{employee.surname}} {{employee.name}} </h3>
 <div style="margin: 10px">
   <div class="container" style="padding: 1em">
     <div class="row">
