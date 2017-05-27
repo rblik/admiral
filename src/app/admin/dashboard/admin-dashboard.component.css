@@ -1,0 +1,38 @@
+th, td {
+  text-align: center;
+}
+
+td, th:not(:first-child) {
+  padding-bottom:0.3em;
+}
+
+.customDialog {
+  background: green;
+}
+::-webkit-input-placeholder {
+  text-align: center;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+  text-align: center;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+  text-align: center;
+}
+
+:-ms-input-placeholder {
+  text-align: center;
+}
+
+.modal-dialog .modal-content {
+  position: absolute;
+  display: table;
+  overflow-y: auto;
+  width: 500px;
+}
+
+.work-infos-modal-title {
+  font-weight: bold;
+  font-size: large;
+}

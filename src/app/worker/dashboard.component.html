@@ -29,8 +29,8 @@
       <th><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 2))" style="cursor: pointer">{{getDayByWeek(currentSunday, 2) | hebrewDate}}</a></th>
       <th><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 1))" style="cursor: pointer">{{getDayByWeek(currentSunday, 1) | hebrewDate}}</a></th>
       <th><a (click)="showPivotalWorkDayDialog(currentSunday)" style="cursor: pointer">{{currentSunday | hebrewDate}}</a></th>
-      <th>פרויקט</th>
-      <th>לקןח</th>
+      <th colspan="2" style="width: 10%">פרויקט</th>
+      <th colspan="2" style="width: 10%">לקןח</th>
     </tr>
     </thead>
     <tbody>
@@ -46,10 +46,10 @@
                disabled>
         </span>
       </td>
-      <td>
+      <td colspan="2">
         {{item.projectName}}
       </td>
-      <td>
+      <td colspan="2">
         {{item.clientName}}
       </td>
     </tr>
@@ -58,7 +58,7 @@
       <td *ngFor="let sumByDay of sumByDayArr | reverse" style="font-weight: bolder">
         {{sumByDay | minutesToHours}}
       </td>
-      <td colspan="2" style="font-weight: bolder">
+      <td colspan="4" style="font-weight: bolder">
         שעות ביום
       </td>
     </tr>
@@ -112,7 +112,7 @@
               <div *ngIf="error" style="text-align: center" class="alert alert-danger">
                 {{error}}
               </div>
-              <table class="table table-hover hebrew-direct table_legenda" style="font-size: smaller; table-layout: fixed" [hidden]="isEmptyDay()">
+              <table class="table table-hover hebrew-direct table_legenda" style="font-size: smaller; table-layout: fixed" [hidden]="isEmptyDay(dayWorkInfos)">
                 <thead>
                 <tr>
                   <th *ngIf="isPivotal" style="width: 10%">לקוח</th>

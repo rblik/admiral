@@ -233,8 +233,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  isEmptyDay(): boolean {
-    return !!this.dayWorkInfos ? this.dayWorkInfos.length == 0 : false;
+  isEmptyDay(dayWorkInfos: WorkInfo[]): boolean {
+    return !!dayWorkInfos ? dayWorkInfos.length == 0 : false;
   }
 
   showPivotalWorkDayDialog(date: Date) {
@@ -245,7 +245,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.activeAgreementId = null;
     this.dayForCreatingWorkInfos = new Date(currentDate);
     this.activeDate = currentDate;
-    this.allDayWorkSubscription = this.workService.getDayWork(currentDate).subscribe(infos => {
+    this.allDayWorkSubscription = this.workService.getDayWork(currentDate, -1).subscribe(infos => {
       this.dayWorkInfos = infos;
     });
     let openModalButton = document.getElementById('openModalButton');

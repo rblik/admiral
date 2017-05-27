@@ -41,8 +41,7 @@ import {LockService} from "./service/lock.service";
     NavBarComponent,
     DashboardComponent,
     HomeComponent,
-    LoginComponent,
-    ReversePipe
+    LoginComponent
   ],
   imports: [
     BrowserModule,

@@ -1,1 +1,153 @@
 <h3 style="text-align: center" *ngIf="employee">{{employee.surname}} {{employee.name}}</h3>
+<div style="margin: 10px">
+  <div class="container" style="padding: 1em">
+    <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-1 pull-left">
+        <button class="btn" (click)="search(clientsUi)"><i class="fa fa-search" aria-hidden="true"></i></button>
+      </div>
+      <div class="col-md-1 pull-left">
+        <ss-multiselect-dropdown [options]="clientsCheckboxOptions" [texts]="clientsCheckboxTexts" [settings]="clientsCheckboxSettings" [(ngModel)]="clientsUi"></ss-multiselect-dropdown>
+      </div>
+      <div class="col-md-4 pull-right">
+        <button (click)="moveWeekForward()" class="btn btn-sm btn-info"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;שבוע קדימה&nbsp;</button>
+        <button (click)="moveWeekBack()" class="btn btn-sm btn-warning">&nbsp;שבוע אחורה&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+  <table style="width:100%; font-size: small">
+    <thead>
+    <tr class="hebrew-direct">
+      <th>סה"כ</th>
+      <th><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 6))" style="cursor: pointer">{{getDayByWeek(currentSunday, 6) | hebrewDate}}</a></th>
+      <th><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 5))" style="cursor: pointer">{{getDayByWeek(currentSunday, 5) | hebrewDate}}</a></th>
+      <th><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 4))" style="cursor: pointer">{{getDayByWeek(currentSunday, 4) | hebrewDate}}</a></th>
+      <th><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 3))" style="cursor: pointer">{{getDayByWeek(currentSunday, 3) | hebrewDate}}</a></th>
+      <th><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 2))" style="cursor: pointer">{{getDayByWeek(currentSunday, 2) | hebrewDate}}</a></th>
+      <th><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 1))" style="cursor: pointer">{{getDayByWeek(currentSunday, 1) | hebrewDate}}</a></th>
+      <th><a (click)="showPivotalWorkDayDialog(currentSunday)" style="cursor: pointer">{{currentSunday | hebrewDate}}</a></th>
+      <th colspan="2" style="width: 10%">פרויקט</th>
+      <th colspan="2" style="width: 10%">לקןח</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of uiAgreements">
+      <td>
+        {{sum(item.workInfos) | minutesToHours}}
+      </td>
+      <td *ngFor="let work of item.workInfos | reverse">
+        <span (click)="showWorkDayDialog(work, item)">
+        <input [ngStyle]="{'width': '90%', 'background-color': work.editable? '#FFFFFF' : '#CDFFFF'}"
+               [ngModel]="work.duration | minutesToHours"
+               style="width: inherit; text-align: center; border-style:solid; border-width: 1px; border-radius: 3px;"
+               disabled>
+        </span>
+      </td>
+      <td colspan="2">
+        {{item.projectName}}
+      </td>
+      <td colspan="2">
+        {{item.clientName}}
+      </td>
+    </tr>
+    <tr>
+      <td style="font-weight: bolder">{{sumByWeek | minutesToHours}}</td>
+      <td *ngFor="let sumByDay of sumByDayArr | reverse" style="font-weight: bolder">
+        {{sumByDay | minutesToHours}}
+      </td>
+      <td colspan="4" style="font-weight: bolder">
+        שעות ביום
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <button id="openModalButton" [hidden]="true" data-toggle="modal" data-target="#dayWorkInfoForm"></button>
+  <div id="dayWorkInfoForm" tabindex='-1' class="modal fade" onclose="" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content" [style.width]="'100%'">
+        <div class="modal-header noselect" style="text-align: center">
+          <a id="dayWorkInfoFormClose" style="float: left"  data-dismiss="modal"><span class="fa fa-fw fa-close" style="color: #1a1a1a; cursor: pointer; font-size: large"></span></a>
+          <span class="work-infos-modal-title hebrew-direct">
+          <i (click)="moveDay(dayForCreatingWorkInfos, -1, activeAgreementId)" title="יום אחורה" class="fa fa-arrow-circle-right" style="cursor: pointer" aria-hidden="true"></i>
+            {{dayForCreatingWorkInfos | hebrewDate}}
+          <i (click)="moveDay(dayForCreatingWorkInfos, 1, activeAgreementId)" title="יום קדימה" class="fa fa-arrow-circle-left" style="cursor: pointer" aria-hidden="true"></i>
+          </span>
+        </div>
+        <div class="modal-body" style="width: 90%; margin: 0 auto">
+          <div style="min-height: 100%">
+            <div style="text-align: center">
+              <h3>
+                {{!isPivotal? clientForCreatingWorkInfos + 'עבודה יומי ב':' עבודה יומי'}}
+              </h3>
+            </div>
+            <div>
+              <button type="button" class="btn btn-xs btn-info" title="הוסיף יחידת עבודה" (click)="create()">&nbsp;הוסיף&nbsp;<i class="fa fa-plus" aria-hidden="true"></i></button>
+            </div>
+            <div class="row hebrew-direct" style="margin-top: 1em">
+              <div *ngIf="createDialog" class="form-group">
+                <!--<p-calendar [(ngModel)]="tes" [stepMinute]=10 hourFormat="24" readonlyInput="true" dataType="string" [timeOnly]="true"></p-calendar>-->
+                <label for="dayWorkInfoFrom">
+                  &nbsp;מ&nbsp;
+                  <p-inputMask [(ngModel)]="workInfoItem.from" id="dayWorkInfoFrom" mask="99:99" inputStyleClass="form-control" [maxlength]="5"></p-inputMask>
+                </label>
+                <label for="dayWorkInfoTo">
+                  &nbsp;עד&nbsp;
+                  <p-inputMask [(ngModel)]="workInfoItem.to" mask="99:99" id="dayWorkInfoTo" inputStyleClass="form-control" [maxlength]="5"></p-inputMask>
+                </label>
+                <button type="button" iconPos="right" pButton icon="fa-clock-o" (click)="makeWholeDay()" label="24"></button>
+                <br>
+                <label for="clientsDropdown" *ngIf="isPivotal && !isEdit">
+                  <p-dropdown [options]="clientsDropdown" [style]="{'text-align':'center'}" id="clientsDropdown" panelStyleClass="form-control pull-right" [(ngModel)]="workInfoItem.agreementId" [filter]="true"></p-dropdown>
+                </label>
+                <br>
+                <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" placeholder="תאור" id="dayWorkInfoComment" class="form-control" [maxlength]="50"></textarea>
+                <br>
+                <button type="button" class="pull-left" pButton icon="fa-check" iconPos="right" (click)="save(workInfoItem)" label="שמור"></button>
+              </div>
+            </div>
+            <div class="row">
+              <div *ngIf="error" style="text-align: center" class="alert alert-danger">
+                {{error}}
+              </div>
+              <table class="table table-hover hebrew-direct table_legenda" style="font-size: smaller; table-layout: fixed" [hidden]="isEmptyDay(dayWorkInfos)">
+                <thead>
+                <tr>
+                  <th *ngIf="isPivotal" style="width: 10%">לקוח</th>
+                  <th style="width: 10%">מ-</th>
+                  <th style="width: 10%">עד-</th>
+                  <th style="width: 10%">משך</th>
+                  <th style="width: 20%">תאור</th>
+                  <th style="width: 10%"></th>
+                  <th style="width: 10%"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let workInfo of dayWorkInfos">
+                  <td width="20%" *ngIf="isPivotal">{{workInfo.clientName}}</td>
+                  <td width="10%">{{workInfo.from | time}}</td>
+                  <td width="10%">{{workInfo.to | time}}</td>
+                  <td width="10%" class="english-direct">{{workInfo.duration | minutesToHours}}</td>
+                  <td width="55%">{{workInfo.comment}}</td>
+                  <td width="10%">
+                    <button title="לערוך" type="button" class="btn btn-xs btn-warning" (click)="edit(workInfo)"><i class="fa fa-pencil fa-fw"></i>&nbsp;ערוך&nbsp;</button>
+                  </td>
+                  <td width="10%">
+                    <button title="למחוק" type="button" class="btn btn-xs btn-danger" (click)="remove(workInfo)"><i class="fa fa-trash-o fa-fw"></i>&nbsp;מחק&nbsp;</button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button class="pull-left" type="button" pButton icon="fa-check" (click)="closeDialog()" label="Ok"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

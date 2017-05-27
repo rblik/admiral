@@ -1,5 +1,6 @@
 import {Injectable} from "@angular/core";
 import {DateFormatPipe} from "../pipe/date-format.pipe";
+import {WorkInfo} from "../model/work-info";
 
 @Injectable()
 export class TimeService {
@@ -65,5 +66,13 @@ export class TimeService {
 
   public getTimeDiff(timeStr1: string, timeStr2: string) {
     return (this.getTime(timeStr1).getTime() - this.getTime(timeStr2).getTime()) / (3600 * 1000);
+  }
+
+  public validate(workInfo: WorkInfo): boolean {
+    return parseInt(workInfo.from.substr(0, 2)) > 23
+      || parseInt(workInfo.from.substr(3, 2)) > 59
+      || parseInt(workInfo.to.substr(0, 2)) > 23
+      || parseInt(workInfo.to.substr(3, 2)) > 59
+      || workInfo.from > workInfo.to;
   }
 }

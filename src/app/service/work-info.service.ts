@@ -11,31 +11,32 @@ import {Url} from "../url";
 export class WorkInfoService {
   private unitsUrl: string;
   private agreementsUrl: string;
+  private adminUnitsUrl: string;
   constructor(private http: Http, private authService: AuthService) {
     this.agreementsUrl = Url.getUrl("/agreements");
     this.unitsUrl = Url.getUrl("/units");
   }
 
-  public getWeekWork(sundayDate: string, nextSundayDate: string): Observable<WorkInfo[]> {
+  public getWeekWork(sundayDate: string, nextSundayDate: string, employeeId?: number, adminUnitsUrl?: string): Observable<WorkInfo[]> {
     let params = new URLSearchParams();
     params.append("from", sundayDate);
     params.append("to", nextSundayDate);
+    if (!!employeeId) params.append("employeeId", employeeId.toString());
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.authService.getToken());
     let options = new RequestOptions({headers: headers, search: params});
-    return this.http.get(this.unitsUrl, options)
+    return this.http.get(!!adminUnitsUrl ? adminUnitsUrl : this.unitsUrl, options)
       .map(res => res.json());
   }
 
-  public getDayWork(date: string, agreementId?: number): Observable<WorkInfo[]>{
+  public getDayWork(date: string, agreementId: number, employeeId?: number, adminUnitsUrl?: string): Observable<WorkInfo[]>{
     let params = new URLSearchParams();
-    if (!!agreementId) {
-      params.append("agreementId", agreementId.toString());
-    }
+    if (agreementId !== -1) params.append("agreementId", agreementId.toString());
+    if (!!employeeId) params.append("employeeId", employeeId.toString());
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.authService.getToken());
     let options = new RequestOptions({headers: headers, search: params});
-    return this.http.get(this.unitsUrl + "/" + date, options)
+    return this.http.get((!!adminUnitsUrl ? adminUnitsUrl : this.unitsUrl) + "/" + date, options)
       .map(res => res.json());
   }
 
@@ -46,13 +47,14 @@ export class WorkInfoService {
     return this.http.get(this.agreementsUrl, options).map(res => res.json());
   }
 
-  public save(agreementId: number, workUnit: WorkUnit): Observable<WorkUnit> {
+  public save(agreementId: number, workUnit: WorkUnit, employeeId?: number, adminUnitsUrl?: string): Observable<WorkUnit> {
     let params = new URLSearchParams();
     params.append("agreementId", agreementId.toString());
+    if (!!employeeId) params.append("employeeId", employeeId.toString());
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.authService.getToken());
     let options = new RequestOptions({headers: headers, search: params});
-    return this.http.post(this.unitsUrl, JSON.stringify(workUnit), options)
+    return this.http.post(!!adminUnitsUrl ? adminUnitsUrl : this.unitsUrl, JSON.stringify(workUnit), options)
       .map(res => res.json())
       .catch(e => {
         let s: string = e.json().cause=='TimeOverlappingException'? 'רקורד על פרק הזמן הזה כבר קיימת.' : e.json().details[0];
@@ -60,11 +62,13 @@ export class WorkInfoService {
       });
   }
 
-  public remove(unitId: number): void {
+  public remove(unitId: number, employeeId?: number, adminUnitsUrl?: string): void {
+    let params = new URLSearchParams();
+    if (!!employeeId) params.append("employeeId", employeeId.toString());
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.authService.getToken());
-    let options = new RequestOptions({headers: headers});
-    this.http.delete(this.unitsUrl + "/" + unitId, options).subscribe(() => {});
+    let options = new RequestOptions({headers: headers, search: params});
+    this.http.delete((!!adminUnitsUrl ? adminUnitsUrl : this.unitsUrl) + "/" + unitId, options).subscribe(() => {});
   }
 
 }
