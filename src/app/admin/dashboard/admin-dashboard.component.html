@@ -10,8 +10,8 @@
         <ss-multiselect-dropdown [options]="clientsCheckboxOptions" [texts]="clientsCheckboxTexts" [settings]="clientsCheckboxSettings" [(ngModel)]="clientsUi"></ss-multiselect-dropdown>
       </div>
       <div class="col-md-4 pull-right">
-        <button (click)="moveWeekForward()" class="btn btn-sm btn-info"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;שבוע קדימה&nbsp;</button>
-        <button (click)="moveWeekBack()" class="btn btn-sm btn-warning">&nbsp;שבוע אחורה&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+        <button (click)="moveWeekForward()" class="btn btn-sm btn-info"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;שבוע הבה&nbsp;</button>
+        <button (click)="moveWeekBack()" class="btn btn-sm btn-warning">&nbsp;שבוע קודם&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></button>
       </div>
       <div class="col-md-2"></div>
     </div>
@@ -69,9 +69,9 @@
         <div class="modal-header noselect" style="text-align: center">
           <a id="dayWorkInfoFormClose" style="float: left"  data-dismiss="modal"><span class="fa fa-fw fa-close" style="color: #1a1a1a; cursor: pointer; font-size: large"></span></a>
           <span class="work-infos-modal-title hebrew-direct">
-          <i (click)="moveDay(dayForCreatingWorkInfos, -1, activeAgreementId)" title="יום אחורה" class="fa fa-arrow-circle-right" style="cursor: pointer" aria-hidden="true"></i>
+          <i (click)="moveDay(dayForCreatingWorkInfos, -1, activeAgreementId)" title="יום קודם" class="fa fa-arrow-circle-right" style="cursor: pointer" aria-hidden="true"></i>
             {{dayForCreatingWorkInfos | hebrewDate}}
-          <i (click)="moveDay(dayForCreatingWorkInfos, 1, activeAgreementId)" title="יום קדימה" class="fa fa-arrow-circle-left" style="cursor: pointer" aria-hidden="true"></i>
+          <i (click)="moveDay(dayForCreatingWorkInfos, 1, activeAgreementId)" title="יום הבה" class="fa fa-arrow-circle-left" style="cursor: pointer" aria-hidden="true"></i>
           </span>
         </div>
         <div class="modal-body" style="width: 90%; margin: 0 auto">
