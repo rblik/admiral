@@ -35,6 +35,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   private clientsCheckboxTexts: IMultiSelectTexts;
   private employee: Employee;
   private timeOffset: number;
+  private lockClass: string;
   private agreements: AgreementDto[];
   private clientsDropdown: SelectItem[] = [];
   private workInfos: WorkInfo[];
@@ -56,8 +57,15 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   private isEdit: boolean;
   private workInfoItem: WorkInfo;
   private upsertWorkInfoSubscription: Subscription;
+  private lockExists: boolean;
 
-  constructor(private route: ActivatedRoute, private employeeService: EmployeeService, private timeService: TimeService, private lockService: AdminLockService, private agreementService: AgreementService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
+  constructor(private route: ActivatedRoute,
+              private employeeService: EmployeeService,
+              private timeService: TimeService,
+              private lockService: AdminLockService,
+              private agreementService: AgreementService,
+              private workService: WorkInfoService,
+              private sessionStorageService: SessionStorageService) {
     this.adminUnitsUrl = Url.getUrl("/admin/dashboard/units");
     this.sumByDayArr = [];
     this.fixDropdownCheckbox();
@@ -124,6 +132,9 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
       ]).subscribe(([workInfos, locks]) => {
       this.workInfos = workInfos;
       this.locks = locks;
+      // this.lockExists = (!!locks && locks.length !== 0 && locks[0].month === this.currentSunday.getMonth() +1);
+      this.lockExists = this.lockService.isLockedByDate(this.locks, this.currentSunday);
+      this.lockClass = this.lockExists? 'fa-lock': 'fa-unlock';
       this.transform(this.workInfos, this.clientsUi);
     });
     /*this.weekWorkSubscription = this.workService.getWeekWork(
@@ -382,6 +393,28 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   makeWholeDay(): void {
     this.workInfoItem.from = "00:00";
     this.workInfoItem.to = "23:59";
+  }
+
+  lockUnlock(sundayDate: Date){
+
+    if (!this.lockExists) {
+      this.lockService.saveLock(this.timeService.getDateString(sundayDate), this.employee.id)
+        .subscribe(dateLock => {
+          this.lockClass = 'fa-lock';
+          this.lockExists = true;
+          this.locks.push(dateLock);
+          this.transform(this.workInfos, this.clientsUi);
+        });
+    } else {
+
+      this.lockService.removeLock(this.timeService.getDateString(sundayDate), this.employee.id)
+        .subscribe(() => {
+          this.lockClass = 'fa-unlock';
+          this.lockExists = false;
+          this.locks.shift();
+          this.transform(this.workInfos, this.clientsUi);
+        });
+    }
   }
 
   private convertToUnit(workInfo: WorkInfo): WorkUnit {
