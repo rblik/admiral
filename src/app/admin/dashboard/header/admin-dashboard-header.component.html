@@ -7,8 +7,10 @@
     <p-dropdown [options]="departmentsUi" [(ngModel)]="chosenDepartment" [filter]="true" [style]="{'text-align':'center'}"
                 (onChange)="getEmployeesUi(chosenDepartment)"></p-dropdown>
     <p-dropdown [options]="employeesUi" [(ngModel)]="chosenEmployee" [filter]="true" [style]="{'text-align':'center', 'width': '15em'}" [panelStyle]="{'align-content': 'center'}"></p-dropdown>
-            <button class="btn btn-sm btn-info" [disabled]="!chosenEmployee" (click)="showDashboard(chosenEmployee)"><i
-              class="fa fa-chevron-circle-down" aria-hidden="true"></i>&nbsp;להראות&nbsp;</button>
+      <p-calendar [(ngModel)]="searchDate" [inputStyle]="{'text-align':'center', 'width':'75%'}" id="startDateId" dateFormat="dd.mm.yy"></p-calendar>
+      <button class="btn btn-sm btn-info" [disabled]="!chosenEmployee" (click)="showDashboard(chosenEmployee)"><i
+        class="fa fa-chevron-circle-down" aria-hidden="true"></i>&nbsp;להראות&nbsp;
+      </button>
     </div>
   </div>
 </div>

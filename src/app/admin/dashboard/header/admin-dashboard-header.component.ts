@@ -5,6 +5,7 @@ import {Subscription} from "rxjs/Subscription";
 import {Employee} from "../../../model/employee";
 import {Department} from "../../../model/department";
 import {ActivatedRoute, Router} from "@angular/router";
+import {TimeService} from "../../../service/time.service";
 
 @Component({
   selector: 'admin-dashboard-header',
@@ -19,14 +20,16 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
   private chosenDepartment: Department;
   private error: string;
   private getEmployeesSubscription: Subscription;
+  private searchDate: Date;
 
-  constructor(private employeeService: EmployeeService, private router: Router, private route: ActivatedRoute) {
+  constructor(private employeeService: EmployeeService, private router: Router, private route: ActivatedRoute, private timeService: TimeService) {
   }
 
   ngOnInit(): void {
     this.departmentsUi.push({label: "בחר צוות", value: null});
     this.employeesUi.push({label: "בחר עובד", value: null});
     this.getEmployees();
+    this.searchDate = new Date();
   }
 
   ngOnDestroy(): void {
@@ -67,6 +70,7 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
   }
 
   showDashboard(chosenEmployee: Employee){
-    this.router.navigate([chosenEmployee.id], {relativeTo: this.route});
+    let date = this.timeService.getDateString(this.searchDate);
+    this.router.navigate([chosenEmployee.id], {relativeTo: this.route, queryParams: {date: date}});
   }
 }
