@@ -21,7 +21,7 @@
   <table style="width:100%; font-size: small">
     <thead>
     <tr class="hebrew-direct">
-      <th>סה"כ</th>
+      <th colspan="2" style="width: 10%">סה"כ</th>
       <th><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 6))" style="cursor: pointer">{{getDayByWeek(currentSunday, 6) | hebrewDate}}</a></th>
       <th><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 5))" style="cursor: pointer">{{getDayByWeek(currentSunday, 5) | hebrewDate}}</a></th>
       <th><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 4))" style="cursor: pointer">{{getDayByWeek(currentSunday, 4) | hebrewDate}}</a></th>
@@ -35,7 +35,7 @@
     </thead>
     <tbody>
     <tr *ngFor="let item of uiAgreements">
-      <td>
+      <td colspan="2">
         {{sum(item.workInfos) | minutesToHours}}
       </td>
       <td *ngFor="let work of item.workInfos | reverse">
@@ -54,7 +54,7 @@
       </td>
     </tr>
     <tr>
-      <td style="font-weight: bolder">{{sumByWeek | minutesToHours}}</td>
+      <td colspan="2" style="font-weight: bolder">{{sumByWeek | minutesToHours}}</td>
       <td *ngFor="let sumByDay of sumByDayArr | reverse" style="font-weight: bolder">
         {{sumByDay | minutesToHours}}
       </td>

@@ -65,11 +65,15 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.timeOffset = 0;
-    this.initWeekBorders(this.timeOffset);
-    this.routeParamsSubscription = this.route.params.switchMap((params: Params) =>
-      this.employeeService.get(params['employeeId'])).subscribe(employee => {
-      this.employee = employee;
-      this.getAgreementsWithWorkAndRender();
+    this.route.queryParams.subscribe((params: Params) => {
+      let date = params['date'];
+      if (!!date) this.timeOffset = this.timeService.getDayOffset(new Date(), new Date(date));
+      this.initWeekBorders(this.timeOffset);
+      this.routeParamsSubscription = this.route.params.switchMap((params: Params) =>
+        this.employeeService.get(params['employeeId'])).subscribe(employee => {
+        this.employee = employee;
+        this.getAgreementsWithWorkAndRender();
+      });
     });
   }
 

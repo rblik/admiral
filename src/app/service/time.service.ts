@@ -7,6 +7,7 @@ export class TimeService {
 
   public fromDate: Date;
   public toDate: Date;
+  private static MS_PER_DAY = 1000 * 60 * 60 * 24;
 
   constructor(private datepipe: DateFormatPipe) {
   }
@@ -66,6 +67,15 @@ export class TimeService {
 
   public getTimeDiff(timeStr1: string, timeStr2: string) {
     return (this.getTime(timeStr1).getTime() - this.getTime(timeStr2).getTime()) / (3600 * 1000);
+  }
+
+  public getDayOffset(fromDate: Date, toDate: Date): number {
+    let utcFrom = Date.UTC(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
+    let utcTo = Date.UTC(toDate.getFullYear(), toDate.getMonth(), toDate.getDate());
+
+    let number2 = (Math.ceil((utcTo - utcFrom) / (TimeService.MS_PER_DAY* 7)))*7;
+    console.log(number2);
+    return number2;
   }
 
   public validate(workInfo: WorkInfo): boolean {

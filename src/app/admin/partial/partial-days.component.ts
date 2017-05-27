@@ -21,7 +21,7 @@ export class PartialDaysComponent implements OnInit, OnDestroy{
     if (this.downloadPartialSubscription) this.downloadPartialSubscription.unsubscribe();
     if (this.getPartialSubscription) this.getPartialSubscription.unsubscribe();
   }
-
+  private dashboardUrl = '/app/admin/dashboard';
   private selectedType: string = 'xlsx';
   private chosenEmployee: Employee;
   private infos: WorkInfo[];

@@ -22,6 +22,12 @@
     <input #gb type="text" pInputText size="50" placeholder="חיפוש">
   </div>
   <p-dataTable emptyMessage="אין נתונים" [value]="infosUi" [globalFilter]="gb" selectionMode="multiple" sortMode="multiple" [style]="{'text-align':'center', 'font-size':'8px'}">
+    <p-column header="לפרטים" [sortable]="true">
+      <template let-col let-vraag="rowData" pTemplate="body">
+        <a title="לפרטים" [routerLink]="['/'+dashboardUrl+'/'+vraag['employeeId']]" [queryParams]="{date: vraag['date']}"><i class="fa  fa-2x fa-chevron-left"
+                                                                                       aria-hidden="true"></i>&nbsp;&nbsp;</a>
+      </template>
+    </p-column>
     <p-column field="duration" header="משך" [sortable]="true">
       <template let-col let-vraag="rowData" pTemplate="body">
         <span [innerHTML]="vraag[col.field] | minutesToHours"></span>

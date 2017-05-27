@@ -9,35 +9,14 @@ import {AgreementDto} from "../../model/agreement-dto";
 import {ReportService} from "../service/report.service";
 import {NotificationBarService, NotificationType} from "angular2-notification-bar";
 import {Subscription} from "rxjs/Subscription";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'pivotal',
   templateUrl: './pivotal.component.html'
 })
 export class PivotalComponent implements OnInit, OnDestroy {
-  ngOnDestroy(): void {
-    if (this.getAgreementsSubscription) this.getAgreementsSubscription.unsubscribe();
-    if (this.downloadPivotalSubscription) this.downloadPivotalSubscription.unsubscribe();
-    if (this.getPivotalSubscription) this.getPivotalSubscription.unsubscribe();
-  }
-  private getAgreementsSubscription: Subscription;
-  private getPivotalSubscription: Subscription;
-  private downloadPivotalSubscription: Subscription;
-
-  constructor(private notificationBarService: NotificationBarService, private downloadService: DownloadService, private reportService: ReportService, private agreementService: AgreementService, private timeService: TimeService) {
-    this.types = [];
-    this.types.push({label: 'PDF', value: 'pdf'});
-    this.types.push({label: 'Excel', value: 'xlsx'});
-  }
-
-  ngOnInit(): void {
-    this.departmentsUi.push({label: "בחר צוות", value: null});
-    this.employeesUi.push({label: "בחר עובד", value: null});
-    this.projectUi.push({label: "בחר פרויקט", value: null});
-    this.clientUi.push({label: "בחר לקוח", value: null});
-    this.getAgreements();
-  }
-
+  private dashboardUrl = '/app/admin/dashboard';
   private selectedType: string = 'xlsx';
   private chosenEmployee;
   private chosenDepartment;
@@ -54,6 +33,29 @@ export class PivotalComponent implements OnInit, OnDestroy {
   private departmentsUi: SelectItem[] = [];
   private projectUi: SelectItem[] = [];
   private clientUi: SelectItem[] = [];
+  private getAgreementsSubscription: Subscription;
+  private getPivotalSubscription: Subscription;
+  private downloadPivotalSubscription: Subscription;
+
+  constructor(private notificationBarService: NotificationBarService, private router: Router, private downloadService: DownloadService, private reportService: ReportService, private agreementService: AgreementService, private timeService: TimeService) {
+    this.types = [];
+    this.types.push({label: 'PDF', value: 'pdf'});
+    this.types.push({label: 'Excel', value: 'xlsx'});
+  }
+
+  ngOnInit(): void {
+    this.departmentsUi.push({label: "בחר צוות", value: null});
+    this.employeesUi.push({label: "בחר עובד", value: null});
+    this.projectUi.push({label: "בחר פרויקט", value: null});
+    this.clientUi.push({label: "בחר לקוח", value: null});
+    this.getAgreements();
+  }
+
+  ngOnDestroy(): void {
+    if (this.getAgreementsSubscription) this.getAgreementsSubscription.unsubscribe();
+    if (this.downloadPivotalSubscription) this.downloadPivotalSubscription.unsubscribe();
+    if (this.getPivotalSubscription) this.getPivotalSubscription.unsubscribe();
+  }
 
   getAgreements() {
     this.getAgreementsSubscription = this.agreementService.getAgreements().subscribe(agreements => {
@@ -66,6 +68,10 @@ export class PivotalComponent implements OnInit, OnDestroy {
     }, error => {
       this.error = error;
     });
+  }
+
+  redirectToDetails(row: any) {
+    this.router.navigateByUrl(this.dashboardUrl + '/' + row['employeeId']);
   }
 
   getEmployeesUi(departmentId: number) {
