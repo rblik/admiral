@@ -31,6 +31,8 @@ import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import {MailService} from "./service/mail.service";
 import {NotificationBarModule} from "angular2-notification-bar";
 import {ProjectEmployeeFormComponent} from "./project-employee-form/project-employee-form.component";
+import {AdminDashboardHeaderComponent} from "./dashboard/header/admin-dashboard-header.component";
+import {AdminDashboardComponent} from "./dashboard/admin-dashboard.component";
 
 @NgModule({
   declarations: [
@@ -45,6 +47,8 @@ import {ProjectEmployeeFormComponent} from "./project-employee-form/project-empl
     EmployeeFormComponent,
     ClientFormComponent,
     ProjectEmployeeFormComponent,
+    AdminDashboardHeaderComponent,
+    AdminDashboardComponent,
     DepartmentFormComponent
   ],
   imports: [

@@ -25,7 +25,7 @@ export class EmployeeDetailComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.getEmployeeWithAgreementsSubscription = this.route.params.map((params: Params) => params['employeeId']).switchMap((employeeId: number) => {
-      return Observable.forkJoin([this.employeeService.getEmployee(employeeId), this.agreementService.getAgreementsByEmployee(employeeId)]);
+      return Observable.forkJoin([this.employeeService.get(employeeId), this.agreementService.getAgreementsByEmployee(employeeId)]);
     }).catch(e => Observable.throw(e.json().details[0]))
       .subscribe(([employee, agreements]) => {
         this.employee = employee;

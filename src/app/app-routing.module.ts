@@ -2,7 +2,6 @@ import {Routes, RouterModule} from "@angular/router";
 import {DashboardComponent} from "./worker/dashboard.component";
 import {NgModule} from "@angular/core";
 import {HomeComponent} from "./home/home.component";
-import {ReportComponent} from "./admin/report/report.component";
 import {LoginComponent} from "./login/login.component";
 import {AuthGuardService} from "./service/auth-guard.service";
 import {AdminAuthGuardService} from "./service/admin-auth-guard.service";

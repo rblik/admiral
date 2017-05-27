@@ -53,7 +53,7 @@ export class PartialDaysComponent implements OnInit, OnDestroy{
   }
 
   getEmployees(): void {
-    this.getEmployeesSubscription = this.employeeService.getAllEmployees().subscribe(employees => {
+    this.getEmployeesSubscription = this.employeeService.getAll().subscribe(employees => {
       this.employees = employees;
       this.getEmployeesUi(this.chosenDepartment);
       this.getDepartmentsUi(this.employees);

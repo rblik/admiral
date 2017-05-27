@@ -14,7 +14,7 @@ export class EmployeeService {
     this.employeesUrl = Url.getUrl("/admin/employees");
   }
 
-  public getAllEmployees(): Observable<Employee[]> {
+  public getAll(): Observable<Employee[]> {
     return this.http.get(this.employeesUrl, {
       headers: new Headers({'Authorization': this.auth.getToken()})
     }).map(res => res.json())
@@ -24,7 +24,7 @@ export class EmployeeService {
       });
   }
 
-  public getEmployee(employeeId: number): Observable<Employee> {
+  public get(employeeId: number): Observable<Employee> {
     return this.http.get(this.employeesUrl + '/' + employeeId, {
       headers: new Headers({'Authorization': this.auth.getToken()})
     }).map(res => res.json())

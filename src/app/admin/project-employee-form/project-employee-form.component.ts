@@ -45,7 +45,7 @@ export class ProjectEmployeeFormComponent implements OnInit, OnChanges, OnDestro
   }
 
   private getEmployeesWithDepartments() {
-    this.getEmployeesSubscription = this.employeeService.getAllEmployees().subscribe(employees => {
+    this.getEmployeesSubscription = this.employeeService.getAll().subscribe(employees => {
       this.employees = employees;
       this.initDepartments();
       this.initEmployees(null);

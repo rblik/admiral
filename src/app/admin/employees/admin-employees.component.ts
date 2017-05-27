@@ -41,7 +41,7 @@ export class AdminEmployeesComponent implements OnInit, OnDestroy{
   }
 
   private getEmployees() {
-    this.getEmployeesSubscription = this.employeeService.getAllEmployees().subscribe(employees => {
+    this.getEmployeesSubscription = this.employeeService.getAll().subscribe(employees => {
       this.employees = employees;
       this.employeesUi = employees;
     }, error => {
