@@ -11,6 +11,7 @@ import {AdminEmployeesComponent} from "./employees/admin-employees.component";
 import {EmployeeDetailComponent} from "./employee-detail/employee-detail.component";
 import {AdminDashboardHeaderComponent} from "./dashboard/header/admin-dashboard-header.component";
 import {AdminDashboardComponent} from "./dashboard/admin-dashboard.component";
+import {IncomeComponent} from "./income/income.component";
 
 const routes: Routes = [
   {
@@ -30,6 +31,10 @@ const routes: Routes = [
       {
         path: 'pivotal',
         component: PivotalComponent
+      },
+      {
+        path: 'income',
+        component: IncomeComponent
       }
     ]
   },

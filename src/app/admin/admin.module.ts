@@ -33,8 +33,8 @@ import {NotificationBarModule} from "angular2-notification-bar";
 import {ProjectEmployeeFormComponent} from "./project-employee-form/project-employee-form.component";
 import {AdminDashboardHeaderComponent} from "./dashboard/header/admin-dashboard-header.component";
 import {AdminDashboardComponent} from "./dashboard/admin-dashboard.component";
-import {LockService} from "../service/lock.service";
 import {AdminLockService} from "./service/admin-lock.service";
+import {IncomeComponent} from "./income/income.component";
 
 @NgModule({
   declarations: [
@@ -51,7 +51,8 @@ import {AdminLockService} from "./service/admin-lock.service";
     ProjectEmployeeFormComponent,
     AdminDashboardHeaderComponent,
     AdminDashboardComponent,
-    DepartmentFormComponent
+    DepartmentFormComponent,
+    IncomeComponent
   ],
   imports: [
     AdminRoutingModule,
