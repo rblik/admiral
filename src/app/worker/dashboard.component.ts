@@ -1,4 +1,5 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
+import * as fileSaver from "file-saver";
 import {TimeService} from "../service/time.service";
 import {WorkInfoService} from "../service/work-info.service";
 import {Employee} from "../model/employee";
@@ -12,6 +13,8 @@ import {Subscription} from "rxjs/Subscription";
 import {Observable} from "rxjs/Observable";
 import {LockService} from "../service/lock.service";
 import {DateLock} from "../model/date-lock";
+import {UserDownloadService} from "../service/user-download.service";
+import {NotificationBarService, NotificationType} from "angular2-notification-bar";
 
 @Component({
   selector: 'worker-dashboard',
@@ -55,9 +58,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private allDayWorkSubscription: Subscription;
   private moveDaySubscription: Subscription;
   private upsertWorkInfoSubscription: Subscription;
+  private downloadReportSubscription: Subscription;
+  private selectedType: string = 'xlsx';
+  private types: SelectItem[];
 
-  constructor(private timeService: TimeService, private lockService: LockService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
+  constructor(private notificationBarService: NotificationBarService, private timeService: TimeService, private downloadService: UserDownloadService, private lockService: LockService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
     this.sumByDayArr = [];
+    this.types = [];
+    this.types.push({label: 'PDF', value: 'pdf'});
+    this.types.push({label: 'Excel', value: 'xlsx'});
     this.fixDropdownCheckbox();
   }
 
@@ -77,6 +86,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (this.moveDaySubscription) this.moveDaySubscription.unsubscribe();
     if (this.upsertWorkInfoSubscription) this.upsertWorkInfoSubscription.unsubscribe();
     if (this.weekWorkSubscription) this.weekWorkSubscription.unsubscribe();
+    if (this.downloadReportSubscription) this.downloadReportSubscription.unsubscribe();
   }
 
   private fixDropdownCheckbox() {
@@ -385,6 +395,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private getClientNameByAgreementId(agreementId: number): string {
     return (agreementId) ? this.clientsDropdown.filter(client => client.value == agreementId)[0].label.split(" - ")[1] : '';
+  }
+
+  pivotalReport() {
+    let from = this.timeService.getDateString(this.currentSunday);
+    let to = this.timeService.getDateString(this.nextSunday);
+    this.downloadReportSubscription = this.downloadService.downloadPivotal(this.selectedType, from, to)
+      .subscribe(res => {
+          let appType = this.downloadService.getMimeType(this.selectedType);
+          let blob = new Blob([res.blob()], {type: appType});
+          fileSaver.saveAs(blob, 'week_work' + from + '-' + to + '.' + this.selectedType);
+        },
+        err => {
+          this.notificationBarService.create({message: 'הורדה נכשלה', type: NotificationType.Error});
+          this.error = err;
+        });
   }
 
   private convertToUnit(workInfo: WorkInfo): WorkUnit {

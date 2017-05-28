@@ -29,11 +29,11 @@ import {LoginComponent} from "./login/login.component";
 import {AuthGuardService} from "./service/auth-guard.service";
 import {AdminAuthGuardService} from "./service/admin-auth-guard.service";
 import {MyCommonModule} from "./my-common.module";
-import {ReversePipe} from "./pipe/reverse.pipe";
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import {NotificationBarModule} from "angular2-notification-bar";
 import {SlimLoadingBarModule} from "ng2-slim-loading-bar";
 import {LockService} from "./service/lock.service";
+import {UserDownloadService} from "./service/user-download.service";
 
 @NgModule({
   declarations: [
@@ -71,7 +71,8 @@ import {LockService} from "./service/lock.service";
     LockService,
     DatePipe,
     AuthGuardService,
-    AdminAuthGuardService
+    AdminAuthGuardService,
+    UserDownloadService
   ],
   bootstrap: [AppComponent]
 })

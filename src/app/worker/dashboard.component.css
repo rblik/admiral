@@ -6,6 +6,19 @@ td, th:not(:first-child) {
   padding-bottom:0.3em;
 }
 
+.save-button {
+  cursor: pointer;
+  color: black;
+}
+
+a {
+  text-decoration: none;
+}
+
+.save-button:hover {
+color: white;
+}
+
 .customDialog {
   background: green;
 }

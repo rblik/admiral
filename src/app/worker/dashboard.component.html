@@ -11,7 +11,11 @@
     <div class="col-md-1 pull-left">
       <ss-multiselect-dropdown [options]="clientsCheckboxOptions" [texts]="clientsCheckboxTexts" [settings]="clientsCheckboxSettings" [(ngModel)]="clientsUi"></ss-multiselect-dropdown>
     </div>
-    <div class="col-md-4 pull-right">
+    <div class="col-md-4">
+      <p-selectButton styleClass="pull-right" [options]="types" [(ngModel)]="selectedType"></p-selectButton>
+      <a class="pull-right" (click)="pivotalReport()">&nbsp;<i class="fa fa-2x fa-save save-button" aria-hidden="true"></i>&nbsp;</a>
+    </div>
+    <div class="col-md-3 pull-right">
       <button (click)="moveWeekForward()" class="btn btn-sm btn-info"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;שבוע הבה&nbsp;</button>
       <button (click)="moveWeekBack()" class="btn btn-sm btn-warning">&nbsp;שבוע קודם&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></button>
     </div>

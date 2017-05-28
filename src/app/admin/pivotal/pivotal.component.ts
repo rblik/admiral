@@ -13,7 +13,10 @@ import {Router} from "@angular/router";
 
 @Component({
   selector: 'pivotal',
-  templateUrl: './pivotal.component.html'
+  templateUrl: './pivotal.component.html',
+  styleUrls: [
+    './pivotal.component.css'
+  ]
 })
 export class PivotalComponent implements OnInit, OnDestroy {
   private dashboardUrl = '/app/admin/dashboard';
