@@ -16,4 +16,7 @@ export class WorkInfo {
   duration: number;
   comment: string;
   editable: boolean;
+  amount: number;
+  currency: string;
+  type: string;
 }

@@ -40,7 +40,12 @@ export class PivotalComponent implements OnInit, OnDestroy {
   private getPivotalSubscription: Subscription;
   private downloadPivotalSubscription: Subscription;
 
-  constructor(private notificationBarService: NotificationBarService, private router: Router, private downloadService: DownloadService, private reportService: ReportService, private agreementService: AgreementService, private timeService: TimeService) {
+  constructor(private notificationBarService: NotificationBarService,
+              private router: Router,
+              private downloadService: DownloadService,
+              private reportService: ReportService,
+              private agreementService: AgreementService,
+              private timeService: TimeService) {
     this.types = [];
     this.types.push({label: 'PDF', value: 'pdf'});
     this.types.push({label: 'Excel', value: 'xlsx'});
@@ -71,10 +76,6 @@ export class PivotalComponent implements OnInit, OnDestroy {
     }, error => {
       this.error = error;
     });
-  }
-
-  redirectToDetails(row: any) {
-    this.router.navigateByUrl(this.dashboardUrl + '/' + row['employeeId']);
   }
 
   getEmployeesUi(departmentId: number) {
@@ -168,7 +169,10 @@ export class PivotalComponent implements OnInit, OnDestroy {
       .subscribe(res => {
           let appType = this.downloadService.getMimeType(this.selectedType);
           let blob = new Blob([res.blob()], {type: appType});
-          fileSaver.saveAs(blob, 'pivotal.' + this.selectedType);
+          fileSaver.saveAs(blob, 'pivotal-' + from + '-'+ to
+            + ((employeeId)? ('-' + employeeId) : (departmentId)? ('-' + departmentId) : '')
+            + ((clientId)? ('-' + clientId) : (projectId)? ('-' + projectId) : '')
+            + '.' + this.selectedType);
         },
         err => {
           this.notificationBarService.create({message: 'הורדה נכשלה', type: NotificationType.Error});

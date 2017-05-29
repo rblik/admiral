@@ -108,7 +108,7 @@ export class PartialDaysComponent implements OnInit, OnDestroy{
       .subscribe(res => {
           let appType = this.downloadService.getMimeType(this.selectedType);
           let blob = new Blob([res.blob()], {type: appType});
-          fileSaver.saveAs(blob, 'partial.' + this.selectedType);
+          fileSaver.saveAs(blob, 'partial-' + fromDate + '-'+ toDate + ((employeeId)? ('-' + employeeId) : (departmentId)? ('-' + departmentId) : '') + '.' + this.selectedType);
         },
         err => {
           this.notificationBarService.create({message: 'הורדה נכשלה', type: NotificationType.Error});

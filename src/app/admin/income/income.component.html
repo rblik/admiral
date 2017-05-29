@@ -1,1 +1,55 @@
 <h3 style="text-align: center">דוח הכנסות</h3>
+<div class="container">
+  <div class="row hebrew-direct">
+    <div class="col-md-2 pull-right">
+      <button class="btn btn-sm btn-info" (click)="getAllIncome()"><i
+        class="fa fa-chevron-circle-down" aria-hidden="true"></i>&nbsp;חפש&nbsp;</button>
+    </div>
+    <p-dropdown [options]="clientUi" [(ngModel)]="chosenClient" [filter]="true" (onChange)="getProjectsUi(chosenClient)" [style]="{'text-align': 'center'}"></p-dropdown>
+    <p-dropdown [options]="projectUi" [(ngModel)]="chosenProject" [filter]="true" [style]="{'text-align': 'center'}"></p-dropdown>
+    <p-dropdown [options]="departmentsUi" [(ngModel)]="chosenDepartment" [filter]="true" [style]="{'text-align': 'center'}" (onChange)="getEmployeesUi(chosenDepartment)"></p-dropdown>
+    <p-dropdown [options]="employeesUi" [(ngModel)]="chosenEmployee" [filter]="true" [style]="{'text-align': 'center', 'width': '15em'}"></p-dropdown>
+    <div class="col-md-3">
+      <p-selectButton [options]="types" [(ngModel)]="selectedType"></p-selectButton>
+      <button class="btn btn-sm btn-default" (click)="incomeReport()"><i class="fa fa fa-save" aria-hidden="true"></i>&nbsp;הורדה&nbsp;</button>
+    </div>
+  </div>
+</div>
+<br>
+<div *ngIf="tableVisible">
+  <div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none">
+    <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+    <input #gb type="text" pInputText size="50" placeholder="חיפוש">
+  </div>
+  <p-dataTable emptyMessage="אין נתונים" [value]="infosUi" [globalFilter]="gb" selectionMode="multiple" sortMode="multiple" [style]="{'text-align':'center', 'font-size':'10px'}">
+    <p-column header="לפרטים" [style]="{'width':'5%'}">
+      <template let-col let-vraag="rowData" pTemplate="body">
+        <a title="לפרטים" [routerLink]="['/'+dashboardUrl+'/'+vraag['employeeId']]" [queryParams]="{date: getFromDate()}"><i class="fa  fa-2x fa-chevron-left"
+                                                                                                                             aria-hidden="true"></i>&nbsp;&nbsp;</a>
+      </template>
+    </p-column>
+    <p-column header="סיכום" [style]="{'width':'7%'}" [sortable]="true">
+      <template let-col let-vraag="rowData" pTemplate="body">
+        <span class="hebrew-direct">{{countIncome(vraag['duration'], vraag['amount'], vraag['type'])}}&nbsp;<i [ngClass]="'fa ' + currencyIconClass(vraag['currency'])"></i>&nbsp;</span>
+      </template>
+    </p-column>
+    <p-column field="duration" header="משך" [style]="{'width':'7%'}" [sortable]="true">
+      <template let-col let-vraag="rowData" pTemplate="body">
+        <span [innerHTML]="vraag[col.field] | minutesToHours"></span>
+      </template>
+    </p-column>
+    <p-column header="תעריף" [sortable]="true" [style]="{'width':'12%'}">
+      <template let-col let-vraag="rowData" pTemplate="body">
+        <span class="hebrew-direct">{{vraag['amount']}}&nbsp;{{vraag['currency'] | currencyPipe}}&nbsp;{{vraag['type'] | tariffType}}</span>
+      </template>
+    </p-column>
+    <p-column header="שם" [sortable]="true" [style]="{'width':'20%'}">
+      <template let-col let-vraag="rowData" pTemplate="body">
+        <span class="hebrew-direct" [innerHTML]="vraag['employeeSurname'] + '&nbsp;' + vraag['employeeName']"></span>
+      </template>
+    </p-column>
+    <p-column field="departmentName" header="צוות" [style]="{'width':'10%'}" [sortable]="true"></p-column>
+    <p-column field="projectName" header="פרויקט" [sortable]="true"></p-column>
+    <p-column field="clientName" header="לקוח" [sortable]="true"></p-column>
+  </p-dataTable>
+</div>

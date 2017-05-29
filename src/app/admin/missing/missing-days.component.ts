@@ -196,7 +196,7 @@ export class MissingDaysComponent implements OnInit, OnDestroy {
       .subscribe(res => {
           let appType = this.downloadService.getMimeType(this.selectedType);
           let blob = new Blob([res.blob()], {type: appType});
-          fileSaver.saveAs(blob, 'missing.' + this.selectedType);
+          fileSaver.saveAs(blob, 'missing-' + fromDate + '-'+ toDate + ((employeeId)? ('-' + employeeId) : (departmentId)? ('-' + departmentId) : '') + '.' + this.selectedType);
         },
         err => {
           this.notificationBarService.create({message: 'הורדה נכשלה', type: NotificationType.Error});

@@ -73,6 +73,26 @@ export class DownloadService {
     });
   }
 
+  public downloadIncome(type: string, from: string, to: string, employeeId: string, departmentId: string, projectId: string, clientId: string) {
+    let params = new URLSearchParams();
+    params.append('from', from);
+    params.append('to', to);
+    params.append('employeeId', employeeId);
+    params.append('departmentId', departmentId);
+    params.append('projectId', projectId);
+    params.append('clientId', clientId);
+    return this.http.get(this.adminUrl + "/" + type + "/income", {
+      method: RequestMethod.Get,
+      responseType: ResponseContentType.Blob,
+      headers: new Headers({'Authorization': this.auth.getToken()}),
+      search: params
+    }).map(res => res).catch(e => {
+      if (e.status === 400) {
+        return Observable.throw('No information about that period of time');
+      }
+    });
+  }
+
   public getMimeType(type: string): string {
     let apType;
     if (type === 'pdf') {
