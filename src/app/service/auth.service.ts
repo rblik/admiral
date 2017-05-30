@@ -41,6 +41,7 @@ export class AuthService {
   public getOptions(): RequestOptions {
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.getToken());
+    headers.append("X-Requested-With", "XMLHttpRequest");
     return new RequestOptions({headers: headers});
   }
 
