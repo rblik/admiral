@@ -13,29 +13,29 @@
         <li *ngIf="client.phones" class="list-group-item"><span *ngFor="let phone of client.phones">{{phone}}&nbsp;&nbsp;</span><span
           class="pull-right"><strong>טל</strong></span></li>
       </ul>
-      <h4 style="text-align: center">פרויקטים</h4>
+      <h3 style="text-align: center">פרויקטים</h3>
 
-      <div class="col-md-12" style="text-align: center">
-        <p-header><a style="cursor: pointer; color: #1a1a1a" (click)="popupCreate()"><i class="module-plus glyphicon glyphicon-plus" aria-hidden="true"></i></a></p-header>
+      <div class="col-md-12 hebrew-direct" style="text-align: center">
+        <p-header><a style="cursor: pointer; color: #1a1a1a" (click)="popupCreate()"><i class="module-plus glyphicon glyphicon-plus" aria-hidden="true"></i></a><span style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: larger">&nbsp;הוסיף פרויקט&nbsp;</span></p-header>
         <div *ngIf="client.projects">
         <p-dataTable [value]="client.projects" emptyMessage="אין נתונים" expandableRows="true" [style]="{'text-align':'center', 'font-size':'12px', 'width':'100%', 'margin':'0 auto'}">
-          <p-column expander="true" styleClass="col-icon" [style]="{'width':'7%'}"></p-column>
-          <p-column header="ערוך" [style]="{'width':'7%'}">
-            <template let-col let-proj="rowData" pTemplate="body">
-              <span><a style="cursor: pointer" (click)="popupEdit(proj)"><i class="fa fa-pencil" aria-hidden="true"></i></a></span>
-            </template>
-          </p-column>
+          <p-column field="name" header="שם פרויקט" [sortable]="true"></p-column>
           <p-column header="תעריף" [sortable]="true">
             <template let-col let-proj="rowData" pTemplate="body">
               <span class="hebrew-direct">{{proj.tariff.amount}} {{proj.tariff.currency | currencyPipe}} {{proj.tariff.type | tariffType}}</span>
             </template>
           </p-column>
-          <p-column field="name" header="שם פרויקט" [sortable]="true"></p-column>
+          <p-column header="ערוך" [style]="{'width':'8%'}">
+            <template let-col let-proj="rowData" pTemplate="body">
+              <span><a style="cursor: pointer" (click)="popupEdit(proj)"><i class="fa fa-pencil" aria-hidden="true"></i></a></span>
+            </template>
+          </p-column>
+          <p-column expander="true" styleClass="col-icon" [style]="{'width':'7%'}"></p-column>
           <template let-proj pTemplate="rowexpansion">
             <table class="table table-responsive table-condensed hebrew-direct" style="margin: 0 auto;width: 75%; border: none">
               <thead>
               <tr>
-                <td colspan="9"><a style="cursor: pointer; color: #1a1a1a" (click)="popupCreateAgreement(proj)"><i class="module-plus glyphicon glyphicon-plus" aria-hidden="true"></i></a></td>
+                <td colspan="9"><a style="cursor: pointer; color: #1a1a1a" (click)="popupCreateAgreement(proj)"><i class="module-plus glyphicon glyphicon-plus" aria-hidden="true"></i></a><span style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: larger">&nbsp;הוסיף עובד&nbsp;</span></td>
               </tr>
               </thead>
               <tbody>
