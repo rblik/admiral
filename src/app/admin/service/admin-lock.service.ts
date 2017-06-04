@@ -12,7 +12,7 @@ export class AdminLockService {
 
   private locksUrl: string;
 
-  constructor(private auth: AuthService, private http: Http, private timeService: TimeService) {
+  constructor(private http: Http, private auth: AuthService) {
     this.locksUrl = Url.getUrl("/admin/dashboard/locks");
   }
 
@@ -30,10 +30,10 @@ export class AdminLockService {
 
   public isLocked(locks: DateLock[], info: WorkInfo): boolean {
     let date = new Date(info.date);
-    return this.isLockedByDate(locks, date);
+    return this.isLockedDate(locks, date);
   }
 
-  public isLockedByDate(locks: DateLock[], date: Date) {
+  public isLockedDate(locks: DateLock[], date: Date) {
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
     return locks.filter(lock => lock.month === month && lock.year === year).length != 0;

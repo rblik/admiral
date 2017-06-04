@@ -1,9 +1,7 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ActivatedRoute, Params} from "@angular/router";
 import {Subscription} from "rxjs/Subscription";
-import {SessionStorageService} from "ng2-webstorage";
 import {WorkInfoService} from "../../service/work-info.service";
-import {LockService} from "../../service/lock.service";
 import {TimeService} from "../../service/time.service";
 import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
 import {Employee} from "../../model/employee";
@@ -64,8 +62,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
               private timeService: TimeService,
               private lockService: AdminLockService,
               private agreementService: AgreementService,
-              private workService: WorkInfoService,
-              private sessionStorageService: SessionStorageService) {
+              private workService: WorkInfoService) {
     this.adminUnitsUrl = Url.getUrl("/admin/dashboard/units");
     this.sumByDayArr = [];
     this.fixDropdownCheckbox();
@@ -132,18 +129,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
       ]).subscribe(([workInfos, locks]) => {
       this.workInfos = workInfos;
       this.locks = locks;
-      // this.lockExists = (!!locks && locks.length !== 0 && locks[0].month === this.currentSunday.getMonth() +1);
-      this.lockExists = this.lockService.isLockedByDate(this.locks, this.currentSunday);
+      this.lockExists = this.lockService.isLockedDate(this.locks, this.currentSunday);
       this.lockClass = this.lockExists? 'fa-lock': 'fa-unlock';
       this.transform(this.workInfos, this.clientsUi);
     });
-    /*this.weekWorkSubscription = this.workService.getWeekWork(
-     this.timeService.getDateString(this.currentSunday),
-     this.timeService.getDateString(this.nextSunday))
-     .subscribe(workInfos => {
-     this.workInfos = workInfos;
-     this.transform(this.workInfos, this.clientsUi);
-     });*/
   }
 
   private fixDropdownCheckbox() {
@@ -257,21 +246,30 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     return !!dayWorkInfos ? dayWorkInfos.length == 0 : false;
   }
 
+  isLockedDate(currentSunday: Date, offset: number) {
+    return this.lockService.isLockedDate(this.locks, this.getDayByWeek(currentSunday, offset));
+  }
+
   showPivotalWorkDayDialog(date: Date) {
-    let currentDate = this.timeService.getDateString(date);
-    this.isPivotal = true;
-    this.error = '';
-    this.createDialog = false;
-    this.activeAgreementId = null;
-    this.dayForCreatingWorkInfos = new Date(currentDate);
-    this.activeDate = currentDate;
-    this.allDayWorkSubscription = this.workService.getDayWork(currentDate, -1, this.employee.id, this.adminUnitsUrl).subscribe(infos => {
-      this.dayWorkInfos = infos;
-    });
-    let openModalButton = document.getElementById('openModalButton');
-    if(!!openModalButton) {
-      openModalButton.click();
+    if (this.isLockedDate(date, 0)) {
+      return;
+    } else {
+      let currentDate = this.timeService.getDateString(date);
+      this.isPivotal = true;
+      this.error = '';
+      this.createDialog = false;
+      this.activeAgreementId = null;
+      this.dayForCreatingWorkInfos = new Date(currentDate);
+      this.activeDate = currentDate;
+      this.allDayWorkSubscription = this.workService.getDayWork(currentDate, -1, this.employee.id, this.adminUnitsUrl).subscribe(infos => {
+        this.dayWorkInfos = infos;
+      });
+      let openModalButton = document.getElementById('openModalButton');
+      if(!!openModalButton) {
+        openModalButton.click();
+      }
     }
+
   }
 
   moveDay(workDate: Date, step: number, agreementId?: number) {
@@ -440,11 +438,11 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
-    if (this.routeParamsSubscription) this.routeParamsSubscription.unsubscribe();
     if (this.getAgreementsSubscription) this.getAgreementsSubscription.unsubscribe();
     if (this.allDayWorkSubscription) this.allDayWorkSubscription.unsubscribe();
     if (this.moveDaySubscription) this.moveDaySubscription.unsubscribe();
     if (this.dayWorkSubscription) this.dayWorkSubscription.unsubscribe();
     if (this.upsertWorkInfoSubscription) this.upsertWorkInfoSubscription.unsubscribe();
+    if (this.routeParamsSubscription) this.routeParamsSubscription.unsubscribe();
   }
 }

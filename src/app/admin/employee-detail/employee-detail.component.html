@@ -37,8 +37,8 @@
         <tbody>
         <tr *ngFor="let agreement of agreements" [ngStyle]="{'color': (agreement.active)? 'black':'red'}">
           <td class="hebrew-direct" style="font-size: smaller">{{agreement.tariffAmount}} {{agreement.tariffCurrency | currencyPipe}} {{agreement.tariffType | tariffType}}</td>
-          <td style="font-weight: bold">{{agreement.projectName}}</td>
           <td style="font-weight: bold">{{agreement.clientName}}</td>
+          <td style="font-weight: bold">{{agreement.projectName}}</td>
         </tr>
         </tbody>
       </table>

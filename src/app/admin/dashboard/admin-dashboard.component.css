@@ -36,3 +36,11 @@ td, th:not(:first-child) {
   font-weight: bold;
   font-size: large;
 }
+
+.red {
+  color: red;
+}
+
+.black {
+  color: black;
+}

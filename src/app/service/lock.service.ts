@@ -27,6 +27,10 @@ export class LockService {
 
   public isLocked(locks: DateLock[], info: WorkInfo): boolean {
     let date = new Date(info.date);
+    return this.isLockedDate(locks, date);
+  }
+
+  public isLockedDate(locks: DateLock[], date: Date): boolean {
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
     return locks.filter(lock => lock.month === month && lock.year === year).length != 0;

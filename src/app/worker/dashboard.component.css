@@ -11,12 +11,8 @@ td, th:not(:first-child) {
   color: black;
 }
 
-a {
-  text-decoration: none;
-}
-
 .save-button:hover {
-color: white;
+  color: white;
 }
 
 .customDialog {
@@ -48,4 +44,12 @@ color: white;
 .work-infos-modal-title {
  font-weight: bold;
   font-size: large;
+}
+
+.red {
+  color: red;
+}
+
+.black {
+  color: black;
 }

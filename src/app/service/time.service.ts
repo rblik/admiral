@@ -73,16 +73,19 @@ export class TimeService {
     let utcFrom = Date.UTC(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
     let utcTo = Date.UTC(toDate.getFullYear(), toDate.getMonth(), toDate.getDate());
 
-    let number2 = (Math.ceil((utcTo - utcFrom) / (TimeService.MS_PER_DAY* 7)))*7;
-    console.log(number2);
-    return number2;
+    return (Math.ceil((utcTo - utcFrom) / (TimeService.MS_PER_DAY * 7))) * 7;
   }
 
   public validate(workInfo: WorkInfo): boolean {
-    return parseInt(workInfo.from.substr(0, 2)) > 23
-      || parseInt(workInfo.from.substr(3, 2)) > 59
-      || parseInt(workInfo.to.substr(0, 2)) > 23
-      || parseInt(workInfo.to.substr(3, 2)) > 59
-      || workInfo.from > workInfo.to;
+    console.log(workInfo);
+      let fromH = workInfo.from.substr(0, 2);
+      let fromM = workInfo.from.substr(3, 2);
+      let toH = workInfo.to.substr(0, 2);
+      let toM = workInfo.to.substr(3, 2);
+      return parseInt(fromH) > 23
+            || parseInt(fromM) > 59
+            || parseInt(toH) > 23
+            || parseInt(toM) > 59
+            || workInfo.from > workInfo.to;
   }
 }
