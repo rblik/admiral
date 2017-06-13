@@ -77,6 +77,9 @@ export class TimeService {
   }
 
   public validate(workInfo: WorkInfo): boolean {
+    if (!workInfo.from || !workInfo.to) {
+      return true;
+    }
       let fromH = workInfo.from.substr(0, 2);
       let fromM = workInfo.from.substr(3, 2);
       let toH = workInfo.to.substr(0, 2);
