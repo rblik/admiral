@@ -85,15 +85,15 @@
               <button type="button" class="btn btn-xs btn-info" title="הוסיף יחידת עבודה" (click)="create()">&nbsp;הוסיף&nbsp;<i class="fa fa-plus" aria-hidden="true"></i></button>
             </div>
             <div class="row hebrew-direct" style="margin-top: 1em">
-              <div *ngIf="createDialog" class="form-group">
+              <div *ngIf="createDialog" class="form-group" (keyup)="checkForEnter($event)">
                 <!--<p-calendar [(ngModel)]="tes" [stepMinute]=10 hourFormat="24" readonlyInput="true" dataType="string" [timeOnly]="true"></p-calendar>-->
                 <label for="dayWorkInfoFrom">
                   &nbsp;מ&nbsp;
-                  <p-inputMask [(ngModel)]="workInfoItem.from" id="dayWorkInfoFrom" mask="99:99" inputStyleClass="form-control" [maxlength]="5"></p-inputMask>
+                  <p-inputMask [(ngModel)]="workInfoItem.from" (keyup)="jump($event)" id="dayWorkInfoFrom" mask="99:99" inputStyleClass="form-control" [maxlength]="5"></p-inputMask>
                 </label>
                 <label for="dayWorkInfoTo">
                   &nbsp;עד&nbsp;
-                  <p-inputMask [(ngModel)]="workInfoItem.to" mask="99:99" id="dayWorkInfoTo" inputStyleClass="form-control" [maxlength]="5"></p-inputMask>
+                  <p-inputMask [(ngModel)]="workInfoItem.to" (keyup)="jump($event)" mask="99:99" id="dayWorkInfoTo" inputStyleClass="form-control" [maxlength]="5"></p-inputMask>
                 </label>
                 <button type="button" iconPos="right" pButton icon="fa-clock-o" (click)="makeWholeDay()" label="24"></button>
                 <br>
@@ -103,7 +103,7 @@
                 <br>
                 <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" placeholder="תאור" id="dayWorkInfoComment" class="form-control" [maxlength]="50"></textarea>
                 <br>
-                <button type="button" class="pull-left" pButton icon="fa-check" iconPos="right" (click)="save(workInfoItem)" label="שמור"></button>
+                <button type="button" id="confirmWorkInfoButton" class="pull-left" pButton icon="fa-check" iconPos="right" (click)="save(workInfoItem)" label="שמור"></button>
               </div>
             </div>
             <div class="row">

@@ -1,20 +1,13 @@
 <nav class="navbar navbar-static-top navbar-default hebrew-direct">
   <div class="container-fluid">
-    <ul class="nav navbar-nav navbar-left" [ngSwitch]="profile">
-      <template [ngSwitchCase]="null">
-        <li>
-          <a routerLink="/app/login" routerLinkActive="active"><span class="glyphicon glyphicon-log-in"></span> כניסה</a>
-        </li>
-      </template>
-      <template ngSwitchDefault>
-        <li>
-          <a (click)="logout()">
+    <ul class="nav navbar-nav navbar-left">
+        <li *ngIf="profile">
+          <a (click)="logout()" style="cursor: pointer">
             <span class="glyphicon glyphicon-log-out"></span> יציאה</a>
         </li>
-      </template>
     </ul>
       <div *ngIf="profile != null">
-        <span class="navbar-brand" href="#">{{profile.surname + ' ' + profile.name}}</span>
+        <span class="navbar-brand profile-name" href="#">{{profile.surname + ' ' + profile.name}}</span>
       </div>
     <ul class="nav navbar-nav navbar-right" [ngSwitch]="profile">
       <li *ngIf="profile != null">
@@ -32,11 +25,8 @@
       <li *ngIf="profile != null">
         <a routerLink="/app/admin/reports" routerLinkActive="active" *ngIf="profile.roles.indexOf('ROLE_ADMIN') != -1">דוחות</a>
       </li>
-      <li>
-        <a routerLink="/" routerLinkActive="active">דף הבית</a>
-      </li>
       <li class="navbar-header">
-        <a class="navbar-brand" href="http://www.naya-tech.co.il/"><img [src]="LOGO" alt="NAYA"
+        <a class="navbar-brand" routerLink="/" routerLinkActive="active"><img [src]="LOGO" alt="NAYA"
                                                                     style="height: 120%">
         </a>
       </li>

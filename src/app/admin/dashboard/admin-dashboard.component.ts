@@ -97,6 +97,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   }
 
   private getClientsUi(agreements: AgreementDto[]) {
+    this.clientsDropdown = [];
     agreements.forEach(agreement => {
       this.clientsDropdown.push({
         label: agreement.projectName + ' - ' + agreement.clientName,
@@ -283,6 +284,34 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     });
   }
 
+  jump(event?: any) {
+    if (
+      event.keyCode == 39
+      && event.target.parentElement.attributes.id.nodeValue === 'dayWorkInfoTo'
+      && event.target.selectionStart === 0) {
+      (<HTMLInputElement>jQuery('#dayWorkInfoFrom').find(':input').get(0)).focus();
+    } else if (
+      event.keyCode == 40
+      && (event.target.parentElement.attributes.id.nodeValue === 'dayWorkInfoFrom'
+      || event.target.parentElement.attributes.id.nodeValue === 'dayWorkInfoTo')
+      && this.isPivotal
+      && !this.isEdit) {
+      jQuery('#clientsDropdown').find("div.ui-helper-hidden-accessible").find(":text").get(0).focus();
+    } else if (
+      event.target.value.indexOf('_') == -1
+      && event.target.parentElement.attributes.id.nodeValue === 'dayWorkInfoFrom'
+      && ((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 37)) {
+      jQuery('#dayWorkInfoTo').find(':input').focus();
+    }
+  }
+
+  checkForEnter(event?: any) {
+    if (event.keyCode == 13) {
+      document.getElementById('confirmWorkInfoButton').click();
+      return;
+    }
+  }
+
   create() {
     this.isEdit = false;
     this.workInfoItem = new WorkInfo();
@@ -290,6 +319,9 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     this.workInfoItem.date = this.activeDate;
     this.workInfoItem.duration = 0;
     this.createDialog = true;
+    setTimeout(function () {
+      jQuery('#dayWorkInfoFrom').find(':input').focus();
+    }, 200);
   }
 
   edit(workInfo: WorkInfo) {
@@ -312,7 +344,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
 
   save(workInfo: WorkInfo) {
     if (this.timeService.validate(workInfo)) {
-      this.error = "Wrong time range";
+      this.error = "טווח זמן שגוי";
       return;
     }
 
@@ -325,7 +357,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
         this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
         this.transform(this.workInfos, this.clientsUi);
         this.createDialog = false;
-        this.workInfoItem = null;
+        // this.workInfoItem = null;
+        jQuery('#dayWorkInfoForm').focus();
       }, err => this.error = err);
   }
 

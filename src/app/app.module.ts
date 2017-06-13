@@ -25,7 +25,6 @@ import {
   SharedModule
 } from "primeng/primeng";
 import {Ng2Webstorage} from "ng2-webstorage";
-import {LoginComponent} from "./login/login.component";
 import {AuthGuardService} from "./service/auth-guard.service";
 import {AdminAuthGuardService} from "./service/admin-auth-guard.service";
 import {MyCommonModule} from "./my-common.module";
@@ -40,8 +39,7 @@ import {UserDownloadService} from "./service/user-download.service";
     AppComponent,
     NavBarComponent,
     DashboardComponent,
-    HomeComponent,
-    LoginComponent
+    HomeComponent
   ],
   imports: [
     BrowserModule,
