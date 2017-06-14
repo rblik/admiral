@@ -1,5 +1,6 @@
 <div class="page-header">
   <p style="text-align: center; font-size: 300%">דיווח שעות</p>
+  <p class="hebrew-direct" style="text-align: center; font-size: 150%">{{currentMonthFirstDay | hebrewDate: 'year-month'}}</p>
 </div>
 <div style="margin-top: 10px">
   <div class="container" style="padding-bottom: 1em; padding-top: 1em; width: 100%">
@@ -29,7 +30,7 @@
       <th *ngFor="let sumByDay of sumByDayArr; let i = index" [attr.data-index]="i">
         <a [ngClass]="lock? 'red':'black'"
            (click)="showPivotalWorkDayDialog(getDayByMonth(currentMonthFirstDay, sumByDayArr.length - 1 - i))" style="cursor: pointer; font-size: smaller">
-          {{getDayByMonth(currentMonthFirstDay, sumByDayArr.length - 1 - i) | hebrewDate: true}}</a>
+          {{getDayByMonth(currentMonthFirstDay, sumByDayArr.length - 1 - i) | hebrewDate: 'day-weekDay'}}</a>
       </th>
       <th colspan="2" style="width: 5%">פרויקט</th>
       <th colspan="2" style="width: 5%">לקןח</th>

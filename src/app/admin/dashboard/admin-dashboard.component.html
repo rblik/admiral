@@ -1,4 +1,5 @@
 <h3 style="text-align: center" *ngIf="employee"><a style="cursor: pointer" (click)="lockUnlock(currentMonthFirstDay)"><i style="color: black" [ngClass]="'fa ' + lockClass" aria-hidden="true"></i></a> {{employee.surname}} {{employee.name}} </h3>
+<p class="hebrew-direct" style="text-align: center; font-size: 150%">{{currentMonthFirstDay | hebrewDate: 'year-month'}}</p>
 <div style="margin-top: 10px">
   <div class="container" style="padding-bottom: 1em; padding-top: 1em; width: 100%">
     <div class="row">
@@ -23,7 +24,7 @@
       <th *ngFor="let sumByDay of sumByDayArr; let i = index" [attr.data-index]="i">
         <a [ngClass]="lock? 'red':'black'"
            (click)="showPivotalWorkDayDialog(getDayByMonth(currentMonthFirstDay, sumByDayArr.length - 1 - i))" style="cursor: pointer; font-size: smaller">
-          {{getDayByMonth(currentMonthFirstDay, sumByDayArr.length - 1 - i) | hebrewDate: true}}</a>
+          {{getDayByMonth(currentMonthFirstDay, sumByDayArr.length - 1 - i) | hebrewDate: 'day-weekDay'}}</a>
       </th>
       <th colspan="2" style="width: 5%">פרויקט</th>
       <th colspan="2" style="width: 5%">לקןח</th>

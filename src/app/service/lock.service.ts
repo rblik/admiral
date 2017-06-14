@@ -17,7 +17,7 @@ export class LockService {
   public isLockedForMonth(year: number, month: number): Observable<DateLock[]> {
     let params = new URLSearchParams();
     params.append("year", year.toString());
-    params.append("month", month.toString());
+    params.append("month", (month + 1).toString());
     let headers = new Headers();
     headers.append("Authorization", this.authService.getToken());
     let options = new RequestOptions({headers: headers, search: params});
