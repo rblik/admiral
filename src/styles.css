@@ -5,6 +5,7 @@
 
 body {
   background-image: url("diamond.png");
+  min-width: 1024px;
 }
 
 .hebrew-direct {

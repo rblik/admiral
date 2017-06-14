@@ -14,10 +14,10 @@ export class LockService {
     this.locksUrl = Url.getUrl("/locks")
   }
 
-  public getLocksForPeriod(from: string, to: string): Observable<DateLock[]> {
+  public isLockedForMonth(year: number, month: number): Observable<DateLock[]> {
     let params = new URLSearchParams();
-    params.append("from", from);
-    params.append("to", to);
+    params.append("year", year.toString());
+    params.append("month", month.toString());
     let headers = new Headers();
     headers.append("Authorization", this.authService.getToken());
     let options = new RequestOptions({headers: headers, search: params});

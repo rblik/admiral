@@ -16,27 +16,16 @@ export class AdminLockService {
     this.locksUrl = Url.getUrl("/admin/dashboard/locks");
   }
 
-  public getLocksForPeriodAndEmployee(from: string, to: string, employeeId: number): Observable<DateLock[]> {
+  public ckeckIsLockedForMonthAndEmployee(year: number, month: number, employeeId: number): Observable<DateLock[]> {
     let params = new URLSearchParams();
-    params.append("from", from);
-    params.append("to", to);
+    params.append("year", year.toString());
+    params.append("month", (month + 1).toString());
     params.append("employeeId", employeeId.toString());
     let headers = new Headers();
     headers.append("Authorization", this.auth.getToken());
     let options = new RequestOptions({headers: headers, search: params});
     return this.http.get(this.locksUrl, options)
       .map(res => res.json());
-  }
-
-  public isLocked(locks: DateLock[], info: WorkInfo): boolean {
-    let date = new Date(info.date);
-    return this.isLockedDate(locks, date);
-  }
-
-  public isLockedDate(locks: DateLock[], date: Date) {
-    let year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    return locks.filter(lock => lock.month === month && lock.year === year).length != 0;
   }
 
   public saveLock(dateStr: string, employeeId: number): Observable<DateLock>{

@@ -2,7 +2,7 @@ import {Pipe, PipeTransform} from "@angular/core";
 
 @Pipe({name: 'hebrewDate'})
 export class HebrewDatePipe implements PipeTransform {
-  transform(date: Date, ...args: any[]): any {
+  transform(date: Date, short?: boolean): any {
     if (date!=null) {
       let year: number = date.getFullYear();
       let dayOfMonth: number = date.getDate();
@@ -68,7 +68,7 @@ export class HebrewDatePipe implements PipeTransform {
           month = "דצמבר";
           break;
       }
-      return year+ " " + month+ " " + dayOfMonth+" " + day;
+      return !short? year+ " " + month+ " " + dayOfMonth+" " + day : dayOfMonth+" " + day;
     }
 
   }

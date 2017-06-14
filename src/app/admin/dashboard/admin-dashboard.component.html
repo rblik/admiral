@@ -1,6 +1,6 @@
-<h3 style="text-align: center" *ngIf="employee"><a style="cursor: pointer" (click)="lockUnlock(currentSunday)"><i style="color: black" [ngClass]="'fa ' + lockClass" aria-hidden="true"></i></a> {{employee.surname}} {{employee.name}} </h3>
-<div style="margin: 10px">
-  <div class="container" style="padding: 1em">
+<h3 style="text-align: center" *ngIf="employee"><a style="cursor: pointer" (click)="lockUnlock(currentMonthFirstDay)"><i style="color: black" [ngClass]="'fa ' + lockClass" aria-hidden="true"></i></a> {{employee.surname}} {{employee.name}} </h3>
+<div style="margin-top: 10px">
+  <div class="container" style="padding-bottom: 1em; padding-top: 1em; width: 100%">
     <div class="row">
       <div class="col-md-1"></div>
       <div class="col-md-1 pull-left">
@@ -10,8 +10,8 @@
         <ss-multiselect-dropdown [options]="clientsCheckboxOptions" [texts]="clientsCheckboxTexts" [settings]="clientsCheckboxSettings" [(ngModel)]="clientsUi"></ss-multiselect-dropdown>
       </div>
       <div class="col-md-4 pull-right">
-        <button (click)="moveWeekForward()" class="btn btn-sm btn-info"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;שבוע הבה&nbsp;</button>
-        <button (click)="moveWeekBack()" class="btn btn-sm btn-warning">&nbsp;שבוע קודם&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+        <button (click)="moveMonthForward()" class="btn btn-sm btn-info"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;חודש הבה&nbsp;</button>
+        <button (click)="moveMonthBack()" class="btn btn-sm btn-warning">&nbsp;חודש הקודם&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></button>
       </div>
       <div class="col-md-2"></div>
     </div>
@@ -19,29 +19,26 @@
   <table style="width:100%; font-size: small">
     <thead style="font-size: smaller">
     <tr class="hebrew-direct">
-      <th colspan="2" style="width: 10%">סה"כ</th>
-      <th><a [ngClass]="!!locks && isLockedDate(currentSunday, 6)? 'red':'black'" (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 6))" style="cursor: pointer">{{getDayByWeek(currentSunday, 6) | hebrewDate}}</a></th>
-      <th><a [ngClass]="!!locks && isLockedDate(currentSunday, 5)? 'red':'black'" (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 5))" style="cursor: pointer">{{getDayByWeek(currentSunday, 5) | hebrewDate}}</a></th>
-      <th><a [ngClass]="!!locks && isLockedDate(currentSunday, 4)? 'red':'black'" (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 4))" style="cursor: pointer">{{getDayByWeek(currentSunday, 4) | hebrewDate}}</a></th>
-      <th><a [ngClass]="!!locks && isLockedDate(currentSunday, 3)? 'red':'black'" (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 3))" style="cursor: pointer">{{getDayByWeek(currentSunday, 3) | hebrewDate}}</a></th>
-      <th><a [ngClass]="!!locks && isLockedDate(currentSunday, 2)? 'red':'black'" (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 2))" style="cursor: pointer">{{getDayByWeek(currentSunday, 2) | hebrewDate}}</a></th>
-      <th><a [ngClass]="!!locks && isLockedDate(currentSunday, 1)? 'red':'black'" (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 1))" style="cursor: pointer">{{getDayByWeek(currentSunday, 1) | hebrewDate}}</a></th>
-      <th><a [ngClass]="!!locks && isLockedDate(currentSunday, 0)? 'red':'black'" (click)="showPivotalWorkDayDialog(currentSunday)" style="cursor: pointer">{{currentSunday | hebrewDate}}</a></th>
-      <th colspan="2" style="width: 10%">פרויקט</th>
-      <th colspan="2" style="width: 10%">לקןח</th>
+      <th colspan="2" style="width: 4%">סה"כ</th>
+      <th *ngFor="let sumByDay of sumByDayArr; let i = index" [attr.data-index]="i">
+        <a [ngClass]="lock? 'red':'black'"
+           (click)="showPivotalWorkDayDialog(getDayByMonth(currentMonthFirstDay, sumByDayArr.length - 1 - i))" style="cursor: pointer; font-size: smaller">
+          {{getDayByMonth(currentMonthFirstDay, sumByDayArr.length - 1 - i) | hebrewDate: true}}</a>
+      </th>
+      <th colspan="2" style="width: 5%">פרויקט</th>
+      <th colspan="2" style="width: 5%">לקןח</th>
     </tr>
     </thead>
-    <tbody>
+    <tbody style="font-size: smaller">
     <tr *ngFor="let item of uiAgreements">
-      <td colspan="2">
-        {{sum(item.workInfos) | minutesToHours}}
+      <td colspan="2" style="font-size: smaller">
+        {{sum(item.workInfos) | minutesToHours: true}}
       </td>
       <td *ngFor="let work of item.workInfos | reverse">
         <span (click)="showWorkDayDialog(work, item)">
-        <input [ngStyle]="{'width': '90%', 'background-color': work.editable? '#FFFFFF' : '#CDFFFF'}"
-               [ngModel]="work.duration | minutesToHours"
-               style="width: inherit; text-align: center; border-style:solid; border-width: 1px; border-radius: 3px;"
-               disabled>
+          <textarea class="dashboardInput" [ngStyle]="{'background-color': work.editable? '#FFFFFF' : '#CDFFFF', 'font-weight':'bold'}"
+
+                  disabled>{{work.duration | minutesToHours: true}}</textarea>
         </span>
       </td>
       <td colspan="2">
@@ -52,9 +49,9 @@
       </td>
     </tr>
     <tr>
-      <td colspan="2" style="font-weight: bolder">{{sumByWeek | minutesToHours}}</td>
-      <td *ngFor="let sumByDay of sumByDayArr | reverse" style="font-weight: bolder">
-        {{sumByDay | minutesToHours}}
+      <td colspan="2" style="font-weight: bolder; font-size: smaller">{{sumByMonth | minutesToHours: true}}</td>
+      <td *ngFor="let sumByDay of sumByDayArr | reverse" style="font-weight: bolder; font-size: smaller">
+        {{sumByDay | minutesToHours: true}}
       </td>
       <td colspan="4" style="font-weight: bolder">
         שעות ביום
@@ -81,7 +78,7 @@
                 {{!isPivotal? clientForCreatingWorkInfos + 'עבודה יומי ב':' עבודה יומי'}}
               </h3>
             </div>
-            <div>
+            <div *ngIf="!dayByDayLock">
               <button type="button" class="btn btn-xs btn-info" title="הוסיף יחידת עבודה" (click)="create()">&nbsp;הוסיף&nbsp;<i class="fa fa-plus" aria-hidden="true"></i></button>
             </div>
             <div class="row hebrew-direct" style="margin-top: 1em">
@@ -113,27 +110,27 @@
               <table class="table table-hover hebrew-direct table_legenda" style="font-size: smaller; table-layout: fixed" [hidden]="isEmptyDay(dayWorkInfos)">
                 <thead>
                 <tr>
-                  <th *ngIf="isPivotal" style="width: 10%">לקוח</th>
+                  <th *ngIf="isPivotal" style="width: 20%">לקוח</th>
                   <th style="width: 10%">מ-</th>
                   <th style="width: 10%">עד-</th>
                   <th style="width: 10%">משך</th>
-                  <th style="width: 20%">תאור</th>
-                  <th style="width: 10%"></th>
-                  <th style="width: 10%"></th>
+                  <th [ngStyle]="{'width': (!dayByDayLock)? '65%':'45%'}">תאור</th>
+                  <th [ngStyle]="{'width': (!dayByDayLock)? '13%':'0'}"></th>
+                  <th [ngStyle]="{'width': (!dayByDayLock)? '13%':'0'}"></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr *ngFor="let workInfo of dayWorkInfos">
-                  <td width="20%" *ngIf="isPivotal">{{workInfo.clientName}}</td>
-                  <td width="10%">{{workInfo.from | time}}</td>
-                  <td width="10%">{{workInfo.to | time}}</td>
-                  <td width="10%" class="english-direct">{{workInfo.duration | minutesToHours}}</td>
-                  <td width="55%">{{workInfo.comment}}</td>
-                  <td width="10%">
-                    <button title="לערוך" type="button" class="btn btn-xs btn-warning" (click)="edit(workInfo)"><i class="fa fa-pencil fa-fw"></i>&nbsp;ערוך&nbsp;</button>
+                  <td  style="width: 20%" *ngIf="isPivotal">{{workInfo.clientName}}</td>
+                  <td style="width: 10%">{{workInfo.from | time}}</td>
+                  <td style="width: 10%">{{workInfo.to | time}}</td>
+                  <td style="width: 10%" class="english-direct">{{workInfo.duration | minutesToHours}}</td>
+                  <td [ngStyle]="{'width': (!dayByDayLock)? '65%':'45%'}">{{workInfo.comment}}</td>
+                  <td style="width: 13%" *ngIf="!dayByDayLock">
+                    <button title="לערוך" type="button" class="btn btn-xs btn-warning" (click)="edit(workInfo)" style="font-size: smaller"><i class="fa fa-pencil fa-fw"></i>&nbsp;ערוך&nbsp;</button>
                   </td>
-                  <td width="10%">
-                    <button title="למחוק" type="button" class="btn btn-xs btn-danger" (click)="remove(workInfo)"><i class="fa fa-trash-o fa-fw"></i>&nbsp;מחק&nbsp;</button>
+                  <td style="width: 13%" *ngIf="!dayByDayLock">
+                    <button title="למחוק" type="button" class="btn btn-xs btn-danger" (click)="remove(workInfo)" style="font-size: smaller"><i class="fa fa-trash-o fa-fw"></i>&nbsp;מחק&nbsp;</button>
                   </td>
                 </tr>
                 </tbody>

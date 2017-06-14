@@ -3,12 +3,13 @@ th, td {
 }
 
 td, th:not(:first-child) {
-  padding-bottom:0.3em;
+  padding-bottom: 0.3em;
 }
 
 .customDialog {
   background: green;
 }
+
 ::-webkit-input-placeholder {
   text-align: center;
 }
@@ -17,7 +18,7 @@ td, th:not(:first-child) {
   text-align: center;
 }
 
-::-moz-placeholder {  /* Firefox 19+ */
+::-moz-placeholder { /* Firefox 19+ */
   text-align: center;
 }
 
@@ -43,4 +44,16 @@ td, th:not(:first-child) {
 
 .black {
   color: black;
+}
+
+.dashboardInput {
+  width: 95%;
+  height: 4em;
+  font-size: 8px;
+  overflow: hidden;
+  resize: none;
+  text-align: center;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 3px;
 }

@@ -17,7 +17,7 @@ export class WorkInfoService {
     this.unitsUrl = Url.getUrl("/units");
   }
 
-  public getWeekWork(sundayDate: string, nextSundayDate: string, employeeId?: number, adminUnitsUrl?: string): Observable<WorkInfo[]> {
+  public getMonthWork(sundayDate: string, nextSundayDate: string, employeeId?: number, adminUnitsUrl?: string): Observable<WorkInfo[]> {
     let params = new URLSearchParams();
     params.append("from", sundayDate);
     params.append("to", nextSundayDate);
@@ -57,7 +57,8 @@ export class WorkInfoService {
     return this.http.post(!!adminUnitsUrl ? adminUnitsUrl : this.unitsUrl, JSON.stringify(workUnit), options)
       .map(res => res.json())
       .catch(e => {
-        let s: string = e.json().cause=='TimeOverlappingException'? 'רקורד על פרק הזמן הזה כבר קיימת.' : e.json().details[0];
+        let json = e.json();
+        let s: string = json.cause=='TimeOverlappingException'? 'רקורד על פרק הזמן הזה כבר קיים.' : json.cause=='DateLockedException'? 'היום הזה סגור לשינויים' : json.details[0];
         return Observable.throw(s);
       });
   }

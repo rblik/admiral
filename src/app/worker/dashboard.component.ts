@@ -12,7 +12,6 @@ import {SelectItem} from "primeng/primeng";
 import {Subscription} from "rxjs/Subscription";
 import {Observable} from "rxjs/Observable";
 import {LockService} from "../service/lock.service";
-import {DateLock} from "../model/date-lock";
 import {UserDownloadService} from "../service/user-download.service";
 import {NotificationBarService, NotificationType} from "angular2-notification-bar";
 
@@ -26,12 +25,10 @@ import {NotificationBarService, NotificationType} from "angular2-notification-ba
 export class DashboardComponent implements OnInit, OnDestroy {
 
   private employee: Employee;
-  private currentSunday: Date;
-  private nextSunday: Date;
-  private timeOffset: number;
   private agreements: AgreementDto[];
   private workInfos: WorkInfo[];
-  private locks: DateLock[];
+  private lock: boolean;
+  private dayBydayLock: boolean;
   private dayWorkInfos: WorkInfo[];
   private uiAgreements: AgreementDto[];
   private activeAgreementId: number;
@@ -42,7 +39,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private clientForCreatingWorkInfos: string;
   private error: string;
   private sumByDayArr: number[];
-  private sumByWeek: number;
   private clientsUi: string[];
   private clientsCheckboxOptions: IMultiSelectOption[];
   private clientsCheckboxSettings: IMultiSelectSettings;
@@ -60,6 +56,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private downloadReportSubscription: Subscription;
   private selectedType: string = 'xlsx';
   private types: SelectItem[];
+  private currentMonthFirstDay: Date;
+  private nextMonthFirstDay: Date;
+  private sumByMonth: number;
+  private monthOffset: number;
 
   constructor(private notificationBarService: NotificationBarService, private timeService: TimeService, private downloadService: UserDownloadService, private lockService: LockService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
     this.sumByDayArr = [];
@@ -70,10 +70,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.timeOffset = 0;
+    this.monthOffset = 0;
     this.localStSubscription = this.sessionStorageService.observe('employee')
       .subscribe((employee) => this.employee = JSON.parse(employee));
-    this.initWeekBorders(this.timeOffset);
+    this.initMonthBorders(this.monthOffset);
     this.getAgreementsWithWorkAndRender();
   }
 
@@ -103,7 +103,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.agreements = agreements;
       this.getClientsUi(agreements);
       this.fillDropDownList(agreements);
-      this.getWorkForWeekAndRender();
+      this.getWorkForMonthAndRender();
     });
   }
 
@@ -117,41 +117,41 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
-  private getWorkForWeekAndRender() {
+  private getWorkForMonthAndRender() {
     Observable.forkJoin(
       [
-        this.workService.getWeekWork(
-          this.timeService.getDateString(this.currentSunday),
-          this.timeService.getDateString(this.nextSunday)),
-        this.lockService.getLocksForPeriod(
-          this.timeService.getDateString(this.currentSunday),
-          this.timeService.getDateString(this.nextSunday))
-      ]).subscribe(([workInfos, locks]) => {
+        this.workService.getMonthWork(
+          this.timeService.getDateString(this.currentMonthFirstDay),
+          this.timeService.getDateString(this.nextMonthFirstDay)),
+        this.lockService.isLockedForMonth(
+          this.currentMonthFirstDay.getFullYear(),
+          this.currentMonthFirstDay.getMonth())
+      ]).subscribe(([workInfos, lock]) => {
       this.workInfos = workInfos;
-      this.locks = locks;
-      this.transform(this.workInfos, this.clientsUi);
+      this.lock = lock;
+      this.transformMonth(this.workInfos, this.clientsUi);
     });
   }
 
-  getDayByWeek(sunday: Date, offset: number): Date {
-    return this.timeService.getRelativeWeekDay(sunday, offset);
+  getDayByMonth(sunday: Date, offset: number): Date {
+    return this.timeService.getRelativeMonthDay(sunday, offset);
   }
 
-  private initWeekBorders(offset: number) {
-    this.currentSunday = this.timeService.getWeekDay(offset);
-    this.nextSunday = this.timeService.getWeekDay(offset + 7);
+  private initMonthBorders(offset: number) {
+    this.currentMonthFirstDay = this.timeService.getFirstDayOfMonth(offset);
+    this.nextMonthFirstDay = this.timeService.getFirstDayOfMonth(offset + 1);
   }
 
-  moveWeekForward() {
-    this.timeOffset += 7;
-    this.initWeekBorders(this.timeOffset);
-    this.getWorkForWeekAndRender();
+  moveMonthForward() {
+    this.monthOffset += 1;
+    this.initMonthBorders(this.monthOffset);
+    this.getWorkForMonthAndRender();
   }
 
-  moveWeekBack() {
-    this.timeOffset -= 7;
-    this.initWeekBorders(this.timeOffset);
-    this.getWorkForWeekAndRender();
+  moveMonthBack() {
+    this.monthOffset -= 1;
+    this.initMonthBorders(this.monthOffset);
+    this.getWorkForMonthAndRender();
   }
 
   sum(arr: WorkInfo[]): number {
@@ -161,17 +161,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   search(params: string[]) {
-    this.transform(this.workInfos, params)
+    this.transformMonth(this.workInfos, params)
   }
 
-  public transform(infos: Array<WorkInfo>, searchParams?: string[]) {
+  public transformMonth(infos: Array<WorkInfo>, searchParams?: string[]) {
     let params = searchParams? searchParams: [];
     this.uiAgreements = this.agreements.filter(function (agreement) {
       return params.length==0 || params.indexOf(agreement.clientName) !== -1;
     });
 
-    this.sumByDayArr = [0, 0, 0, 0, 0, 0, 0];
-    this.sumByWeek = 0;
+    let daysInMonth = this.timeService.getDaysInMonth(this.monthOffset);
+    this.sumByDayArr = new Array(daysInMonth).fill(0);
+    this.sumByMonth = 0;
     this.uiAgreements.forEach(agreement => {
       let filtered: WorkInfo[] = infos.filter(function (workInfo) {
         return workInfo.agreementId == agreement.agreementId;
@@ -180,22 +181,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
       let resultArr: WorkInfo[] = [];
 
       for (let i = 0; i < filtered.length; i++) {
-        let day = new Date(filtered[i].date).getDay();
-        resultArr[day] = filtered[i];
-        this.sumByDayArr[day] += resultArr[day].duration;
-        this.sumByWeek += resultArr[day].duration;
+        let day = new Date(filtered[i].date).getDate();
+        resultArr[day-1] = filtered[i];
+        this.sumByDayArr[day-1] += resultArr[day-1].duration;
+        this.sumByMonth += resultArr[day-1].duration;
       }
-      for (let i = 0; i < 7; i++) {
+      for (let i = 0; i < daysInMonth; i++) {
         if (resultArr[i] == null) {
           let info = new WorkInfo();
-          info.date = this.timeService.getDateString(this.timeService.getRelativeWeekDay(this.currentSunday, i));
+          info.date = this.timeService.getDateString(this.timeService.getRelativeMonthDay(this.currentMonthFirstDay, i));
           info.agreementId = agreement.agreementId;
           info.duration = 0;
-          info.editable = !this.lockService.isLocked(this.locks, info);
+          info.editable = !this.lock;
           resultArr[i] = info;
         }
         else {
-          resultArr[i].editable = !this.lockService.isLocked(this.locks, resultArr[i]);
+          resultArr[i].editable = !this.lock;
         }
       }
       agreement.workInfos = resultArr;
@@ -203,24 +204,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   showWorkDayDialog(workInfo: WorkInfo, agreement: AgreementDto) {
-    if (workInfo.editable === false) {
-      return;
-    } else {
-      let currentDate = workInfo.date;
-      this.isPivotal = false;
-      this.error = '';
-      this.createDialog = false;
-      this.clientForCreatingWorkInfos = agreement.clientName;
-      this.dayForCreatingWorkInfos = new Date(currentDate);
-      this.activeAgreementId = workInfo.agreementId;
-      this.activeDate = currentDate;
-      this.dayWorkSubscription = this.workService.getDayWork(currentDate, workInfo.agreementId).subscribe(infos => {
-        this.dayWorkInfos = infos;
-      });
-      let openModalButton = document.getElementById('openModalButton');
-      if (!!openModalButton) {
-        openModalButton.click();
-      }
+    this.dayBydayLock = this.lock;
+    let currentDate = workInfo.date;
+    this.isPivotal = false;
+    this.error = '';
+    this.createDialog = false;
+    this.clientForCreatingWorkInfos = agreement.clientName;
+    this.dayForCreatingWorkInfos = new Date(currentDate);
+    this.activeAgreementId = workInfo.agreementId;
+    this.activeDate = currentDate;
+    this.dayWorkSubscription = this.workService.getDayWork(currentDate, workInfo.agreementId).subscribe(infos => {
+      this.dayWorkInfos = infos;
+    });
+    let openModalButton = document.getElementById('openModalButton');
+    if (!!openModalButton) {
+      openModalButton.click();
     }
   }
 
@@ -228,40 +226,50 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return !!dayWorkInfos ? dayWorkInfos.length == 0 : false;
   }
 
-  isLockedDate(currentSunday: Date, offset: number) {
-    return this.lockService.isLockedDate(this.locks, this.getDayByWeek(currentSunday, offset));
-  }
-
   showPivotalWorkDayDialog(date: Date) {
-    if (this.isLockedDate(date, 0)) {
-      return;
-    } else {
-      let currentDate = this.timeService.getDateString(date);
-      this.isPivotal = true;
-      this.error = '';
-      this.createDialog = false;
-      this.activeAgreementId = null;
-      this.dayForCreatingWorkInfos = new Date(currentDate);
-      this.activeDate = currentDate;
-      this.allDayWorkSubscription = this.workService.getDayWork(currentDate, -1).subscribe(infos => {
-        this.dayWorkInfos = infos;
-      });
-      let openModalButton = document.getElementById('openModalButton');
-      if (!!openModalButton) {
-        openModalButton.click();
-      }
+    this.dayBydayLock = this.lock;
+    let currentDate = this.timeService.getDateString(date);
+    this.isPivotal = true;
+    this.error = '';
+    this.createDialog = false;
+    this.activeAgreementId = null;
+    this.dayForCreatingWorkInfos = new Date(currentDate);
+    this.activeDate = currentDate;
+    this.allDayWorkSubscription = this.workService.getDayWork(currentDate, -1).subscribe(infos => {
+      this.dayWorkInfos = infos;
+    });
+    let openModalButton = document.getElementById('openModalButton');
+    if (!!openModalButton) {
+      openModalButton.click();
     }
   }
 
   moveDay(workDate: Date, step: number, agreementId?: number) {
-    let currentDate = this.timeService.getDateString(this.getDayByWeek(new Date(workDate), step));
+    let currentDate = this.timeService.getDateString(this.getDayByMonth(new Date(workDate), step));
     this.error = '';
     this.createDialog = false;
-    this.dayForCreatingWorkInfos = new Date(currentDate);
+    let newDayForCreatingWorkInfos = new Date(currentDate);
+    let lockCheckingRequired = newDayForCreatingWorkInfos.getFullYear() != this.dayForCreatingWorkInfos.getFullYear()
+      || newDayForCreatingWorkInfos.getMonth() != this.dayForCreatingWorkInfos.getMonth();
+    this.dayForCreatingWorkInfos = newDayForCreatingWorkInfos;
     this.activeDate = currentDate;
-    this.moveDaySubscription = this.workService.getDayWork(currentDate, agreementId).subscribe(infos => {
-      this.dayWorkInfos = infos;
-    });
+    if (!lockCheckingRequired) {
+      this.moveDaySubscription = this.workService.getDayWork(currentDate, agreementId==null? -1: agreementId).subscribe(infos => {
+        this.dayWorkInfos = infos;
+      });
+    } else {
+      Observable.forkJoin(
+        [
+          this.workService.getDayWork(currentDate, agreementId==null? -1: agreementId),
+          this.lockService.isLockedForMonth(
+            this.dayForCreatingWorkInfos.getFullYear(),
+            this.dayForCreatingWorkInfos.getMonth()
+          )
+        ]).subscribe(([infos, lock]) => {
+        this.dayWorkInfos = infos;
+        this.dayBydayLock = lock;
+      });
+    }
   }
 
   jump(event?: any) {
@@ -334,7 +342,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         saved.clientName = this.getClientNameByAgreementId(workInfo.agreementId);
         this.replaceInDayWorkInfos(saved);
         this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
-        this.transform(this.workInfos, this.clientsUi);
+        this.transformMonth(this.workInfos, this.clientsUi);
         this.createDialog = false;
         // this.workInfoItem = null;
         jQuery('#dayWorkInfoForm').focus();
@@ -345,7 +353,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.workService.remove(workInfo.unitId);
     this.removeInDayWorkInfos(workInfo);
     this.removeInAllWorkInfos(workInfo);
-    this.transform(this.workInfos, this.clientsUi);
+    this.transformMonth(this.workInfos, this.clientsUi);
   }
 
   private removeInDayWorkInfos(workInfo: WorkInfo) {
@@ -416,8 +424,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   pivotalReport() {
-    let from = this.timeService.getDateString(this.currentSunday);
-    let to = this.timeService.getDateString(this.nextSunday);
+    let from = this.timeService.getDateString(this.currentMonthFirstDay);
+    let to = this.timeService.getDateString(this.nextMonthFirstDay);
     this.downloadReportSubscription = this.downloadService.downloadPivotal(this.selectedType, from, to)
       .subscribe(res => {
           let appType = this.downloadService.getMimeType(this.selectedType);
