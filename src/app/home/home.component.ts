@@ -33,7 +33,6 @@ export class HomeComponent implements OnInit, OnDestroy{
     this.authSubscription = this.authService.profileObserv().subscribe(employee => {
       this.profile = JSON.parse(employee);
     });
-    window['isLoading'] = false;
   }
 
   login() {

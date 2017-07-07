@@ -7,11 +7,10 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script>
-    window['isLoading'] = true;
     window.dotsGoingUp = true;
     var dots = window.setInterval(function () {
       var wait = document.getElementById("dotsContainer");
-      if (wait === null || window['isLoading'] === false) {
+      if (wait === null) {
         clearInterval(dots);
         var loading = document.getElementById('loading');
         loading.outerHTML = ""
