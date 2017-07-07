@@ -83,3 +83,21 @@ body {
   user-select: none;
   cursor: default;
 }
+/*//////////////////////////////////*/
+.loading {
+  opacity: 0.75;
+  /*transition: opacity 2s ease-in-out;*/
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+app-root:empty + .loading h1 {
+  color: #EEE;
+  /*position: absolute;*/
+  top: 50%;
+  width: 100%;
+  text-align: center;
+  transform: translate(0, -50%);
+}

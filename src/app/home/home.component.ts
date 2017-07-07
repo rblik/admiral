@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit, OnDestroy{
     this.authSubscription = this.authService.profileObserv().subscribe(employee => {
       this.profile = JSON.parse(employee);
     });
+    window['isLoading'] = false;
   }
 
   login() {
@@ -42,8 +43,8 @@ export class HomeComponent implements OnInit, OnDestroy{
           this.localSt.store("TOKEN", jwt.token);
           this.authService.storeProfile();
           this.error = '';
-          // let redirect = this.authService.redirectUrl && this.authService.redirectUrl != '/app/admin' ? this.authService.redirectUrl : '/app';
-          // this.router.navigate([redirect]);
+          let redirect = this.authService.redirectUrl && this.authService.redirectUrl != '/app/admin' ? this.authService.redirectUrl : '/app/dashboard';
+          this.router.navigate([redirect]);
           jQuery('#checkingSign').delay(2000).fadeOut(500);
         },
         err => {

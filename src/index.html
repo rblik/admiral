@@ -6,10 +6,43 @@
   <base href="/">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    window['isLoading'] = true;
+    window.dotsGoingUp = true;
+    var dots = window.setInterval(function () {
+      var wait = document.getElementById("dotsContainer");
+      if (wait === null || window['isLoading'] === false) {
+        clearInterval(dots);
+        var loading = document.getElementById('loading');
+        loading.outerHTML = ""
+      }
+      if (window.dotsGoingUp)
+        wait.innerHTML += ".";
+      else {
+        wait.innerHTML = "";
+        window.dotsGoingUp = true;
+      }
+      if (wait.innerHTML.length > 2)
+        window.dotsGoingUp = false;
+    }, 10);
+  </script>
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 
 </head>
-<body>
-  <app-root>Loading...</app-root>
+<body style="min-width: 1024px">
+<app-root>
+</app-root>
+  <div class="loading" id="loading">
+    <div style="text-align: center">
+      <img src="assets/logo-naya.gif" alt="NAYA" height="auto" width="auto"
+           style="max-width: 23%; margin: 10.5% auto auto auto"/>
+
+    </div>
+    <div style="text-align: right">
+
+      <h1 style="margin-top: 5%; padding-right: 46%; direction: rtl; color: #685350">
+        <strong>טוען</strong><strong id="dotsContainer"></strong></h1>
+    </div>
+  </div>
 </body>
 </html>

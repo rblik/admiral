@@ -22,7 +22,8 @@ import {
   InputTextareaModule,
   InputTextModule,
   SelectButtonModule,
-  SharedModule
+  SharedModule,
+  ScheduleModule
 } from "primeng/primeng";
 import {Ng2Webstorage} from "ng2-webstorage";
 import {AuthGuardService} from "./service/auth-guard.service";
@@ -58,6 +59,7 @@ import {UserDownloadService} from "./service/user-download.service";
     Ng2Webstorage,
     MyCommonModule,
     CheckboxModule,
+    ScheduleModule,
     MultiselectDropdownModule,
     NotificationBarModule,
     SlimLoadingBarModule.forRoot()

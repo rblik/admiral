@@ -3,7 +3,6 @@ import {ActivatedRoute, Params} from "@angular/router";
 import {Subscription} from "rxjs/Subscription";
 import {WorkInfoService} from "../../service/work-info.service";
 import {TimeService} from "../../service/time.service";
-import { IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings } from 'angular-2-dropdown-multiselect';
 import {Employee} from "../../model/employee";
 import {EmployeeService} from "../service/employee.service";
 import {AgreementDto} from "../../model/agreement-dto";
@@ -11,10 +10,12 @@ import {SelectItem} from "primeng/primeng";
 import {Observable} from "rxjs/Observable";
 import {WorkInfo} from "../../model/work-info";
 import {DateLock} from "../../model/date-lock";
+import {Event} from "../../model/event";
 import {Url} from "../../url";
 import {AdminLockService} from "../service/admin-lock.service";
 import {AgreementService} from "../service/agreement.service";
 import {WorkUnit} from "../../model/work-unit";
+import {MinutesToHoursPipe} from "../../pipe/minutes-to-hours.pipe";
 
 @Component({
   selector: 'admin-dashboard',
@@ -24,11 +25,6 @@ import {WorkUnit} from "../../model/work-unit";
 export class AdminDashboardComponent implements OnInit, OnDestroy{
   private routeParamsSubscription: Subscription;
   private getAgreementsSubscription: Subscription;
-  private sumByDayArr: number[];
-  private clientsUi: string[];
-  private clientsCheckboxOptions: IMultiSelectOption[];
-  private clientsCheckboxSettings: IMultiSelectSettings;
-  private clientsCheckboxTexts: IMultiSelectTexts;
   private employee: Employee;
   private lockClass: string;
   private agreements: AgreementDto[];
@@ -36,12 +32,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   private workInfos: WorkInfo[];
   private lock: boolean;
   private dayByDayLock: boolean;
-  private uiAgreements: AgreementDto[];
   private adminUnitsUrl: string;
   private error: string;
   private isPivotal: boolean;
   private createDialog: boolean;
-  private clientForCreatingWorkInfos: string;
   private dayForCreatingWorkInfos: Date;
   private activeAgreementId: number;
   private activeDate: string;
@@ -52,28 +46,36 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   private isEdit: boolean;
   private workInfoItem: WorkInfo;
   private upsertWorkInfoSubscription: Subscription;
-  private currentMonthFirstDay: Date;
-  private nextMonthFirstDay: Date;
   private sumByMonth: number;
   private monthOffset: number;
+  private firstAdminRender: boolean = true;
+  private firstDayOfMonth: Date;
+  private firstDayOfNextMonth: Date;
+  private pluu: Event[] = [];
+  private header: { left: string; center: string; right: string };
 
   constructor(private route: ActivatedRoute,
               private employeeService: EmployeeService,
               private timeService: TimeService,
               private lockService: AdminLockService,
               private agreementService: AgreementService,
+              private minToHours: MinutesToHoursPipe,
               private workService: WorkInfoService) {
     this.adminUnitsUrl = Url.getUrl("/admin/dashboard/units");
-    this.sumByDayArr = [];
-    this.fixDropdownCheckbox();
+    this.sumByMonth = 0;
+    this.header = {
+      left: 'today',
+      center: 'title',
+      right: ''
+    };
   }
 
   ngOnInit(): void {
     this.monthOffset = 0;
+    console.log('asd');
     this.route.queryParams.subscribe((params: Params) => {
       let date = params['date'];
       if (!!date) this.monthOffset = this.timeService.getMonthOffset(new Date(date));
-      this.initMonthBorders(this.monthOffset);
       this.routeParamsSubscription = this.route.params.switchMap((params: Params) =>
         this.employeeService.get(params['employeeId'])).subscribe(employee => {
         this.employee = employee;
@@ -82,18 +84,18 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     });
   }
 
-  private initMonthBorders(offset: number) {
-    this.currentMonthFirstDay = this.timeService.getFirstDayOfMonth(offset);
-    this.nextMonthFirstDay = this.timeService.getFirstDayOfMonth(offset + 1);
-  }
-
   private getAgreementsWithWorkAndRender() {
     this.getAgreementsSubscription = this.agreementService.getAgreementsByEmployee(this.employee.id).subscribe(agreements => {
       this.agreements = agreements;
       this.getClientsUi(agreements);
-      this.fillDropDownList(agreements);
-      this.getWorkForMonthAndRender();
+      this.refreshUiAfterEmployeeChange();
     });
+  }
+
+  private refreshUiAfterEmployeeChange() {
+    this.pluu = [];
+    this.sumByMonth = 0;
+    this.firstAdminRender = true;
   }
 
   private getClientsUi(agreements: AgreementDto[]) {
@@ -106,138 +108,100 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     });
   }
 
-  private fillDropDownList(agreements: AgreementDto[]) {
-    let arr = [];
-    agreements.forEach(agreement => {
-      if (arr.indexOf(agreement.clientName) == -1) {
-        this.clientsCheckboxOptions.push({id: agreement.clientName, name: agreement.clientName});
-        arr.push(agreement.clientName);
-      }
-    });
-  }
-
-  private getWorkForMonthAndRender() {
+  getMonthAndRender(calendar?: any) {
+    if (this.firstAdminRender) {
+      this.addButtons(calendar);
+      this.firstAdminRender = false;
+    }
+    this.firstDayOfMonth = new Date();
+    this.firstDayOfMonth.setFullYear(calendar.getDate().year(), calendar.getDate().month(), 1);
+    this.firstDayOfNextMonth = new Date();
+    this.firstDayOfNextMonth.setFullYear(calendar.getDate().year(), calendar.getDate().month() + 1, 1);
     Observable.forkJoin(
       [
         this.workService.getMonthWork(
-          this.timeService.getDateString(this.currentMonthFirstDay),
-          this.timeService.getDateString(this.nextMonthFirstDay),
-        this.employee.id, this.adminUnitsUrl),
+          this.timeService.getDateString(this.firstDayOfMonth),
+          this.timeService.getDateString(this.firstDayOfNextMonth),
+          this.employee.id, this.adminUnitsUrl),
         this.lockService.ckeckIsLockedForMonthAndEmployee(
-          this.currentMonthFirstDay.getFullYear(),
-          this.currentMonthFirstDay.getMonth(),
-        this.employee.id)
+          this.firstDayOfMonth.getFullYear(),
+          this.firstDayOfNextMonth.getMonth() - 1,
+          this.employee.id)
       ]).subscribe(([workInfos, lock]) => {
       this.workInfos = workInfos;
       this.lock = lock;
       this.lockClass = this.lock? 'fa-lock': 'fa-unlock';
-      this.transformMonth(this.workInfos, this.clientsUi);
+      $('#lockUnlockButton').removeClass('fa-lock').removeClass('fa-unlock').addClass(this.lockClass);
+      this.refreshAllInfos(workInfos);
     });
   }
 
-  private fixDropdownCheckbox() {
-    this.clientsCheckboxOptions = [];
-    this.clientsUi = [];
-    this.clientsCheckboxSettings = {
-      enableSearch: true,
-      displayAllSelectedText: false,
-      dynamicTitleMaxItems: 0,
-      showCheckAll: true,
-      showUncheckAll: true
-    };
-    this.clientsCheckboxTexts = {
-      checkAll: 'בחר כולם',
-      uncheckAll: 'בטל בחירה',
-      checked: 'לקוח נבחר',
-      checkedPlural: 'לקוחות נבחרו',
-      searchPlaceholder: 'חפש',
-      defaultTitle: 'בחר לקוח',
-      allSelected: 'כלם נבחרו',
-    };
+  addButtons(calendar) {
+    let nextPrevGroupDiv = $('<div>').addClass('button-group');
+
+    let nextButton = $('<button>')
+      .addClass("fc-prev-button ui-button ui-state-default ui-corner-left")
+      .attr({
+        type: "button"
+      })
+      .on('click', function () {
+        calendar.next();
+      }).html('<span class="ui-icon ui-icon-circle-triangle-w"></span>');
+    nextButton.append('</button>');
+
+    let prevButton = $('<button>')
+      .addClass("fc-next-button ui-button ui-state-default ui-corner-right")
+      .attr({
+        type: "button"
+      })
+      .on('click', function () {
+        calendar.prev();
+      }).html('<span class="ui-icon ui-icon-circle-triangle-e"></span>');
+    prevButton.append('</button>');
+
+    let a = $('<a>').css('cursor', 'pointer').css('font-size', 'large');
+    let i = $('<i>').css('color', 'black');
+    i.attr('id', 'lockUnlockButton');
+    i.addClass('fa');
+    let t = this;
+    a.click(function () {
+      t.lockUnlock();
+    });
+    a.append(i);
+
+    let spanWithName = $('<span>').text(this.employee.surname + ' ' + this.employee.name).css('font-size', 'large');
+    nextPrevGroupDiv.append(nextButton);
+    nextPrevGroupDiv.append(prevButton);
+    nextPrevGroupDiv.append('</div>');
+
+    $('.fc-left').prepend(nextPrevGroupDiv);
+    $('.fc-right').prepend(spanWithName);
+    $('.fc-right').prepend(a);
+  }
+
+  private refreshAllInfos(workInfos: WorkInfo[]) {
+    this.sumByMonth = 0;
+    this.pluu.splice(0, this.pluu.length);
+    this.pluu.push.apply(this.pluu, this.getEvents(workInfos));
+  }
+
+  private getEvents(workInfos: WorkInfo[]): Event[] {
+    return workInfos.map(info => {
+      this.sumByMonth += info.duration;
+      return new Event(info.clientName + ' - ' + this.minToHours.transform(info.duration, true), info.date, info.duration);
+    });
+  }
+
+  getDayWork(event) {
+    this.showPivotalWorkDayDialog(new Date(event.date.format()));
+  }
+
+  getEventWork(event) {
+    this.showPivotalWorkDayDialog(new Date(event.calEvent.start));
   }
 
   getDayByMonth(sunday: Date, offset: number): Date {
     return this.timeService.getRelativeMonthDay(sunday, offset);
-  }
-
-  moveMonthForward() {
-    this.monthOffset += 1;
-    this.initMonthBorders(this.monthOffset);
-    this.getWorkForMonthAndRender();
-  }
-
-  moveMonthBack() {
-    this.monthOffset -= 1;
-    this.initMonthBorders(this.monthOffset);
-    this.getWorkForMonthAndRender();
-  }
-
-  sum(arr: WorkInfo[]): number {
-    let sum = 0;
-    arr.forEach((workInfo) => sum += workInfo.duration);
-    return sum;
-  }
-
-  search(params: string[]) {
-    this.transformMonth(this.workInfos, params)
-  }
-
-  public transformMonth(infos: Array<WorkInfo>, searchParams?: string[]) {
-    let params = searchParams? searchParams: [];
-    this.uiAgreements = this.agreements.filter(function (agreement) {
-      return params.length==0 || params.indexOf(agreement.clientName) !== -1;
-    });
-
-    let daysInMonth = this.timeService.getDaysInMonth(this.monthOffset);
-    this.sumByDayArr = new Array(daysInMonth).fill(0);
-    this.sumByMonth = 0;
-    this.uiAgreements.forEach(agreement => {
-      let filtered: WorkInfo[] = infos.filter(function (workInfo) {
-        return workInfo.agreementId == agreement.agreementId;
-      });
-
-      let resultArr: WorkInfo[] = [];
-
-      for (let i = 0; i < filtered.length; i++) {
-        let day = new Date(filtered[i].date).getDate();
-        resultArr[day-1] = filtered[i];
-        this.sumByDayArr[day-1] += resultArr[day-1].duration;
-        this.sumByMonth += resultArr[day-1].duration;
-      }
-      for (let i = 0; i < daysInMonth; i++) {
-        if (resultArr[i] == null) {
-          let info = new WorkInfo();
-          info.date = this.timeService.getDateString(this.timeService.getRelativeMonthDay(this.currentMonthFirstDay, i));
-          info.agreementId = agreement.agreementId;
-          info.duration = 0;
-          info.editable = !this.lock;
-          resultArr[i] = info;
-        }
-        else {
-          resultArr[i].editable = !this.lock;
-        }
-      }
-      agreement.workInfos = resultArr;
-    });
-  }
-
-  showWorkDayDialog(workInfo: WorkInfo, agreement: AgreementDto) {
-    this.dayByDayLock = this.lock;
-      let currentDate = workInfo.date;
-      this.isPivotal = false;
-      this.error = '';
-      this.createDialog = false;
-      this.clientForCreatingWorkInfos = agreement.clientName;
-      this.dayForCreatingWorkInfos = new Date(currentDate);
-      this.activeAgreementId = workInfo.agreementId;
-      this.activeDate = currentDate;
-      this.dayWorkSubscription = this.workService.getDayWork(currentDate, workInfo.agreementId, this.employee.id, this.adminUnitsUrl).subscribe(infos => {
-        this.dayWorkInfos = infos;
-      });
-      let openModalButton = document.getElementById('openModalButton');
-      if (!!openModalButton) {
-        openModalButton.click();
-      }
   }
 
   isEmptyDay(dayWorkInfos: WorkInfo[]): boolean {
@@ -260,7 +224,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     if (!!openModalButton) {
       openModalButton.click();
     }
-
   }
 
   moveDay(workDate: Date, step: number, agreementId?: number) {
@@ -359,16 +322,12 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
       .subscribe(workUnit => {
         this.error = '';
         let date = new Date(workUnit.date);
-        let monthOffset = this.timeService.getMonthOffset(date);
         let saved: WorkInfo = this.convertToInfo(workUnit, workInfo.agreementId);
         saved.clientName = this.getClientNameByAgreementId(workInfo.agreementId);
         this.replaceInDayWorkInfos(saved);
-        if (monthOffset == this.monthOffset) {
-          this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
-          this.transformMonth(this.workInfos, this.clientsUi);
-        }
+        this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
+        this.refreshAllInfos(this.workInfos);
         this.createDialog = false;
-        // this.workInfoItem = null;
         jQuery('#dayWorkInfoForm').focus();
       }, err => this.error = err);
   }
@@ -377,7 +336,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     this.workService.remove(workInfo.unitId, this.employee.id, this.adminUnitsUrl);
     this.removeInDayWorkInfos(workInfo);
     this.removeInAllWorkInfos(workInfo);
-    this.transformMonth(this.workInfos, this.clientsUi);
+    this.refreshAllInfos(this.workInfos);
   }
 
   private removeInDayWorkInfos(workInfo: WorkInfo) {
@@ -395,6 +354,9 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     for (let i = 0; i < this.workInfos.length; i++) {
       if (this.workInfos[i].agreementId === workInfo.agreementId && this.workInfos[i].date === workInfo.date) {
         this.workInfos[i].duration -= workInfo.duration;
+        if (this.workInfos[i].duration===0) {
+          this.workInfos.splice(i, 1);
+        }
         return;
       }
     }
@@ -437,22 +399,21 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     this.workInfoItem.to = "23:59";
   }
 
-  lockUnlock(firstDayOfMonth: Date){
-
+  lockUnlock(firstDayOfMonth?: Date){
     if (!this.lock) {
-      this.lockService.saveLock(this.timeService.getDateString(firstDayOfMonth), this.employee.id)
+      this.lockService.saveLock(this.timeService.getDateString(this.firstDayOfMonth), this.employee.id)
         .subscribe(dateLock => {
           this.lockClass = 'fa-lock';
+          $('#lockUnlockButton').removeClass('fa-unlock').addClass(this.lockClass);
           this.lock = true;
-          this.transformMonth(this.workInfos, this.clientsUi);
         });
     } else {
 
-      this.lockService.removeLock(this.timeService.getDateString(firstDayOfMonth), this.employee.id)
+      this.lockService.removeLock(this.timeService.getDateString(this.firstDayOfMonth), this.employee.id)
         .subscribe(() => {
           this.lockClass = 'fa-unlock';
+          $('#lockUnlockButton').removeClass('fa-lock').addClass(this.lockClass);
           this.lock = false;
-          this.transformMonth(this.workInfos, this.clientsUi);
         });
     }
   }

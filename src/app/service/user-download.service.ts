@@ -25,13 +25,7 @@ export class UserDownloadService {
     });
   }
 
-  public getMimeType(type: string): string {
-    let apType;
-    if (type === 'pdf') {
-      apType = 'pdf';
-    } else if (type === 'xls') {
-      apType = 'vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    }
-    return 'application/' + apType;
+  public xlsType(): string {
+    return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
   }
 }

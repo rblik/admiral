@@ -30,7 +30,10 @@ import {ReversePipe} from "./pipe/reverse.pipe";
     TariffTypePipe,
     ReversePipe
   ],
-  providers: [DateFormatPipe]
+  providers: [
+    DateFormatPipe,
+    MinutesToHoursPipe
+  ]
 })
 export class MyCommonModule {
 

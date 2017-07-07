@@ -4,7 +4,7 @@ import {ReportComponent} from "./report/report.component";
 import {AdminRoutingModule} from "./admin-routing.module";
 import {
   CalendarModule, CheckboxModule, DataTableModule, DialogModule, DropdownModule, InputMaskModule, OverlayPanelModule,
-  SelectButtonModule,
+  SelectButtonModule, ScheduleModule,
   SharedModule, SpinnerModule
 } from "primeng/primeng";
 import {HttpModule} from "@angular/http";
@@ -71,6 +71,7 @@ import {IncomeComponent} from "./income/income.component";
     CheckboxModule,
     MyCommonModule,
     MultiselectDropdownModule,
+    ScheduleModule,
     NotificationBarModule,
     OverlayPanelModule
   ],

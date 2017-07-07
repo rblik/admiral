@@ -1,65 +1,4 @@
-<h3 style="text-align: center" *ngIf="employee"><a style="cursor: pointer" (click)="lockUnlock(currentMonthFirstDay)"><i style="color: black" [ngClass]="'fa ' + lockClass" aria-hidden="true"></i></a> {{employee.surname}} {{employee.name}} </h3>
-<p class="hebrew-direct" style="text-align: center; font-size: 150%">{{currentMonthFirstDay | hebrewDate: 'year-month'}}</p>
-<div style="margin-top: 10px">
-  <div class="container" style="padding-bottom: 1em; padding-top: 1em; width: 100%">
-    <div class="row">
-      <div class="col-md-1"></div>
-      <div class="col-md-1 pull-left">
-        <button class="btn" (click)="search(clientsUi)"><i class="fa fa-search" aria-hidden="true"></i></button>
-      </div>
-      <div class="col-md-1 pull-left">
-        <ss-multiselect-dropdown [options]="clientsCheckboxOptions" [texts]="clientsCheckboxTexts" [settings]="clientsCheckboxSettings" [(ngModel)]="clientsUi"></ss-multiselect-dropdown>
-      </div>
-      <div class="col-md-4 pull-right">
-        <button (click)="moveMonthForward()" class="btn btn-sm btn-info"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;חודש הבה&nbsp;</button>
-        <button (click)="moveMonthBack()" class="btn btn-sm btn-warning">&nbsp;חודש הקודם&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></button>
-      </div>
-      <div class="col-md-2"></div>
-    </div>
-  </div>
-  <table style="width:100%; font-size: small">
-    <thead style="font-size: smaller">
-    <tr class="hebrew-direct">
-      <th colspan="2" style="width: 4%">סה"כ</th>
-      <th *ngFor="let sumByDay of sumByDayArr; let i = index" [attr.data-index]="i">
-        <a [ngClass]="lock? 'red':'black'"
-           (click)="showPivotalWorkDayDialog(getDayByMonth(currentMonthFirstDay, sumByDayArr.length - 1 - i))" style="cursor: pointer; font-size: smaller">
-          {{getDayByMonth(currentMonthFirstDay, sumByDayArr.length - 1 - i) | hebrewDate: 'day-weekDay'}}</a>
-      </th>
-      <th colspan="2" style="width: 5%">פרויקט</th>
-      <th colspan="2" style="width: 5%">לקןח</th>
-    </tr>
-    </thead>
-    <tbody style="font-size: smaller">
-    <tr *ngFor="let item of uiAgreements">
-      <td colspan="2" style="font-size: smaller">
-        {{sum(item.workInfos) | minutesToHours: true}}
-      </td>
-      <td *ngFor="let work of item.workInfos | reverse">
-        <span (click)="showWorkDayDialog(work, item)">
-          <textarea class="dashboardInput" [ngStyle]="{'background-color': work.editable? '#FFFFFF' : '#CDFFFF', 'font-weight':'bold'}"
-
-                  disabled>{{work.duration | minutesToHours: true}}</textarea>
-        </span>
-      </td>
-      <td colspan="2">
-        {{item.projectName}}
-      </td>
-      <td colspan="2">
-        {{item.clientName}}
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2" style="font-weight: bolder; font-size: smaller">{{sumByMonth | minutesToHours: true}}</td>
-      <td *ngFor="let sumByDay of sumByDayArr | reverse" style="font-weight: bolder; font-size: smaller">
-        {{sumByDay | minutesToHours: true}}
-      </td>
-      <td colspan="4" style="font-weight: bolder">
-        שעות ביום
-      </td>
-    </tr>
-    </tbody>
-  </table>
+<div style="margin-top: 15px">
   <button id="openModalButton" [hidden]="true" data-toggle="modal" data-target="#dayWorkInfoForm"></button>
   <div id="dayWorkInfoForm" tabindex='-1' class="modal fade" onclose="" role="dialog">
     <div class="modal-dialog">
@@ -75,9 +14,7 @@
         <div class="modal-body" style="width: 90%; margin: 0 auto">
           <div style="min-height: 100%">
             <div style="text-align: center">
-              <h3>
-                {{!isPivotal? clientForCreatingWorkInfos + 'עבודה יומי ב':' עבודה יומי'}}
-              </h3>
+              <h3 id="dasdasd">עבודה יומי</h3>
             </div>
             <div *ngIf="!dayByDayLock">
               <button type="button" class="btn btn-xs btn-info" title="הוסיף יחידת עבודה" (click)="create()">&nbsp;הוסיף&nbsp;<i class="fa fa-plus" aria-hidden="true"></i></button>
@@ -147,5 +84,19 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div style="text-align: center" *ngIf="employee">
+    <div style="width: 80%; display: inline-block; margin: 0 auto; font-size: x-small">
+
+      <p-schedule [contentHeight]="385" [editable]="true" [events]="pluu" #cal (onViewRender)="getMonthAndRender(cal)"
+                  [header]="header"
+                  (onDayClick)="getDayWork($event)" (onEventClick)="getEventWork($event)" [eventLimit]="3"></p-schedule>
+    </div>
+  <div style="text-align: center">
+
+    <span id="adminSumByMonth" style="margin: 0 auto; font-weight: bold">{{sumByMonth | minutesToHours}}</span>
+    <span style="margin: 0 auto; font-weight: bold"> - סה''כ שעות בחודש</span>
+  </div>
   </div>
 </div>
