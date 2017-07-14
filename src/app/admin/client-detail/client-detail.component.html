@@ -7,7 +7,7 @@
           <p style="font-size: small" class="btn btn-xs btn-warning" data-toggle="modal" data-keyboard="true" data-target="#clientEditionForm">ערוך&nbsp;<i
                 class="fa fa-pencil-square-o"></i></p></li>
         <li class="list-group-item" *ngIf="client.clientNumber">{{client.clientNumber}}<span class="pull-right"><strong>מספר לקוח</strong></span></li>
-        <li class="list-group-item" *ngIf="client.companyNumber">{{client.companyNumber}}<span class="pull-right"><strong>מספר חברה</strong></span></li>
+        <li class="list-group-item" *ngIf="client.companyNumber">{{client.companyNumber}}<span class="pull-right"><strong>ח.פ. חברה</strong></span></li>
         <li class="list-group-item" *ngFor="let address of client.addresses; let i = index" [attr.data-index]="i">{{(address.houseNumber>0? address.houseNumber:'')+'&nbsp;'+address.street+'&nbsp;'+address.city}}<span
           class="pull-right"><strong>כתובת {{i + 1}}</strong></span></li>
         <li *ngIf="client.phones" class="list-group-item"><span *ngFor="let phone of client.phones">{{phone}}&nbsp;&nbsp;</span><span
@@ -16,7 +16,7 @@
       <h3 style="text-align: center">פרויקטים</h3>
 
       <div class="col-md-12 hebrew-direct" style="text-align: center">
-        <p-header><a style="cursor: pointer; color: #1a1a1a" (click)="popupCreate()"><i class="module-plus glyphicon glyphicon-plus" aria-hidden="true"></i></a><span style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: larger">&nbsp;הוסיף פרויקט&nbsp;</span></p-header>
+        <p-header><a style="cursor: pointer; color: #1a1a1a" (click)="popupCreate()"><i class="module-plus glyphicon glyphicon-plus" aria-hidden="true"></i></a><span style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: larger">&nbsp;הוסף פרויקט&nbsp;</span></p-header>
         <div *ngIf="client.projects">
         <p-dataTable [value]="client.projects" emptyMessage="אין נתונים" expandableRows="true" [style]="{'text-align':'center', 'font-size':'12px', 'width':'100%', 'margin':'0 auto'}">
           <p-column field="name" header="שם פרויקט" [sortable]="true"></p-column>
@@ -35,7 +35,7 @@
             <table class="table table-responsive table-condensed hebrew-direct" style="margin: 0 auto;width: 75%; border: none">
               <thead>
               <tr>
-                <td colspan="9"><a style="cursor: pointer; color: #1a1a1a" (click)="popupCreateAgreement(proj)"><i class="module-plus glyphicon glyphicon-plus" aria-hidden="true"></i></a><span style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: larger">&nbsp;הוסיף עובד&nbsp;</span></td>
+                <td colspan="9"><a style="cursor: pointer; color: #1a1a1a" (click)="popupCreateAgreement(proj)"><i class="module-plus glyphicon glyphicon-plus" aria-hidden="true"></i></a><span style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: larger">&nbsp;הוסף עובד&nbsp;</span></td>
               </tr>
               </thead>
               <tbody>
@@ -98,5 +98,5 @@
   </div>
 </div>
 
-<client-form id="clientEditionForm" [clientForCreation]="client" tabindex='-1' class="modal fade" onclose="" role="dialog">
+<client-form id="clientEditionForm" [clientForCreation]="client" tabindex='-1' class="modal fade" onclose="" role="dialog"></client-form>
 

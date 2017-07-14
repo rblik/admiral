@@ -6,8 +6,8 @@
 <div style="margin-top: 15px">
   <button id="openModalButton" [hidden]="true" data-toggle="modal" data-target="#dayWorkInfoForm"></button>
   <div id="dayWorkInfoForm" tabindex='-1' class="modal fade" onclose="" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content" [style.width]="'110%'">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content" [style.width]="'100%'">
         <div class="modal-header noselect" style="text-align: center">
           <a id="dayWorkInfoFormClose" style="float: left"  data-dismiss="modal"><span class="fa fa-fw fa-close" style="color: #1a1a1a; cursor: pointer; font-size: large"></span></a>
           <span class="work-infos-modal-title hebrew-direct">
@@ -19,10 +19,10 @@
         <div class="modal-body" style="width: 90%; margin: 0 auto">
           <div style="min-height: 100%">
             <div style="text-align: center">
-                <h3>עבודה יומי</h3>
+                <h3>דיווח שעות עבודה</h3>
             </div>
             <div *ngIf="!dayBydayLock">
-              <button type="button" class="btn btn-xs btn-info" title="הוסיף יחידת עבודה" (click)="create()">&nbsp;הוסיף&nbsp;<i class="fa fa-plus" aria-hidden="true"></i></button>
+              <button type="button" class="btn btn-xs btn-info" title="הוסף דיווח" (click)="create()">&nbsp;הוסף דיווח&nbsp;<i class="fa fa-plus" aria-hidden="true"></i></button>
             </div>
             <div class="row hebrew-direct" style="margin-top: 1em">
               <div *ngIf="createDialog" class="form-group" (keyup)="checkForEnter($event)">
@@ -41,7 +41,7 @@
                   <p-dropdown [options]="clientsDropdown" [style]="{'text-align':'center'}" id="clientsDropdown" panelStyleClass="form-control pull-right" [(ngModel)]="workInfoItem.agreementId" [filter]="true"></p-dropdown>
                 </label>
                 <br>
-                <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" placeholder="תאור" id="dayWorkInfoComment" class="form-control" [maxlength]="50"></textarea>
+                <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" placeholder="תיאור הפעילות " id="dayWorkInfoComment" class="form-control" [maxlength]="50"></textarea>
                 <br>
                 <button type="button" id="confirmWorkInfoButton" class="pull-left" pButton icon="fa-check" iconPos="right" (click)="save(workInfoItem)" label="שמור"></button>
               </div>
@@ -57,7 +57,7 @@
                   <th style="width: 10%">מ-</th>
                   <th style="width: 10%">עד-</th>
                   <th style="width: 12%">משך</th>
-                  <th [ngStyle]="{'width': (!dayBydayLock)? '65%':'45%'}">תאור</th>
+                  <th [ngStyle]="{'width': (!dayBydayLock)? '65%':'45%'}">תיאור הפעילות </th>
                   <th [ngStyle]="{'width': (!dayBydayLock)? '13%':'0'}"></th>
                   <th [ngStyle]="{'width': (!dayBydayLock)? '13%':'0'}"></th>
                 </tr>
@@ -90,17 +90,23 @@
       </div>
     </div>
   </div>
-  <div style="text-align: center">
-    <div style="width: 80%; display: inline-block; margin: 0 auto; font-size: x-small">
+  <div style="text-align: center; position: relative">
+    <div id="errorSuccessField" style="position: absolute; direction: rtl; margin-top: 2.5em" class="hebrew-direct" >
+    </div>
+    <div style="width: 100%; display: inline-block; margin: 0 auto; font-size: x-small">
 
-      <p-schedule [contentHeight]="385" [editable]="true" [events]="pluu" #cal (onViewRender)="getMonthAndRender(cal)" [header]="header"
-                  (onDayClick)="getDayWork($event)" (onEventClick)="getEventWork($event)" [eventLimit]="3"></p-schedule>
+      <p-schedule [aspectRatio]="3" [editable]="true" [events]="pluu" #cal (onViewRender)="getMonthAndRender(cal)" [header]="header"
+                  (onDayClick)="getDayWork($event)" (onEventClick)="getEventWork($event)" [eventLimit]="2"></p-schedule>
     </div>
   </div>
-  <button class="pull-right ui-button ui-state-default ui-corner-left ui-corner-right" id="downloadPivotal" (click)="pivotalReport(cal)">&nbsp;XLS&nbsp;<i class="fa fa-download save-button" aria-hidden="true" style="color: white"></i>&nbsp;</button>
+  <input type="file" style="display: none" id="chooseXslInput" accept=".xls,.xlsx"/>
+  <button class="pull-right ui-button ui-state-default ui-corner-left hebrew-direct" id="uploadButton" (click)="uploadReport(cal)"><i class="fa fa-upload save-button" aria-hidden="true" style="color: white"></i>&nbsp;להעלות דיווחים&nbsp;</button>
+  <button class="pull-right ui-button ui-state-default  hebrew-direct" aria-hidden="true" id="chooseXslLabel"><i class="fa fa-file-excel-o save-button" aria-hidden="true" style="color: white"></i>&nbsp;בחר קובץ&nbsp;</button>
+  <button class="pull-right ui-button ui-state-default" id="downloadTemplate" (click)="pivotalReport(cal, true)">&nbsp;שבלונה&nbsp;<i class="fa fa-table save-button" aria-hidden="true" style="color: white"></i></button>
+  <button class="pull-right ui-button ui-state-default ui-corner-right" id="downloadPivotal" (click)="pivotalReport(cal)">&nbsp;XLS שעות גולמי&nbsp;<i class="fa fa-download save-button" aria-hidden="true" style="color: white"></i>&nbsp;</button>
 <div style="text-align: center">
 
   <span id="sumByMonth" style="margin: 0 auto; font-weight: bold">{{sumByMonth | minutesToHours}}</span>
-  <span style="margin: 0 auto; font-weight: bold"> - סה''כ שעות בחודש</span>
+  <span style="margin: 0 auto; font-weight: bold"> - סה''כ שעות עבודה מדווחות</span>
 </div>
 </div>

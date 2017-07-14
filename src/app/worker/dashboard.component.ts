@@ -86,7 +86,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   addButtons(calendar) {
-    let nextPrevGroupDiv = $('<div>').addClass('button-group');
+    let nextPrevGroupDiv = $('<div>');
 
     let nextButton = $('<button>')
       .addClass("fc-prev-button ui-button ui-state-default ui-corner-left")
@@ -108,10 +108,39 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     nextPrevGroupDiv.append(nextButton);
     nextPrevGroupDiv.append(prevButton);
+    let uploadGroupDiv = $('<div>').addClass('button-group');
 
     $('.fc-left').prepend(nextPrevGroupDiv);
     let downloadPivotal = $('#downloadPivotal');
-    $('.fc-right').prepend(downloadPivotal);
+    let downloadTemplate = $('#downloadTemplate');
+    let chooseXslInput = $('#chooseXslInput');
+    let chooseXslLabel = $('#chooseXslLabel');
+    let uploadButton = $('#uploadButton');
+    let errorSuccessField = $('#errorSuccessField');
+    chooseXslLabel.click(eventObject => {chooseXslInput.click()});
+    let fcRight = $('.fc-right');
+    uploadGroupDiv.append(downloadTemplate);
+    uploadGroupDiv.append(chooseXslLabel);
+    uploadGroupDiv.append(uploadButton);
+    if (!this.lock) {
+      fcRight.prepend(uploadGroupDiv);
+      fcRight.prepend(errorSuccessField);
+    } else {
+      downloadPivotal.addClass('ui-corner-left');
+    }
+    fcRight.prepend(downloadPivotal);
+
+    chooseXslInput.on('click touchstart', function () {
+      $(this).val('');
+    });
+
+    let t = this;
+    //Trigger now when you have selected any file
+    chooseXslInput.change(function (e) {
+      let path = $(this).val().split("\\");
+      t.refreshSuccessField('black', path[path.length - 1]);
+    });
+    errorSuccessField.click(eventObject => errorSuccessField.text(''));
   }
 
   getMonthAndRender(calendar?: any) {
@@ -131,8 +160,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.refreshAllInfos(workInfos);
         // this.calculateDefaultSumByMonth(this.firstDayOfMonth, this.firstDayOfNextMonth);
     });
+    if (this.firstRender) {
+      this.addButtons(calendar);
+      this.firstRender = false;
+    }
   }
-
   /*calculateDefaultSumByMonth(d0: Date, d1: Date) {
     let date = new Date(d1);
     date.setDate(0);
@@ -179,10 +211,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.activeAgreementId = null;
     this.dayForCreatingWorkInfos = new Date(currentDate);
     this.activeDate = currentDate;
-    let openModalButton = document.getElementById('openModalButton');
-    if (!!openModalButton) {
-      openModalButton.click();
-    }
     Observable.forkJoin(
       [
         this.workService.getDayWork(currentDate, -1),
@@ -194,6 +222,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.dayWorkInfos = infos;
       this.dayBydayLock = lock;
     });
+    let openModalButton = document.getElementById('openModalButton');
+    if (!!openModalButton) {
+      openModalButton.click();
+    }
   }
 
   moveDay(workDate: Date, step: number, agreementId?: number) {
@@ -377,12 +409,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return (agreementId) ? this.clientsDropdown.filter(client => client.value == agreementId)[0].label.split(" - ")[1] : '';
   }
 
-  pivotalReport(calendar?: any) {
+  pivotalReport(calendar: any, template?: boolean) {
     let year = calendar.getDate().year();
     let month = calendar.getDate().month() + 1;
     let from = year + '-' + (month < 10? '0'+ month : month) + '-' + '01';
     let to = year + '-' + (month + 1 < 10? '0' + (month + 1) : month + 1) + '-' + '01';
-    this.downloadReportSubscription = this.downloadService.downloadPivotal(this.selectedType, from, to)
+    this.downloadReportSubscription = this.downloadService.downloadPivotal(this.selectedType, from, to, template)
       .subscribe(res => {
           let appType = this.downloadService.xlsType();
           let blob = new Blob([res.blob()], {type: appType});
@@ -392,6 +424,30 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.notificationBarService.create({message: 'הורדה נכשלה', type: NotificationType.Error});
           this.error = err;
         });
+  }
+
+  uploadReport(calendar?) {
+    let chooseXslInput = (<HTMLInputElement>document.getElementById('chooseXslInput'));
+    if (!!chooseXslInput.files[0]
+      && chooseXslInput.files[0]
+      && (chooseXslInput.value.indexOf('.xls') !== -1
+      || chooseXslInput.value.indexOf('.xlsx') !== -1)) {
+      this.downloadService.uploadReports(this.firstDayOfMonth.getFullYear(), this.firstDayOfMonth.getMonth(), chooseXslInput.files[0])
+        .subscribe(res => {
+          this.refreshSuccessField('green', 'הקובץ הועלה בהצלחה');
+          this.getMonthAndRender(calendar);
+        }, err => {
+          this.refreshSuccessField('red', err);
+        });
+    } else {
+      this.refreshSuccessField('red', 'קודם תבחר את הקובץ הנכון');
+    }
+  }
+
+  private refreshSuccessField(color: string, message: string) {
+    $("#errorSuccessField").text('');
+    $("#errorSuccessField").css('color', color);
+    $("#errorSuccessField").text('\n' + message);
   }
 
   private convertToUnit(workInfo: WorkInfo): WorkUnit {

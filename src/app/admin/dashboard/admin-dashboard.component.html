@@ -14,10 +14,10 @@
         <div class="modal-body" style="width: 90%; margin: 0 auto">
           <div style="min-height: 100%">
             <div style="text-align: center">
-              <h3 id="dasdasd">עבודה יומי</h3>
+              <h3 id="dasdasd">דיווח שעות עבודה</h3>
             </div>
             <div *ngIf="!dayByDayLock">
-              <button type="button" class="btn btn-xs btn-info" title="הוסיף יחידת עבודה" (click)="create()">&nbsp;הוסיף&nbsp;<i class="fa fa-plus" aria-hidden="true"></i></button>
+              <button type="button" class="btn btn-xs btn-info" title="הוסף דיווח" (click)="create()">&nbsp;הוסף דיווח&nbsp;<i class="fa fa-plus" aria-hidden="true"></i></button>
             </div>
             <div class="row hebrew-direct" style="margin-top: 1em">
               <div *ngIf="createDialog" class="form-group" (keyup)="checkForEnter($event)">
@@ -36,7 +36,7 @@
                   <p-dropdown [options]="clientsDropdown" [style]="{'text-align':'center'}" id="clientsDropdown" panelStyleClass="form-control pull-right" [(ngModel)]="workInfoItem.agreementId" [filter]="true"></p-dropdown>
                 </label>
                 <br>
-                <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" placeholder="תאור" id="dayWorkInfoComment" class="form-control" [maxlength]="50"></textarea>
+                <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" placeholder="תיאור הפעילות " id="dayWorkInfoComment" class="form-control" [maxlength]="50"></textarea>
                 <br>
                 <button type="button" id="confirmWorkInfoButton" class="pull-left" pButton icon="fa-check" iconPos="right" (click)="save(workInfoItem)" label="שמור"></button>
               </div>
@@ -52,7 +52,7 @@
                   <th style="width: 10%">מ-</th>
                   <th style="width: 10%">עד-</th>
                   <th style="width: 10%">משך</th>
-                  <th [ngStyle]="{'width': (!dayByDayLock)? '65%':'45%'}">תאור</th>
+                  <th [ngStyle]="{'width': (!dayByDayLock)? '65%':'45%'}">תיאור הפעילות </th>
                   <th [ngStyle]="{'width': (!dayByDayLock)? '13%':'0'}"></th>
                   <th [ngStyle]="{'width': (!dayByDayLock)? '13%':'0'}"></th>
                 </tr>
@@ -96,7 +96,7 @@
   <div style="text-align: center">
 
     <span id="adminSumByMonth" style="margin: 0 auto; font-weight: bold">{{sumByMonth | minutesToHours}}</span>
-    <span style="margin: 0 auto; font-weight: bold"> - סה''כ שעות בחודש</span>
+    <span style="margin: 0 auto; font-weight: bold"> - סה''כ שעות עבודה מדווחות</span>
   </div>
   </div>
 </div>

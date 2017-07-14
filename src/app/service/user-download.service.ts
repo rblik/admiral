@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/Observable";
-import {Http, RequestMethod, ResponseContentType, URLSearchParams, Headers} from "@angular/http";
+import {Http, RequestMethod, ResponseContentType, URLSearchParams, Headers, RequestOptions} from "@angular/http";
 import {AuthService} from "./auth.service";
 import {Url} from "../url";
 
@@ -9,11 +9,11 @@ export class UserDownloadService {
   constructor(private http: Http, private auth: AuthService) {
   }
 
-  public downloadPivotal(type: string, from: string, to: string) {
+  public downloadPivotal(type: string, from: string, to: string, template?: boolean) {
     let params = new URLSearchParams();
     params.append('from', from);
     params.append('to', to);
-    return this.http.get(Url.getUrl("/") + type + "/download", {
+    return this.http.get(Url.getUrl("/") + type + "/download" + (template ? "Template" : ""), {
       method: RequestMethod.Get,
       responseType: ResponseContentType.Blob,
       headers: new Headers({'Authorization': this.auth.getToken()}),
@@ -23,6 +23,32 @@ export class UserDownloadService {
         return Observable.throw('No information about that period of time');
       }
     });
+  }
+
+  public uploadReports(year: number, month: number, file: File) {
+    let headers = new Headers();
+    headers.append("Authorization", this.auth.getToken());
+    let form = new FormData();
+    form.append('year', year.toString());
+    form.append('month', (month + 1).toString());
+    form.append('file', file);
+    let options = new RequestOptions({headers: headers});
+    return this.http.post(Url.getUrl("/xlsx/upload"), form, options)
+      .map(res => res)
+      .catch(e => {
+        let json = e.json();
+        if (json.cause=='IllegalCellFormatException') {
+          let errorString = json.details[0];
+          let errArr = errorString.split(";");
+          let s1 = errArr[0] === "" ? "" : "היו שגעיות בתאים: " + errArr[0];
+          let s2 = errArr[1] === "" ? "" : " בשורות: " + errArr[1] + " קיימים תאים ריקים";
+          return Observable.throw(s1 + s2);
+        } else if (json.cause=='TimeOverlappingException') {
+          return Observable.throw("כמה תקופות עבודה כבר תפוסות.")
+        } else if (json.cause=='DateLockedException') {
+          return Observable.throw("החודש הזה סגור לשינויים.")
+        }
+      });
   }
 
   public xlsType(): string {

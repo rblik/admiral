@@ -87,10 +87,15 @@ body {
 .loading {
   opacity: 0.75;
   /*transition: opacity 2s ease-in-out;*/
-  position: fixed;
+  /*position: fixed;*/
   top: 0;
   left: 0;
   z-index: -1;
+}
+
+.modal-lg {
+  width: 50%;
+  margin: 3% 25%;
 }
 
 app-root:empty + .loading h1 {
