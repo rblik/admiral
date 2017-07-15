@@ -32,7 +32,7 @@ import {MyCommonModule} from "./my-common.module";
 import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import {NotificationBarModule} from "angular2-notification-bar";
 import {SlimLoadingBarModule} from "ng2-slim-loading-bar";
-import {LockService} from "./service/lock.service";
+import {MonthInfoService} from "./service/month-info.service";
 import {UserDownloadService} from "./service/user-download.service";
 
 @NgModule({
@@ -68,7 +68,7 @@ import {UserDownloadService} from "./service/user-download.service";
     AuthService,
     TimeService,
     WorkInfoService,
-    LockService,
+    MonthInfoService,
     DatePipe,
     AuthGuardService,
     AdminAuthGuardService,

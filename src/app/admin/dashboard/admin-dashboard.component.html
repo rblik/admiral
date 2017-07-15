@@ -1,7 +1,7 @@
 <div style="margin-top: 15px">
   <button id="openModalButton" [hidden]="true" data-toggle="modal" data-target="#dayWorkInfoForm"></button>
   <div id="dayWorkInfoForm" tabindex='-1' class="modal fade" onclose="" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content" [style.width]="'100%'">
         <div class="modal-header noselect" style="text-align: center">
           <a id="dayWorkInfoFormClose" style="float: left"  data-dismiss="modal"><span class="fa fa-fw fa-close" style="color: #1a1a1a; cursor: pointer; font-size: large"></span></a>
@@ -87,16 +87,17 @@
   </div>
 
   <div style="text-align: center" *ngIf="employee">
-    <div style="width: 80%; display: inline-block; margin: 0 auto; font-size: x-small">
+    <div style="width: 100%; display: inline-block; margin: 0 auto; font-size: x-small">
 
-      <p-schedule [contentHeight]="385" [editable]="true" [events]="pluu" #cal (onViewRender)="getMonthAndRender(cal)"
+      <p-schedule [aspectRatio]="3" [editable]="true" [events]="pluu" #cal (onViewRender)="getMonthAndRender(cal)"
                   [header]="header"
-                  (onDayClick)="getDayWork($event)" (onEventClick)="getEventWork($event)" [eventLimit]="3"></p-schedule>
+                  (onDayClick)="getDayWork($event)" (onEventClick)="getEventWork($event)" [eventLimit]="2"></p-schedule>
     </div>
-  <div style="text-align: center">
+  <div class="hebrew-direct" style="text-align: center">
+    <span style="margin: 0 auto; font-weight: bold">סה''כ שעות עבודה מדווחות - </span>
+    <span id="sumByMonth" style="margin: 0 auto; font-weight: bold">{{sumByMonth | minutesToHours}}</span>
+    <span id="defaultMonthHours" style="margin: 0 auto; font-weight: bold">{{'/ '+(defaultMonthHours?defaultMonthHours:0) + 'h'}}</span>
 
-    <span id="adminSumByMonth" style="margin: 0 auto; font-weight: bold">{{sumByMonth | minutesToHours}}</span>
-    <span style="margin: 0 auto; font-weight: bold"> - סה''כ שעות עבודה מדווחות</span>
   </div>
   </div>
 </div>

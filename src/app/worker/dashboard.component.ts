@@ -11,7 +11,7 @@ import {SessionStorageService} from 'ng2-webstorage';
 import {SelectItem} from "primeng/primeng";
 import {Subscription} from "rxjs/Subscription";
 import {Observable} from "rxjs/Observable";
-import {LockService} from "../service/lock.service";
+import {MonthInfoService} from "../service/month-info.service";
 import {UserDownloadService} from "../service/user-download.service";
 import {NotificationBarService, NotificationType} from "angular2-notification-bar";
 import {MinutesToHoursPipe} from "../pipe/minutes-to-hours.pipe";
@@ -57,8 +57,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private header: { left: string; center: string; right: string };
   private firstDayOfMonth: Date;
   private firstDayOfNextMonth: Date;
+  private defaultMonthHours: number = 0;
 
-  constructor(private notificationBarService: NotificationBarService, private minToHours: MinutesToHoursPipe, private timeService: TimeService, private downloadService: UserDownloadService, private lockService: LockService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
+  constructor(private notificationBarService: NotificationBarService, private minToHours: MinutesToHoursPipe, private timeService: TimeService, private downloadService: UserDownloadService, private monthInfoService: MonthInfoService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
     this.types = [];
     this.sumByMonth = 0;
     // this.neededSumByMonth = 0;
@@ -152,13 +153,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.firstDayOfMonth.setFullYear(calendar.getDate().year(), calendar.getDate().month(), 1);
     this.firstDayOfNextMonth = new Date();
     this.firstDayOfNextMonth.setFullYear(calendar.getDate().year(), calendar.getDate().month() + 1, 1);
-    this.workService.getMonthWork(
-      this.timeService.getDateString(this.firstDayOfMonth),
-      this.timeService.getDateString(this.firstDayOfNextMonth))
-      .subscribe(workInfos => {
-        this.workInfos = workInfos;
-        this.refreshAllInfos(workInfos);
-        // this.calculateDefaultSumByMonth(this.firstDayOfMonth, this.firstDayOfNextMonth);
+    Observable.forkJoin(
+      [
+        this.workService.getMonthWork(
+          this.timeService.getDateString(this.firstDayOfMonth),
+          this.timeService.getDateString(this.firstDayOfNextMonth)
+        ),
+        this.monthInfoService.getMonthInfo(
+          this.firstDayOfMonth.getFullYear(),
+          this.firstDayOfMonth.getMonth()
+        )
+      ]).subscribe(([workInfos, monthInfo]) => {
+      this.workInfos = workInfos;
+      this.refreshAllInfos(workInfos);
+      this.lock = monthInfo.locked;
+      this.defaultMonthHours = monthInfo.hoursSum;
     });
     if (this.firstRender) {
       this.addButtons(calendar);
@@ -214,13 +223,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     Observable.forkJoin(
       [
         this.workService.getDayWork(currentDate, -1),
-        this.lockService.isLockedForMonth(
+        this.monthInfoService.getMonthInfo(
           this.firstDayOfMonth.getFullYear(),
           this.firstDayOfMonth.getMonth()
         )
-      ]).subscribe(([infos, lock]) => {
+      ]).subscribe(([infos, monthInfo]) => {
       this.dayWorkInfos = infos;
-      this.dayBydayLock = lock;
+      this.dayBydayLock = monthInfo.locked;
     });
     let openModalButton = document.getElementById('openModalButton');
     if (!!openModalButton) {
@@ -245,13 +254,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
       Observable.forkJoin(
         [
           this.workService.getDayWork(currentDate, agreementId==null? -1: agreementId),
-          this.lockService.isLockedForMonth(
+          this.monthInfoService.getMonthInfo(
             this.dayForCreatingWorkInfos.getFullYear(),
             this.dayForCreatingWorkInfos.getMonth()
           )
-        ]).subscribe(([infos, lock]) => {
+        ]).subscribe(([infos, monthInfo]) => {
         this.dayWorkInfos = infos;
-        this.dayBydayLock = lock;
+        this.dayBydayLock = monthInfo.locked;
       });
     }
   }

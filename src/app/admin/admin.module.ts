@@ -33,7 +33,7 @@ import {NotificationBarModule} from "angular2-notification-bar";
 import {ProjectEmployeeFormComponent} from "./project-employee-form/project-employee-form.component";
 import {AdminDashboardHeaderComponent} from "./dashboard/header/admin-dashboard-header.component";
 import {AdminDashboardComponent} from "./dashboard/admin-dashboard.component";
-import {AdminLockService} from "./service/admin-lock.service";
+import {AdminMonthInfoService} from "./service/admin-month-info.service";
 import {IncomeComponent} from "./income/income.component";
 
 @NgModule({
@@ -84,7 +84,7 @@ import {IncomeComponent} from "./income/income.component";
     ClientService,
     DepartmentService,
     MailService,
-    AdminLockService
+    AdminMonthInfoService
   ]
 })
 export class AdminModule {

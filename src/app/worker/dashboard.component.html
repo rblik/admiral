@@ -104,9 +104,10 @@
   <button class="pull-right ui-button ui-state-default  hebrew-direct" aria-hidden="true" id="chooseXslLabel"><i class="fa fa-file-excel-o save-button" aria-hidden="true" style="color: white"></i>&nbsp;בחר קובץ&nbsp;</button>
   <button class="pull-right ui-button ui-state-default" id="downloadTemplate" (click)="pivotalReport(cal, true)">&nbsp;שבלונה&nbsp;<i class="fa fa-table save-button" aria-hidden="true" style="color: white"></i></button>
   <button class="pull-right ui-button ui-state-default ui-corner-right" id="downloadPivotal" (click)="pivotalReport(cal)">&nbsp;XLS שעות גולמי&nbsp;<i class="fa fa-download save-button" aria-hidden="true" style="color: white"></i>&nbsp;</button>
-<div style="text-align: center">
+<div class="hebrew-direct" style="text-align: center">
 
+  <span style="margin: 0 auto; font-weight: bold">סה''כ שעות עבודה מדווחות - </span>
   <span id="sumByMonth" style="margin: 0 auto; font-weight: bold">{{sumByMonth | minutesToHours}}</span>
-  <span style="margin: 0 auto; font-weight: bold"> - סה''כ שעות עבודה מדווחות</span>
+  <span id="defaultMonthHours" style="margin: 0 auto; font-weight: bold">{{'/ '+(defaultMonthHours?defaultMonthHours:0) + 'h'}}</span>
 </div>
 </div>

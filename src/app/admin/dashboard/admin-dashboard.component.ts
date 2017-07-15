@@ -9,10 +9,9 @@ import {AgreementDto} from "../../model/agreement-dto";
 import {SelectItem} from "primeng/primeng";
 import {Observable} from "rxjs/Observable";
 import {WorkInfo} from "../../model/work-info";
-import {DateLock} from "../../model/date-lock";
 import {Event} from "../../model/event";
 import {Url} from "../../url";
-import {AdminLockService} from "../service/admin-lock.service";
+import {AdminMonthInfoService} from "../service/admin-month-info.service";
 import {AgreementService} from "../service/agreement.service";
 import {WorkUnit} from "../../model/work-unit";
 import {MinutesToHoursPipe} from "../../pipe/minutes-to-hours.pipe";
@@ -53,11 +52,12 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   private firstDayOfNextMonth: Date;
   private pluu: Event[] = [];
   private header: { left: string; center: string; right: string };
+  private defaultMonthHours: number = 0;
 
   constructor(private route: ActivatedRoute,
               private employeeService: EmployeeService,
               private timeService: TimeService,
-              private lockService: AdminLockService,
+              private lockService: AdminMonthInfoService,
               private agreementService: AgreementService,
               private minToHours: MinutesToHoursPipe,
               private workService: WorkInfoService) {
@@ -127,9 +127,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
           this.firstDayOfMonth.getFullYear(),
           this.firstDayOfNextMonth.getMonth() - 1,
           this.employee.id)
-      ]).subscribe(([workInfos, lock]) => {
+      ]).subscribe(([workInfos, monthInfo]) => {
       this.workInfos = workInfos;
-      this.lock = lock;
+      this.lock = monthInfo.locked;
+      this.defaultMonthHours = monthInfo.hoursSum;
       this.lockClass = this.lock? 'fa-lock': 'fa-unlock';
       $('#lockUnlockButton').removeClass('fa-lock').removeClass('fa-unlock').addClass(this.lockClass);
       this.refreshAllInfos(workInfos);
@@ -247,9 +248,9 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
             this.dayForCreatingWorkInfos.getFullYear(),
             this.dayForCreatingWorkInfos.getMonth(),
             this.employee.id
-          )]).subscribe(([infos, lock]) => {
+          )]).subscribe(([infos, monthInfo]) => {
         this.dayWorkInfos = infos;
-        this.dayByDayLock = lock;
+        this.dayByDayLock = monthInfo.locked;
       });
     }
   }
@@ -399,10 +400,19 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     this.workInfoItem.to = "23:59";
   }
 
+  saveHoursSum(hoursSum: number) {
+    this.lockService.saveMonthInfo(this.timeService.getDateString(this.firstDayOfMonth), this.lock, hoursSum,this.employee.id)
+      .subscribe(monthInfo => {
+        this.lockClass = 'fa-lock';
+        $('#lockUnlockButton').removeClass('fa-unlock').addClass(this.lockClass);
+        this.sumByMonth = hoursSum;
+      });
+  }
+
   lockUnlock(firstDayOfMonth?: Date){
     if (!this.lock) {
-      this.lockService.saveLock(this.timeService.getDateString(this.firstDayOfMonth), this.employee.id)
-        .subscribe(dateLock => {
+      this.lockService.saveMonthInfo(this.timeService.getDateString(this.firstDayOfMonth), true, this.sumByMonth,this.employee.id)
+        .subscribe(monthInfo => {
           this.lockClass = 'fa-lock';
           $('#lockUnlockButton').removeClass('fa-unlock').addClass(this.lockClass);
           this.lock = true;
