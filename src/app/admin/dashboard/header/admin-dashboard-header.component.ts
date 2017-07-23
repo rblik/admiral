@@ -23,6 +23,7 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
   private chosenDepartment: Department;
   private error: string;
   private getEmployeesSubscription: Subscription;
+  private updateSumHoursForMonthSubscription: Subscription;
   private searchDate: Date;
   private message: string;
   private employeesCheckboxOptions: IMultiSelectOption[] = [];
@@ -38,6 +39,10 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
+    this.message = '';
+    $("#errorSuccessHoursField").click(function () {
+      $("#errorSuccessHoursField").text('');
+    });
     this.departmentsUi.push({label: "בחר צוות", value: null});
     this.employeesUi.push({label: "בחר עובד", value: null});
     this.getEmployees();
@@ -46,6 +51,7 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
 
   ngOnDestroy(): void {
     if (this.getEmployeesSubscription) this.getEmployeesSubscription.unsubscribe();
+    if (this.updateSumHoursForMonthSubscription) this.updateSumHoursForMonthSubscription.unsubscribe();
   }
 
   getEmployees(): void {
@@ -115,12 +121,16 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
 
   updateSumHoursForMonth(hoursSum: string) {
     let date = this.timeService.getDateString(this.searchDate);
-    this.monthInfoService.updateSumHoursForMonth(date, this.employeeIds, +hoursSum).subscribe(monthInfos => {
-      this.message = 'הנתונים רועננו';
-    }, err => {
-      this.message = err;
-    });
+    this.updateSumHoursForMonthSubscription = this.monthInfoService.updateSumHoursForMonth(date, this.employeeIds, +hoursSum)
+      .subscribe(monthInfos => {
+        this.message = 'הנתונים רועננו';
+        $("#errorSuccessHoursField").css('color', 'green');
+      }, err => {
+        this.message = err;
+        $("#errorSuccessHoursField").css('color', 'red');
+      });
     this.closeUpdatingMonthHoursForm();
+    this.router.navigate(['/app/admin/dashboard']);
   }
 
   getEmployeesUi(department: Department) {

@@ -72,7 +72,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.monthOffset = 0;
-    console.log('asd');
     this.route.queryParams.subscribe((params: Params) => {
       let date = params['date'];
       if (!!date) this.monthOffset = this.timeService.getMonthOffset(new Date(date));
@@ -109,10 +108,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   }
 
   getMonthAndRender(calendar?: any) {
-    if (this.firstAdminRender) {
-      this.addButtons(calendar);
-      this.firstAdminRender = false;
-    }
+    this.addButtons(calendar);
     this.firstDayOfMonth = new Date();
     this.firstDayOfMonth.setFullYear(calendar.getDate().year(), calendar.getDate().month(), 1);
     this.firstDayOfNextMonth = new Date();
@@ -138,6 +134,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   }
 
   addButtons(calendar) {
+    console.log('addbuttons');
+    console.log($('.fc-right').children().length);
+    if ($('.fc-right').children().length == 0) {
+
     let nextPrevGroupDiv = $('<div>').addClass('button-group');
 
     let nextButton = $('<button>')
@@ -170,7 +170,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     });
     a.append(i);
 
-    let spanWithName = $('<span>').text(this.employee.surname + ' ' + this.employee.name).css('font-size', 'large');
+    let spanWithName = $('<span>').attr('id', 'spanWithNameForAdmin').text(this.employee.surname + ' ' + this.employee.name).css('font-size', 'large');
     nextPrevGroupDiv.append(nextButton);
     nextPrevGroupDiv.append(prevButton);
     nextPrevGroupDiv.append('</div>');
@@ -178,6 +178,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     $('.fc-left').prepend(nextPrevGroupDiv);
     $('.fc-right').prepend(spanWithName);
     $('.fc-right').prepend(a);
+    console.log($('.fc-right').children().length);
+    }
+      $('#spanWithNameForAdmin').text(this.employee.surname + ' ' + this.employee.name);
+
   }
 
   private refreshAllInfos(workInfos: WorkInfo[]) {

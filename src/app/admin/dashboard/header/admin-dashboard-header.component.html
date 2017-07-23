@@ -1,11 +1,10 @@
 <div class="page-header" style="margin-top: 0; margin-bottom: 0">
-  <div class="row hebrew-direct" width="75%">
+  <div class="row hebrew-direct" width="75%" style="position: relative">
     <div class="col-sm-2 pull-right"></div>
     <div style="text-align: center; font-size: 300%" class="col-sm-3 pull-right">
       דיווח שעות
     </div>
     <div class="col-sm-1 pull-left"></div>
-    <div style="margin-top: 1em; text-align: center; vertical-align: bottom" class="col-sm-7 pull-left">
     <div style="margin-top: 1em; text-align: center; vertical-align: bottom" class="col-sm-7 pull-left">
       <p-dropdown [options]="departmentsUi" [(ngModel)]="chosenDepartment" [filter]="true"
                   [style]="{'text-align':'center'}"
@@ -13,14 +12,22 @@
       <p-dropdown [options]="employeesUi" [(ngModel)]="chosenEmployee" [filter]="true"
                   [style]="{'text-align':'center', 'width': '12em'}"
                   [panelStyle]="{'align-content': 'center'}"></p-dropdown>
-      <p-calendar [(ngModel)]="searchDate" [style]="{'text-align':'center', 'width': '7em'}" [inputStyle]="{'text-align':'center', 'width':'100%'}" id="startDateId"
+      <p-calendar [(ngModel)]="searchDate" [style]="{'text-align':'center', 'width': '7em'}"
+                  [inputStyle]="{'text-align':'center', 'width':'100%'}" id="startDateId"
                   dateFormat="dd.mm.yy"></p-calendar>
       <button class="btn btn-sm btn-info" [disabled]="!chosenEmployee" (click)="showDashboard(chosenEmployee)"><i
         class="fa fa-chevron-circle-down" aria-hidden="true"></i>&nbsp;היצג&nbsp;
       </button>
+      <span>
+
       <button class="btn btn-sm btn-default pull-left" (click)="showUpdatingMonthHoursForm()"><i
         class="fa fa-clock-o" aria-hidden="true"></i>&nbsp;הגדרת תקן השעות&nbsp;
       </button>
+    <span id="errorSuccessHoursField" style="position: absolute; direction: rtl; margin-top: 2.5em"
+          class="hebrew-direct">
+      {{message}}
+    </span>
+      </span>
     </div>
   </div>
 </div>
@@ -39,19 +46,19 @@
           <div class="col-md-6 pull-left hebrew-direct form-group" style="text-align: center">
             <input type="number" #newHoursNumber placeholder="כמות שעות" style="margin: 0 auto" class="form-control"/>
           </div>
-          <div class="col-md-1 pull-right"></div>
           <div class="col-md-4 pull-right hebrew-direct" style="min-height: 100%">
             <ss-multiselect-dropdown [options]="employeesCheckboxOptions"
                                      [texts]="employeesCheckboxTexts"
                                      [settings]="employeesCheckboxSettings"
                                      [(ngModel)]="employeeIds"></ss-multiselect-dropdown>
           </div>
+          <div class="col-md-1 pull-right"></div>
         </div>
       </div>
       <div class="modal-footer">
         <div class="ui-dialog-buttonpane ui-helper-clearfix">
           <button type="button" class="ui-button-danger pull-left" pButton icon="fa-close" (click)="closeUpdatingMonthHoursForm()" label="בטל"></button>
-          <button type="button" class="pull-left" pButton icon="fa-check" (click)="updateSumHoursForMonth(newHoursNumber.value)" label="שלח"></button>
+          <button type="button" [disabled]="employeeIds.length==0 || newHoursNumber.value=='' || newHoursNumber.length==0" class="pull-left" pButton icon="fa-check" (click)="updateSumHoursForMonth(newHoursNumber.value)" label="שלח"></button>
         </div>
       </div>
     </div>

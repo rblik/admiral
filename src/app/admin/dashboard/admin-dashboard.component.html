@@ -89,7 +89,7 @@
   <div style="text-align: center" *ngIf="employee">
     <div style="width: 100%; display: inline-block; margin: 0 auto; font-size: x-small">
 
-      <p-schedule [aspectRatio]="3" [editable]="true" [events]="pluu" #cal (onViewRender)="getMonthAndRender(cal)"
+      <p-schedule [aspectRatio]="3" [editable]="true" [events]="pluu" #adminCal (onViewRender)="getMonthAndRender(adminCal)"
                   [header]="header"
                   (onDayClick)="getDayWork($event)" (onEventClick)="getEventWork($event)" [eventLimit]="2"></p-schedule>
     </div>
