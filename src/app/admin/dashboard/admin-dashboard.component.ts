@@ -53,6 +53,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   private pluu: Event[] = [];
   private header: { left: string; center: string; right: string };
   private defaultMonthHours: number = 0;
+  private pointDate: Date;
 
   constructor(private route: ActivatedRoute,
               private employeeService: EmployeeService,
@@ -74,7 +75,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     this.monthOffset = 0;
     this.route.queryParams.subscribe((params: Params) => {
       let date = params['date'];
-      if (!!date) this.monthOffset = this.timeService.getMonthOffset(new Date(date));
+      if (!!date) {
+        this.pointDate = new Date(date);
+        this.monthOffset = this.timeService.getMonthOffset(new Date(date));
+      }
       this.routeParamsSubscription = this.route.params.switchMap((params: Params) =>
         this.employeeService.get(params['employeeId'])).subscribe(employee => {
         this.employee = employee;
@@ -93,8 +97,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
 
   private refreshUiAfterEmployeeChange() {
     this.pluu = [];
-    this.sumByMonth = 0;
-    this.firstAdminRender = true;
+    // this.sumByMonth = 0;
+    // this.firstAdminRender = true;
   }
 
   private getClientsUi(agreements: AgreementDto[]) {
@@ -134,54 +138,51 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   }
 
   addButtons(calendar) {
-    console.log('addbuttons');
-    console.log($('.fc-right').children().length);
     if ($('.fc-right').children().length == 0) {
 
-    let nextPrevGroupDiv = $('<div>').addClass('button-group');
+      let nextPrevGroupDiv = $('<div>').addClass('button-group');
 
-    let nextButton = $('<button>')
-      .addClass("fc-prev-button ui-button ui-state-default ui-corner-left")
-      .attr({
-        type: "button"
-      })
-      .on('click', function () {
-        calendar.next();
-      }).html('<span class="ui-icon ui-icon-circle-triangle-w"></span>');
-    nextButton.append('</button>');
+      let nextButton = $('<button>')
+        .addClass("fc-prev-button ui-button ui-state-default ui-corner-left")
+        .attr({
+          type: "button"
+        })
+        .on('click', function () {
+          calendar.next();
+        }).html('<span class="ui-icon ui-icon-circle-triangle-w"></span>');
+      nextButton.append('</button>');
 
-    let prevButton = $('<button>')
-      .addClass("fc-next-button ui-button ui-state-default ui-corner-right")
-      .attr({
-        type: "button"
-      })
-      .on('click', function () {
-        calendar.prev();
-      }).html('<span class="ui-icon ui-icon-circle-triangle-e"></span>');
-    prevButton.append('</button>');
+      let prevButton = $('<button>')
+        .addClass("fc-next-button ui-button ui-state-default ui-corner-right")
+        .attr({
+          type: "button"
+        })
+        .on('click', function () {
+          calendar.prev();
+        }).html('<span class="ui-icon ui-icon-circle-triangle-e"></span>');
+      prevButton.append('</button>');
 
-    let a = $('<a>').css('cursor', 'pointer').css('font-size', 'large');
-    let i = $('<i>').css('color', 'black');
-    i.attr('id', 'lockUnlockButton');
-    i.addClass('fa');
-    let t = this;
-    a.click(function () {
-      t.lockUnlock();
-    });
-    a.append(i);
+      let a = $('<a>').css('cursor', 'pointer').css('font-size', 'large');
+      let i = $('<i>').css('color', 'black');
+      i.attr('id', 'lockUnlockButton');
+      i.addClass('fa');
+      let t = this;
+      a.click(function () {
+        t.lockUnlock();
+      });
+      a.append(i);
 
-    let spanWithName = $('<span>').attr('id', 'spanWithNameForAdmin').text(this.employee.surname + ' ' + this.employee.name).css('font-size', 'large');
-    nextPrevGroupDiv.append(nextButton);
-    nextPrevGroupDiv.append(prevButton);
-    nextPrevGroupDiv.append('</div>');
+      let spanWithName = $('<span>').attr('id', 'adminSpanWithName').text(this.employee.surname + ' ' + this.employee.name).css('font-size', 'large');
+      nextPrevGroupDiv.append(nextButton);
+      nextPrevGroupDiv.append(prevButton);
+      nextPrevGroupDiv.append('</div>');
 
-    $('.fc-left').prepend(nextPrevGroupDiv);
-    $('.fc-right').prepend(spanWithName);
-    $('.fc-right').prepend(a);
-    console.log($('.fc-right').children().length);
+      $('.fc-left').prepend(nextPrevGroupDiv);
+      $('.fc-right').prepend(spanWithName);
+      $('.fc-right').prepend(a);
+      calendar.gotoDate(this.pointDate);
     }
-      $('#spanWithNameForAdmin').text(this.employee.surname + ' ' + this.employee.name);
-
+    $('#adminSpanWithName').text(this.employee.surname + ' ' + this.employee.name);
   }
 
   private refreshAllInfos(workInfos: WorkInfo[]) {
