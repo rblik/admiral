@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
-import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {Observable} from "rxjs";
 import {Employee} from "../model/employee";
-import {Headers, Http, RequestOptions} from "@angular/http";
+import {Http, URLSearchParams, Headers, RequestOptions} from "@angular/http";
 import {SessionStorageService} from "ng2-webstorage";
 import {Credentials} from "../model/credentials";
 import {Router} from "@angular/router";
@@ -36,6 +36,19 @@ export class AuthService {
         // this.loggedEmployee.next(employee);
         this.localSt.store("employee", JSON.stringify(employee));
       });
+  }
+
+  public changeOwnPass(newPass: string): Observable<any> {
+    let params = new URLSearchParams();
+    params.append('password', newPass);
+    let headers = new Headers({'Authorization': this.getToken()});
+    headers.append('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.put(this.profileUrl + "/password", params.toString(), {
+      headers: headers,
+    }).catch(e => {
+      let s = e.json().details[0];
+      return Observable.throw(s);
+    })
   }
 
   public getOptions(): RequestOptions {

@@ -1,5 +1,4 @@
 import {OnInit, Component, OnDestroy} from "@angular/core";
-import {SessionStorageService} from "ng2-webstorage";
 import {AuthService} from "../service/auth.service";
 import {Employee} from "../model/employee";
 import {Subscription} from "rxjs/Subscription";
@@ -13,6 +12,10 @@ export class NavBarComponent implements OnInit, OnDestroy {
   profile: Employee;
   LOGO = require("../../assets/logo-naya-little.gif");
   private authSubscription: Subscription;
+  private passwordChangeSuccess: any;
+  private passwordChangeFailure: any;
+  private passwordUpdateSubscrption: Subscription;
+  private requstStarted: boolean;
 
   constructor(private authService: AuthService) {
   }
@@ -24,8 +27,28 @@ export class NavBarComponent implements OnInit, OnDestroy {
     });
   }
 
+  preparePasswordForm() {
+    this.passwordChangeSuccess = null;
+    this.passwordChangeFailure = null;
+  }
+
   ngOnDestroy(): void {
     if (this.authSubscription) this.authSubscription.unsubscribe();
+    if (this.passwordUpdateSubscrption) this.passwordUpdateSubscrption.unsubscribe();
+  }
+
+  updatePassword(newPass: string){
+    if (!!newPass) {
+      if (newPass != '') {
+        this.requstStarted = true;
+        this.passwordUpdateSubscrption = this.authService.changeOwnPass(newPass).subscribe(response => {
+          this.requstStarted = false;
+          this.passwordChangeSuccess = 'הסיסמה עודכנה בהצלחה';
+        }, e=> {
+          this.passwordChangeFailure = e;
+        });
+      }
+    }
   }
 
   logout(): void {

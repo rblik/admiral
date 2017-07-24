@@ -23,7 +23,8 @@ import {
   InputTextModule,
   SelectButtonModule,
   SharedModule,
-  ScheduleModule
+  ScheduleModule,
+  OverlayPanelModule
 } from "primeng/primeng";
 import {Ng2Webstorage} from "ng2-webstorage";
 import {AuthGuardService} from "./service/auth-guard.service";
@@ -52,6 +53,7 @@ import {UserDownloadService} from "./service/user-download.service";
     ButtonModule,
     CalendarModule,
     SelectButtonModule,
+    OverlayPanelModule,
     InputTextModule,
     InputMaskModule,
     DropdownModule,

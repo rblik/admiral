@@ -1,10 +1,19 @@
 <nav class="navbar navbar-static-top navbar-default hebrew-direct">
   <div class="container-fluid">
     <ul class="nav navbar-nav navbar-left">
-        <li *ngIf="profile">
-          <a (click)="logout()" style="cursor: pointer">
-            <span class="glyphicon glyphicon-log-out"></span> יציאה</a>
-        </li>
+      <li *ngIf="profile">
+        <a (click)="logout()" style="cursor: pointer">
+          <span class="glyphicon glyphicon-log-out"></span> יציאה</a>
+      </li>
+      <li *ngIf="profile" class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          <span class="glyphicon glyphicon-cog"></span> הגדרות</a>
+        <ul class="dropdown-menu" >
+          <li ><a (click)="preparePasswordForm(); op.toggle($event)" class="hebrew-direct " style="cursor: pointer">
+            <span class="glyphicon glyphicon-lock pull-right"></span><span class="pull-left" style="font-size: small; font-weight: bolder"> שינוי סיסמא</span></a></li>
+        </ul>
+
+      </li>
     </ul>
       <div *ngIf="profile != null">
         <span class="navbar-brand profile-name" href="#">{{profile.surname + ' ' + profile.name}}</span>
@@ -33,3 +42,23 @@
     </ul>
   </div>
 </nav>
+<p-overlayPanel #op>
+  <h4 style="text-align: center">שינוי סיסמה</h4>
+  <div style="text-align: center" *ngIf="passwordChangeSuccess" class="alert alert-success">
+    הסיסמה עודכנה בהצלחה
+  </div>
+  <div style="text-align: center" *ngIf="passwordChangeFailure" class="alert alert-success">
+    {{passwordChangeFailure}}
+  </div>
+  <div *ngIf="!passwordChangeSuccess" class="row">
+    <div class="form-group">
+      <div class="col-md-2 pull-left">
+        <a class="btn btn-warning" (click)="updatePassword(updatePassInput.value); updatePassInput.value=''"><i style="font-size: large; color: white"
+                                                                                                                class="fa fa-cog {{requstStarted?'fa-spin':''}}"></i></a>
+      </div>
+      <div class="col-md-9 pull-right">
+        <input #updatePassInput required type="password" class="form-control">
+      </div>
+    </div>
+  </div>
+</p-overlayPanel>
