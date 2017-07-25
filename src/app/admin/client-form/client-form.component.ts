@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from "@angular/core";
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from "@angular/core";
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Client} from "../../model/client";
 import {SessionStorageService} from "ng2-webstorage";
@@ -14,6 +14,7 @@ import {Subscription} from "rxjs/Subscription";
 export class ClientFormComponent implements OnInit, OnChanges, OnDestroy{
 
   @Input() private clientForCreation: Client;
+  @Output() outputClient: EventEmitter<Client> = new EventEmitter<Client>();
   public clientCreationForm: FormGroup;
   private errorClient: string;
   private upsertClientSubscription: Subscription;
@@ -68,12 +69,14 @@ export class ClientFormComponent implements OnInit, OnChanges, OnDestroy{
 
   submitForm(clientSubmitted: any) {
     let value = clientSubmitted.value;
-    this.clientForCreation.name = value.name;
-    this.clientForCreation.companyNumber = value.companyNumber;
-    this.clientForCreation.clientNumber = value.clientNumber;
-    this.clientForCreation.addresses = value.addresses;
-    this.clientForCreation.phones = value.phones;
-    this.upsertClientSubscription = this.clientService.save(this.clientForCreation).subscribe(client => {
+    value.id = this.clientForCreation.id;
+    // this.clientForCreation.name = value.name;
+    // this.clientForCreation.companyNumber = value.companyNumber;
+    // this.clientForCreation.clientNumber = value.clientNumber;
+    // this.clientForCreation.addresses = value.addresses;
+    // this.clientForCreation.phones = value.phones;
+    this.upsertClientSubscription = this.clientService.save(value).subscribe(client => {
+      this.outputClient.emit(client);
       let closeNewClientFormButton = document.getElementById("closeNewClientFormButton");
       if (closeNewClientFormButton) {
         closeNewClientFormButton.click();

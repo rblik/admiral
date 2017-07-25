@@ -10,6 +10,7 @@ import {WorkInfo} from "../../model/work-info";
 import * as fileSaver from "file-saver";
 import {NotificationBarService, NotificationType} from "angular2-notification-bar";
 import {Subscription} from "rxjs/Subscription";
+import {ArraySortPipe} from "../../pipe/array-sort.pipe";
 
 @Component({
   selector: 'partial-days',
@@ -39,7 +40,12 @@ export class PartialDaysComponent implements OnInit, OnDestroy{
   private getPartialSubscription: Subscription;
   private downloadPartialSubscription: Subscription;
 
-  constructor(private notificationBarService: NotificationBarService, private downloadService: DownloadService, private reportService: ReportService, private employeeService: EmployeeService, private timeService: TimeService) {
+  constructor(private notificationBarService: NotificationBarService,
+              private downloadService: DownloadService,
+              private reportService: ReportService,
+              private arrSortPipe: ArraySortPipe,
+              private employeeService: EmployeeService,
+              private timeService: TimeService) {
     this.limit = 9;
     this.types = [];
     this.types.push({label: 'PDF', value: 'pdf'});
@@ -78,15 +84,18 @@ export class PartialDaysComponent implements OnInit, OnDestroy{
 
   getDepartmentsUi(employees: Array<Employee>) {
     let arr = [];
+    let buff = this.departmentsUi.slice(1, this.departmentsUi.length);
     employees.map(employee => {
       if (arr.indexOf(employee.department.name) == -1) {
-        this.departmentsUi.push({
+        buff.push({
           label: employee.department.name,
           value: employee.department
         });
         arr.push(employee.department.name);
       }
     });
+    this.arrSortPipe.transform(buff, "label");
+    this.departmentsUi = this.departmentsUi.slice(0,1).concat(buff);
   }
 
   getEmployeesUi(department: Department) {

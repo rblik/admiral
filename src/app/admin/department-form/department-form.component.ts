@@ -4,6 +4,7 @@ import {DepartmentService} from "../service/department.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SessionStorageService} from "ng2-webstorage";
 import {Subscription} from "rxjs/Subscription";
+import {ArraySortPipe} from "../../pipe/array-sort.pipe";
 
 @Component({
   selector: 'department-form',
@@ -23,6 +24,7 @@ export class DepartmentFormComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(private departmentService: DepartmentService,
               private localSt: SessionStorageService,
+              private arrSortPipe: ArraySortPipe,
               private _fb: FormBuilder) {
     this.department = new Department();
   }
@@ -92,6 +94,7 @@ export class DepartmentFormComponent implements OnInit, OnChanges, OnDestroy {
           }
         });
       }
+      this.departments = this.arrSortPipe.transform(this.departments, 'name');
       this.department = new Department();
       this.localSt.store('formDepartment', JSON.stringify({
         isNew: isNew,

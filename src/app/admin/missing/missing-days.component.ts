@@ -12,6 +12,7 @@ import {IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings} from 'angul
 import {MailService} from "../service/mail.service";
 import {NotificationBarService, NotificationType} from "angular2-notification-bar";
 import {Subscription} from "rxjs/Subscription";
+import {ArraySortPipe} from "../../pipe/array-sort.pipe";
 
 @Component({
   selector: 'missing-days',
@@ -50,7 +51,13 @@ export class MissingDaysComponent implements OnInit, OnDestroy {
   private downloadMissingSubscription: Subscription;
   private mailSendingSubscription: Subscription;
 
-  constructor(private notificationBarService: NotificationBarService, private downloadService: DownloadService, private reportService: ReportService, private mailService: MailService, private employeeService: EmployeeService, private timeService: TimeService) {
+  constructor(private notificationBarService: NotificationBarService,
+              private downloadService: DownloadService,
+              private reportService: ReportService,
+              private mailService: MailService,
+              private employeeService: EmployeeService,
+              private arrSortPipe: ArraySortPipe,
+              private timeService: TimeService) {
     this.types = [];
     this.types.push({label: 'PDF', value: 'pdf'});
     this.types.push({label: 'Excel', value: 'xlsx'});
@@ -166,15 +173,18 @@ export class MissingDaysComponent implements OnInit, OnDestroy {
 
   getDepartmentsUi(employees: Array<Employee>) {
     let arr = [];
+    let buff = this.departmentsUi.slice(1, this.departmentsUi.length);
     employees.forEach(employee => {
       if (arr.indexOf(employee.department.id) == -1) {
-        this.departmentsUi.push({
+        buff.push({
           label: employee.department.name,
           value: employee.department
         });
         arr.push(employee.department.id);
       }
     });
+    this.arrSortPipe.transform(buff, "label");
+    this.departmentsUi = this.departmentsUi.slice(0,1).concat(buff);
   }
 
   getEmployeesUi(department: Department) {

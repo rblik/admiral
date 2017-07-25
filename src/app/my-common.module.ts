@@ -8,6 +8,7 @@ import {CurrencyPipe} from "./pipe/currency.pipe";
 import {TariffTypePipe} from "./pipe/tariff-type.pipe";
 import {OnlyNumberDirective} from "./directives/only-number.directive";
 import {ReversePipe} from "./pipe/reverse.pipe";
+import {ArraySortPipe} from "./pipe/array-sort.pipe";
 @NgModule({
   declarations: [
     MinutesToHoursPipe,
@@ -18,10 +19,12 @@ import {ReversePipe} from "./pipe/reverse.pipe";
     CurrencyPipe,
     TariffTypePipe,
     OnlyNumberDirective,
+    ArraySortPipe,
     ReversePipe
   ],
   exports: [
     MinutesToHoursPipe,
+    ArraySortPipe,
     HebrewDatePipe,
     DateFormatPipe,
     WeekDayPipe,
@@ -31,6 +34,7 @@ import {ReversePipe} from "./pipe/reverse.pipe";
     ReversePipe
   ],
   providers: [
+    ArraySortPipe,
     DateFormatPipe,
     MinutesToHoursPipe
   ]

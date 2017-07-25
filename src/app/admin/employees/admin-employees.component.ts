@@ -3,9 +3,8 @@ import {Employee} from "../../model/employee";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SessionStorageService} from "ng2-webstorage";
 import {EmployeeService} from "../service/employee.service";
-import {DepartmentService} from "../service/department.service";
-import {Department} from "../../model/department";
 import {Subscription} from "rxjs/Subscription";
+import {ArraySortPipe} from "../../pipe/array-sort.pipe";
 
 @Component({
   selector: 'admin-employees',
@@ -23,6 +22,7 @@ export class AdminEmployeesComponent implements OnInit, OnDestroy{
 
   constructor(private employeeService: EmployeeService,
               private router: Router,
+              private arrSortPipe: ArraySortPipe,
               private localSt: SessionStorageService,
               private route: ActivatedRoute) {
     this.employeeForCreation = new Employee();
@@ -103,6 +103,7 @@ export class AdminEmployeesComponent implements OnInit, OnDestroy{
           }
         });
       }
+      this.arrSortPipe.transform(this.employeesUi, 'name');
     });
   }
 }

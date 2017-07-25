@@ -10,6 +10,7 @@ import {ReportService} from "../service/report.service";
 import {NotificationBarService, NotificationType} from "angular2-notification-bar";
 import {Subscription} from "rxjs/Subscription";
 import {Router} from "@angular/router";
+import {ArraySortPipe} from "../../pipe/array-sort.pipe";
 
 @Component({
   selector: 'pivotal',
@@ -42,6 +43,7 @@ export class PivotalComponent implements OnInit, OnDestroy {
 
   constructor(private notificationBarService: NotificationBarService,
               private router: Router,
+              private arrSortPipe: ArraySortPipe,
               private downloadService: DownloadService,
               private reportService: ReportService,
               private agreementService: AgreementService,
@@ -99,15 +101,18 @@ export class PivotalComponent implements OnInit, OnDestroy {
 
   getDepartmentsUi() {
     let arr = [];
+    let buff = this.departmentsUi.slice(1, this.departmentsUi.length);
     this.agreementsUi.forEach(agreement => {
       if (arr.indexOf(agreement.departmentId) == -1) {
-        this.departmentsUi.push({
+        buff.push({
           label: agreement.departmentName,
           value: agreement.departmentId
         });
         arr.push(agreement.departmentId);
       }
     });
+    this.arrSortPipe.transform(buff, "label");
+    this.departmentsUi = this.departmentsUi.slice(0,1).concat(buff);
   }
 
   getProjectsUi(clientId: number) {
@@ -131,15 +136,18 @@ export class PivotalComponent implements OnInit, OnDestroy {
 
   getClientsUi() {
     let arr = [];
+    let buff = this.clientUi.slice(1, this.clientUi.length);
     this.agreementsUi.forEach(agreement => {
       if (arr.indexOf(agreement.clientId) == -1) {
-        this.clientUi.push({
+        buff.push({
           label: agreement.clientName,
           value: agreement.clientId
         });
         arr.push(agreement.clientId);
       }
     });
+    this.arrSortPipe.transform(buff, "label");
+    this.clientUi = this.clientUi.slice(0,1).concat(buff);
   }
 
   getAllWorkInfo() {

@@ -98,5 +98,5 @@
   </div>
 </div>
 
-<client-form id="clientEditionForm" [clientForCreation]="client" tabindex='-1' class="modal fade" onclose="" role="dialog"></client-form>
+<client-form id="clientEditionForm" (outputClient)="syncClient($event)" [clientForCreation]="client" tabindex='-1' class="modal fade" onclose="" role="dialog"></client-form>
 

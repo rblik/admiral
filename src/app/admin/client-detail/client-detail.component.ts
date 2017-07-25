@@ -54,6 +54,10 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  syncClient(client) {
+    this.client = client;
+  }
+
   ngOnDestroy(): void {
     if (this.routeParamsSubscription) this.routeParamsSubscription.unsubscribe();
     if (this.upsertProjectSubscription) this.upsertProjectSubscription.unsubscribe();

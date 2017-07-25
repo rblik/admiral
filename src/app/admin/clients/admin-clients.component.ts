@@ -4,6 +4,7 @@ import {Client} from "../../model/client";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SessionStorageService} from "ng2-webstorage";
 import {Subscription} from "rxjs/Subscription";
+import {ArraySortPipe} from "../../pipe/array-sort.pipe";
 
 @Component({
   selector: 'admin-clients',
@@ -21,6 +22,7 @@ export class AdminClientsComponent implements OnInit, OnDestroy {
   constructor(private clientService: ClientService,
               private router: Router,
               private localSt: SessionStorageService,
+              private arrSortPipe: ArraySortPipe,
               private route: ActivatedRoute) {
     this.clientForCreation = new Client();
 
@@ -48,6 +50,7 @@ export class AdminClientsComponent implements OnInit, OnDestroy {
           }
         });
       }
+      this.clientsUi = this.arrSortPipe.transform(this.clientsUi, 'name');
     });
   }
 
