@@ -13,7 +13,7 @@
         <p><input type="text" style="text-align: center" class="form-control" #searchBox placeholder="חפש"
                   (keyup)="search(searchBox.value)"></p>
         <div class="module" *ngFor="let employee of employeesUi" style="font-size: 75%; margin-bottom: 3%; text-align: left" position="relative"
-           (click)="toDetail(employee.id)">&nbsp;{{employee.surname+'&nbsp;'+employee.name}}<span class="badge pull-right" style="font-size: 75%; margin-top: 0.5%">{{employee.department.name}}</span>
+           (click)="toDetail(employee.id)">&nbsp;{{employee.name+'&nbsp;'+employee.surname}}<span class="badge pull-right" style="font-size: 75%; margin-top: 0.5%">{{employee.department.name}}</span>
         </div>
       </div>
       <div *ngIf="errorEmployees" class="alert alert-danger pull-right">

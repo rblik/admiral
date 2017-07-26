@@ -134,6 +134,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
       this.lockClass = this.lock? 'fa-lock': 'fa-unlock';
       $('#lockUnlockButton').removeClass('fa-lock').removeClass('fa-unlock').addClass(this.lockClass);
       this.refreshAllInfos(workInfos);
+
+      setTimeout(() => {
+        jQuery('.fc-content').css('direction', 'rtl');
+      }, 10);
     });
   }
 
@@ -281,8 +285,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     }
   }
 
-  checkForEnter(event?: any) {
-    if (event.keyCode == 13) {
+  checkForCtrlEnter(event?: any) {
+    if (event.which == 13 && event.ctrlKey == true) {
       document.getElementById('confirmWorkInfoButton').click();
       return;
     }

@@ -168,6 +168,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.refreshAllInfos(workInfos);
       this.lock = monthInfo.locked;
       this.defaultMonthHours = monthInfo.hoursSum;
+
+      setTimeout(() => {
+        jQuery('.fc-content').css('direction', 'rtl');
+      }, 10);
     });
     if (this.firstRender) {
       this.addButtons(calendar);
@@ -286,8 +290,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  checkForEnter(event?: any) {
-    if (event.keyCode == 13) {
+  checkForCtrlEnter(event?: any) {
+    if (event.which == 13 && event.ctrlKey == true) {
       document.getElementById('confirmWorkInfoButton').click();
       return;
     }

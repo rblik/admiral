@@ -7,7 +7,7 @@
   <button id="openModalButton" [hidden]="true" data-toggle="modal" data-target="#dayWorkInfoForm"></button>
   <div id="dayWorkInfoForm" tabindex='-1' class="modal fade" onclose="" role="dialog">
     <div class="modal-dialog modal-lg">
-      <div class="modal-content" [style.width]="'100%'">
+      <div class="modal-content" [style.width]="'110%'">
         <div class="modal-header noselect" style="text-align: center">
           <a id="dayWorkInfoFormClose" style="float: left"  data-dismiss="modal"><span class="fa fa-fw fa-close" style="color: #1a1a1a; cursor: pointer; font-size: large"></span></a>
           <span class="work-infos-modal-title hebrew-direct">
@@ -25,7 +25,7 @@
               <button type="button" class="btn btn-xs btn-info" title="הוסף דיווח" (click)="create()">&nbsp;הוסף דיווח&nbsp;<i class="fa fa-plus" aria-hidden="true"></i></button>
             </div>
             <div class="row hebrew-direct" style="margin-top: 1em">
-              <div *ngIf="createDialog" class="form-group" (keyup)="checkForEnter($event)">
+              <div *ngIf="createDialog" class="form-group" (keyup)="checkForCtrlEnter($event)">
                 <!--<p-calendar [(ngModel)]="tes" [stepMinute]=10 hourFormat="24" readonlyInput="true" dataType="string" [timeOnly]="true"></p-calendar>-->
                 <label for="dayWorkInfoFrom">
                   &nbsp;מ&nbsp;
@@ -41,7 +41,7 @@
                   <p-dropdown [options]="clientsDropdown" [style]="{'text-align':'center'}" id="clientsDropdown" panelStyleClass="form-control pull-right" [(ngModel)]="workInfoItem.agreementId" [filter]="true"></p-dropdown>
                 </label>
                 <br>
-                <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" placeholder="תיאור הפעילות " id="dayWorkInfoComment" class="form-control" [maxlength]="50"></textarea>
+                <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" placeholder="תיאור הפעילות " id="dayWorkInfoComment" class="form-control" [maxlength]="75"></textarea>
                 <br>
                 <button type="button" id="confirmWorkInfoButton" class="pull-left" pButton icon="fa-check" iconPos="right" (click)="save(workInfoItem)" label="שמור"></button>
               </div>
@@ -68,7 +68,7 @@
                   <td style="width: 10%">{{workInfo.from | time}}</td>
                   <td style="width: 10%">{{workInfo.to | time}}</td>
                   <td style="width: 10%" class="english-direct">{{workInfo.duration | minutesToHours}}</td>
-                  <td [ngStyle]="{'width': (!dayBydayLock)? '65%':'45%'}">{{workInfo.comment}}</td>
+                  <td [ngStyle]="{'width': (!dayBydayLock)? '65%':'45%'}" class="hebrew-direct" style="word-wrap: break-word; text-align: right">{{workInfo.comment}}</td>
                   <td style="width: 13%" *ngIf="!dayBydayLock">
                     <button title="לערוך" type="button" class="btn btn-xs btn-warning" (click)="edit(workInfo)" style="font-size: smaller"><i class="fa fa-pencil fa-fw"></i>&nbsp;ערוך&nbsp;</button>
                   </td>
