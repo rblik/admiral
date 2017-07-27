@@ -7,6 +7,7 @@ export class TimeService {
 
   public fromDate: Date;
   public toDate: Date;
+  private static MS_PER_DAY = 1000 * 60 * 60 * 24;
 
   constructor(private datepipe: DateFormatPipe) {
   }
@@ -26,6 +27,23 @@ export class TimeService {
     let day = d.getDay(),
       diff = d.getDate() - day + (day == 0 ? -7 + offset : offset);
     return new Date(d.setDate(diff));
+  }
+
+  public getWeekDayByDate(date : Date, offset?: number): Date {
+    let d = new Date(date);
+    d.setUTCHours(0, 0, 0);
+    let day = d.getDay(),
+      diff = d.getDate() - day + offset;
+    return new Date(d.setDate(diff));
+  }
+
+  public getDayOffset(fromDate: Date, toDate: Date): number {
+    let fromDateSunday = this.getWeekDayByDate(fromDate, 0);
+    let toDateSunday = this.getWeekDayByDate(toDate, 0);
+    let utcFrom = Date.UTC(fromDateSunday.getFullYear(), fromDateSunday.getMonth(), fromDateSunday.getDate());
+    let utcTo = Date.UTC(toDateSunday.getFullYear(), toDateSunday.getMonth(), toDateSunday.getDate());
+
+    return Math.round((utcTo - utcFrom) / (TimeService.MS_PER_DAY));
   }
 
   public getDaysInMonth(monthOffset?: number) {

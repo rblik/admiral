@@ -29,6 +29,7 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
   private employeesCheckboxOptions: IMultiSelectOption[] = [];
   private employeesCheckboxSettings: IMultiSelectSettings;
   private employeesCheckboxTexts: IMultiSelectTexts;
+  private he: any;
 
   constructor(private employeeService: EmployeeService,
               private router: Router,
@@ -39,6 +40,11 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
+    this.he = {
+      firstDayOfWeek: 0,
+      dayNamesMin: ["א'","ב'","ג'","ד'","ה'","ו'","ש'"],
+      monthNames: [ "ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר" ]
+    };
     this.message = '';
     $("#errorSuccessHoursField").click(function () {
       $("#errorSuccessHoursField").text('');

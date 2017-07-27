@@ -12,6 +12,7 @@ export class ReportComponent implements OnInit{
   private endDate: Date;
   private types: SelectItem[];
   private monthOffset: number;
+  private he: any;
 
   constructor(private timeService: TimeService) {
     this.types = [];
@@ -21,6 +22,11 @@ export class ReportComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    this.he = {
+      firstDayOfWeek: 0,
+      dayNamesMin: ["א'","ב'","ג'","ד'","ה'","ו'","ש'"],
+      monthNames: [ "ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר" ]
+    };
     this.setDefaultDateRange();
   }
 

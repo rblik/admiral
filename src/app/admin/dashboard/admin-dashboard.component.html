@@ -1,4 +1,5 @@
 <div style="margin-top: 15px">
+  <h3 style="text-align: center" *ngIf="employee"><a style="cursor: pointer" (click)="lockUnlock(currentMonthFirstDay)"><i style="color: black" [ngClass]="'fa ' + lockClass" aria-hidden="true"></i></a> {{employee.surname}} {{employee.name}} </h3>
   <button id="openModalButton" [hidden]="true" data-toggle="modal" data-target="#dayWorkInfoForm"></button>
   <div id="dayWorkInfoForm" tabindex='-1' class="modal fade" onclose="" role="dialog">
     <div class="modal-dialog modal-lg">
@@ -13,8 +14,9 @@
         </div>
         <div class="modal-body" style="width: 90%; margin: 0 auto">
           <div style="min-height: 100%">
-            <div style="text-align: center">
-              <h3 id="dasdasd">דיווח שעות עבודה</h3>
+            <div style="text-align: center" class="hebrew-direct">
+              <h3 id="dasdasd" *ngIf="isPivotal">דיווח שעות עבודה</h3>
+              <h3 *ngIf="!isPivotal && !!clientForCreatingWorkInfos">דיווח שעות עבודה ב{{clientForCreatingWorkInfos}}</h3>
             </div>
             <div *ngIf="!dayByDayLock && !inCreation">
               <button type="button" class="btn btn-xs btn-info" title="הוסף דיווח" (click)="create()">&nbsp;הוסף דיווח&nbsp;<i class="fa fa-plus" aria-hidden="true"></i></button>
@@ -88,11 +90,68 @@
   </div>
 
   <div style="text-align: center" *ngIf="employee">
-    <div style="width: 100%; display: inline-block; margin: 0 auto; font-size: x-small">
-
-      <p-schedule [aspectRatio]="3" [editable]="true" [events]="pluu" #adminCal (onViewRender)="getMonthAndRender(adminCal)"
-                  [header]="header"
-                  (onDayClick)="getDayWork($event)" (onEventClick)="getEventWork($event)" [eventLimit]="2"></p-schedule>
+    <div style="margin: 10px">
+      <div class="container" style="padding: 1em">
+        <div class="row">
+          <div class="col-md-1"></div>
+          <div class="col-md-1 pull-left">
+            <button class="btn" (click)="search(clientsUi)"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </div>
+          <div class="col-md-1 pull-left">
+            <ss-multiselect-dropdown [options]="clientsCheckboxOptions" [texts]="clientsCheckboxTexts" [settings]="clientsCheckboxSettings" [(ngModel)]="clientsUi"></ss-multiselect-dropdown>
+          </div>
+          <div class="col-md-4 pull-right">
+            <button (click)="moveWeekForward()" class="btn btn-sm btn-info"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;שבוע הבה&nbsp;</button>
+            <button (click)="moveWeekBack()" class="btn btn-sm btn-warning">&nbsp;שבוע קודם&nbsp;<i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+          </div>
+          <div class="col-md-2"></div>
+        </div>
+      </div>
+      <table style="width:100%; font-size: small">
+        <thead class="hebrew-direct" style="font-size: smaller">
+        <tr class="hebrew-direct">
+          <th colspan="2" style="width: 10%">סה"כ</th>
+          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 6))" style="cursor: pointer">{{getDayByWeek(currentSunday, 6) | hebrewDate}}</a></th>
+          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 5))" style="cursor: pointer">{{getDayByWeek(currentSunday, 5) | hebrewDate}}</a></th>
+          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 4))" style="cursor: pointer">{{getDayByWeek(currentSunday, 4) | hebrewDate}}</a></th>
+          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 3))" style="cursor: pointer">{{getDayByWeek(currentSunday, 3) | hebrewDate}}</a></th>
+          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 2))" style="cursor: pointer">{{getDayByWeek(currentSunday, 2) | hebrewDate}}</a></th>
+          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 1))" style="cursor: pointer">{{getDayByWeek(currentSunday, 1) | hebrewDate}}</a></th>
+          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(currentSunday)" style="cursor: pointer">{{currentSunday | hebrewDate}}</a></th>
+          <th colspan="2" style="width: 10%">פרויקט</th>
+          <th colspan="2" style="width: 10%">שם לקוח</th>
+        </tr>
+        </thead>
+        <tbody class="hebrew-direct">
+        <tr *ngFor="let item of uiAgreements">
+          <td colspan="2" style="width: 10%; font-size: smaller">
+            {{sum(item.workInfos) | minutesToHours}}
+          </td>
+          <td colspan="1" style="width: 10%" *ngFor="let work of item.workInfos | reverse">
+        <span style="cursor: pointer" (click)="showWorkDayDialog(work, item)">
+        <button [ngStyle]="{'width': '90%', 'direction':'rtl', 'background-color': '#FFFFFF'}"
+               style="width: inherit; font-size: smaller; text-align: center; border-style:solid; border-width: 1px; border-radius: 3px;"
+              >{{work.duration | minutesToHours}}</button>
+        </span>
+          </td>
+          <td colspan="2" style="width: 10%">
+            {{item.projectName}}
+          </td>
+          <td colspan="2" style="width: 10%">
+            {{item.clientName}}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" style="font-weight: bolder">{{sumByWeek | minutesToHours}}</td>
+          <td *ngFor="let sumByDay of sumByDayArr | reverse" style="font-weight: bolder">
+            {{sumByDay | minutesToHours}}
+          </td>
+          <td colspan="4" style="font-weight: bolder">
+            שעות ביום
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </div>
   <div class="hebrew-direct" style="text-align: center">
     <span style="margin: 0 auto; font-weight: bold">סה''כ שעות עבודה מדווחות - </span>
@@ -103,3 +162,4 @@
   </div>
   </div>
 </div>
+

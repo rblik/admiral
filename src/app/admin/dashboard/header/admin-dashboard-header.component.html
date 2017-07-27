@@ -12,7 +12,7 @@
       <p-dropdown [options]="employeesUi" [(ngModel)]="chosenEmployee" [filter]="true"
                   [style]="{'text-align':'center', 'width': '12em'}"
                   [panelStyle]="{'align-content': 'center'}"></p-dropdown>
-      <p-calendar [(ngModel)]="searchDate" [style]="{'text-align':'center', 'width': '7em'}"
+      <p-calendar [(ngModel)]="searchDate" [locale]="he" [style]="{'text-align':'center', 'width': '7em'}"
                   [inputStyle]="{'text-align':'center', 'width':'100%'}" id="startDateId"
                   dateFormat="dd.mm.yy"></p-calendar>
       <button class="btn btn-sm btn-info" [disabled]="!chosenEmployee" (click)="showDashboard(chosenEmployee)"><i
