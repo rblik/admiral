@@ -15,13 +15,19 @@
 
         <div class="row col-md-12">
           <div class="form-group col-md-6 pull-right">
-            <input type="text" placeholder="שם *" class="form-control" formControlName="name">
+            <label>שם לקוח *
+              <input type="text" class="form-control" formControlName="name">
+            </label>
           </div>
           <div class="form-group col-md-6 pull-left">
-            <input type="text" placeholder="מס. חברה" class="form-control" formControlName="companyNumber">
+            <label>ח.פ. לקוח
+              <input type="text" class="form-control" formControlName="companyNumber">
+            </label>
           </div>
           <div class="form-group col-md-6 pull-right">
-            <input type="text" placeholder="מס. לקוח" class="form-control" formControlName="clientNumber">
+            <label>מס' לקוח במערכת
+              <input type="text" class="form-control" formControlName="clientNumber">
+            </label>
           </div>
         </div>
 
@@ -64,21 +70,29 @@
               <!--area-->
               <div class="row col-md-12">
                 <div class="pull-right col-md-6">
-                  <input type="text" class="form-control" placeholder="אזור" formControlName="area">
+                  <label>אזור
+                    <input type="text" class="form-control" formControlName="area">
+                  </label>
                 </div>
                 <!--city-->
                 <div class="col-md-6 pull-left">
-                  <input type="text" class="form-control" placeholder="עיר" formControlName="city">
+                  <label>עיר
+                    <input type="text" class="form-control" formControlName="city">
+                  </label>
                 </div>
               </div>
               <div class="row col-md-12">
                 <!--street-->
                 <div class="pull-right col-md-6">
-                  <input type="text" class="form-control" placeholder="רחוב" formControlName="street">
+                  <label>רחוב
+                    <input type="text" class="form-control" formControlName="street">
+                  </label>
                 </div>
                 <!--houseNumber-->
                 <div class="pull-left col-md-6">
-                  <input type="text" class="form-control" placeholder="מס. בית" formControlName="houseNumber">
+                  <label>מס' בית
+                    <input type="text" class="form-control" formControlName="houseNumber">
+                  </label>
                   <!--display error message if street is not valid-->
                 </div>
               </div>

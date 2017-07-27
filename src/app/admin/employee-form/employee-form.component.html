@@ -13,13 +13,19 @@
 
         <div class="row col-md-12 hebrew-direct">
           <div class="form-group col-md-6 pull-right">
-            <input type="text" placeholder="שם *" class="form-control" formControlName="name">
+            <label>שם פרטי *
+              <input type="text" class="form-control" formControlName="name">
+            </label>
           </div>
           <div class="form-group col-md-6 pull-left">
-            <input type="text" placeholder="שם משפחה *" class="form-control" formControlName="surname">
+            <label>שם משפחה *
+              <input type="text" class="form-control" formControlName="surname">
+            </label>
           </div>
           <div class="form-group col-md-4 pull-right">
-            <p-calendar formControlName="birthday" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2030" dateFormat="dd.mm.yy" id="birthdayDate" placeholder="תאריך לידה" inputStyleClass="form-control"></p-calendar>
+            <label>              תעריך לידה
+            <p-calendar formControlName="birthday" [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2030" dateFormat="dd.mm.yy" id="birthdayDate" inputStyleClass="form-control"></p-calendar>
+            </label>
           </div>
           <div class="form-group col-md-1 pull-right">
             <label for="isEnabled">
@@ -34,25 +40,40 @@
             </label>
           </div>
           <div class="form-group col-md-6 pull-left">
-            <input type="text" placeholder="דואר *" class="form-control" formControlName="email">
-          </div>
-          <div class="form-group col-md-6 pull-right">
-            <input type="text" placeholder="מספר עובד" class="form-control" formControlName="employeeNumber">
-          </div>
-          <div class="form-group col-md-6 pull-right">
-            <input type="text" placeholder="טל פרטי" class="form-control" formControlName="privatePhone">
+            <label>כתובת מייל *
+              <input type="text" class="form-control" formControlName="email">
+            </label>
           </div>
           <div class="form-group col-md-6 pull-left">
-            <input type="text" placeholder="תעודת זהות" class="form-control" formControlName="passportId">
+            <label>מס' עובד
+              <input type="text" class="form-control" formControlName="employeeNumber">
+            </label>
+          </div>
+          <div class="form-group col-md-6 pull-left">
+            <label>טל פרטי
+              <input type="text" class="form-control" formControlName="privatePhone">
+            </label>
           </div>
           <div class="form-group col-md-6 pull-right">
-            <input type="text" placeholder="טל עבודה" class="form-control" formControlName="companyPhone">
+            <label>תעודת זהות
+              <input type="text" class="form-control" formControlName="passportId">
+            </label>
+          </div>
+          <div class="form-group col-md-6 pull-left">
+            <label>טל עבודה
+              <input type="text" class="form-control" formControlName="companyPhone">
+            </label>
           </div>
           <div [hidden]="!!employeeForCreation.id" class="form-group col-md-6 pull-left">
-            <input type="password" placeholder="סיסמה *" class="form-control" formControlName="password">
+            <label>סיסמה *
+              <input type="password" class="form-control" formControlName="password">
+            </label>
           </div>
           <div class="form-group col-md-6 pull-right">
-            <p-dropdown [options]="departmentsUi" [style]="{'width':'inherit'}" formControlName="chosenDepartment" [filter]="true"></p-dropdown>
+            <label>צוות *
+            </label>
+            <br>
+              <p-dropdown [options]="departmentsUi" [style]="{'width':'inherit'}" formControlName="chosenDepartment" [filter]="true"></p-dropdown>
           </div>
         </div>
         <div class="modal-footer col-md-12">

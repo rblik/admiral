@@ -419,8 +419,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   makeWholeDay(): void {
-    this.workInfoItem.from = "00:00";
-    this.workInfoItem.to = "23:59";
+    this.workInfoItem.from = "09:00";
+    this.workInfoItem.to = "18:00";
   }
 
   private getClientsUi(agreements: AgreementDto[]) {

@@ -419,8 +419,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   }
 
   makeWholeDay(): void {
-    this.workInfoItem.from = "00:00";
-    this.workInfoItem.to = "23:59";
+    this.workInfoItem.from = "09:00";
+    this.workInfoItem.to = "18:00";
   }
 
   saveHoursSum(hoursSum: number) {

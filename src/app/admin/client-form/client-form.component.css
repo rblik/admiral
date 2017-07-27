@@ -7,6 +7,7 @@ p {
 input {
   margin-bottom: 5px;
   text-align: right;
+  font-weight: normal;
 }
 
 .modal-dialog .modal-content {

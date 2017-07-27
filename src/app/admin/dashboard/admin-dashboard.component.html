@@ -30,7 +30,7 @@
                   &nbsp;עד&nbsp;
                   <p-inputMask [(ngModel)]="workInfoItem.to" (keyup)="jump($event)" mask="99:99" id="dayWorkInfoTo" inputStyleClass="form-control" [maxlength]="5"></p-inputMask>
                 </label>
-                <button type="button" iconPos="right" pButton icon="fa-clock-o" (click)="makeWholeDay()" label="24"></button>
+                <button type="button" iconPos="right" pButton icon="fa-clock-o" (click)="makeWholeDay()" label="דיווח שעות מלא"></button>
                 <br>
                 <label for="clientsDropdown" *ngIf="isPivotal && !isEdit" style="padding: 0.5em 0 0.5em 0">
                   <p-dropdown [options]="clientsDropdown" [style]="{'text-align':'center'}" id="clientsDropdown" panelStyleClass="form-control pull-right" [(ngModel)]="workInfoItem.agreementId" [filter]="true"></p-dropdown>
