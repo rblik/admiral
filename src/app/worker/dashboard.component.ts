@@ -58,6 +58,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private firstDayOfMonth: Date;
   private firstDayOfNextMonth: Date;
   private defaultMonthHours: number = 0;
+  private inCreation: boolean = false;
 
   constructor(private notificationBarService: NotificationBarService, private minToHours: MinutesToHoursPipe, private timeService: TimeService, private downloadService: UserDownloadService, private monthInfoService: MonthInfoService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
     this.types = [];
@@ -168,16 +169,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.refreshAllInfos(workInfos);
       this.lock = monthInfo.locked;
       this.defaultMonthHours = monthInfo.hoursSum;
-
-      setTimeout(() => {
-        jQuery('.fc-content').css('direction', 'rtl');
-      }, 10);
     });
     if (this.firstRender) {
       this.addButtons(calendar);
       this.firstRender = false;
     }
   }
+
+  private setAsyncDirection() {
+    setTimeout(() => {
+      jQuery('.fc-content').css('direction', 'rtl');
+    }, 10);
+  }
+
   /*calculateDefaultSumByMonth(d0: Date, d1: Date) {
     let date = new Date(d1);
     date.setDate(0);
@@ -193,12 +197,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.sumByMonth = 0;
     this.pluu.splice(0, this.pluu.length);
     this.pluu.push.apply(this.pluu, this.getEvents(workInfos));
+    this.setAsyncDirection();
   }
 
   private getEvents(workInfos: WorkInfo[]): Event[] {
     return workInfos.map(info => {
       this.sumByMonth += info.duration;
-      return new Event(info.clientName + ' - ' + this.minToHours.transform(info.duration, true), info.date, info.duration);
+      return new Event(this.minToHours.transform(info.duration, true) + " - " + info.clientName, info.date, info.duration);
     });
   }
 
@@ -220,6 +225,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     let currentDate = this.timeService.getDateString(date);
     this.isPivotal = true;
     this.error = '';
+    this.inCreation = false;
     this.createDialog = false;
     this.activeAgreementId = null;
     this.dayForCreatingWorkInfos = new Date(currentDate);
@@ -303,6 +309,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.workInfoItem.agreementId = !this.isPivotal? this.activeAgreementId : this.clientsDropdown[0].value;
     this.workInfoItem.date = this.activeDate;
     this.workInfoItem.duration = 0;
+    this.inCreation = true;
     this.createDialog = true;
     setTimeout(function () {
       jQuery('#dayWorkInfoFrom').find(':input').focus();
@@ -327,6 +334,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }, 500);
   }
 
+  cancel() {
+    this.error = '';
+    this.inCreation = false;
+    this.createDialog = false;
+    jQuery('#dayWorkInfoForm').focus();
+  }
+
   save(workInfo: WorkInfo) {
     if (this.timeService.validate(workInfo)) {
       this.error = "טווח זמן שגוי";
@@ -335,6 +349,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.upsertWorkInfoSubscription = this.workService.save(workInfo.agreementId, this.convertToUnit(workInfo))
       .subscribe(workUnit => {
         this.error = '';
+        this.inCreation = false;
         let saved: WorkInfo = this.convertToInfo(workUnit, workInfo.agreementId);
         saved.clientName = this.getClientNameByAgreementId(workInfo.agreementId);
         this.replaceInDayWorkInfos(saved);

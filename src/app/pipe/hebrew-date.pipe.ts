@@ -68,7 +68,7 @@ export class HebrewDatePipe implements PipeTransform {
           month = "דצמבר";
           break;
       }
-      return (pattern == 'day-weekDay') ? dayOfMonth + " " + day : (pattern == 'year-month') ? year + " " + month : year + " " + month + " " + dayOfMonth + " " + day;
+      return (pattern == 'day-weekDay') ? dayOfMonth + " " + day + "'" : (pattern == 'year-month') ? year + " " + month : dayOfMonth + " ב" + month + " " + year + " " + day + "'";
     }
 
   }

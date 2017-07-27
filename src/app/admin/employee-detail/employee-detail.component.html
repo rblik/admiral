@@ -4,7 +4,7 @@
       <h4 class="card-title hebrew-direct" style="font-weight: bold; text-align: center">{{employee.surname+'&nbsp;'+employee.name}}<span style="font-size: 50%" class="{{employee.enabled? 'label label-success': 'label label-danger'}}">{{employee.enabled? 'פעיל':'לא פעול'}}</span></h4>
       <ul class="list-group">
         <li class="list-group-item">
-          <a style="font-size: small" pButton icon="fa-pencil-square-o" data-toggle="modal" data-keyboard="true" data-target="#employeeEditionForm"></a>
+          <a style="font-size: small" pButton icon="fa-pencil-square-o" class="ui-button-warning" data-toggle="modal" data-keyboard="true" data-target="#employeeEditionForm"></a>
           <a style="font-size: small" pButton icon="fa-lock" class="ui-button-danger" (click)="preparePasswordForm(); op.toggle($event)"></a>
         </li>
         <li *ngIf="employee.employeeNumber" class="list-group-item">&nbsp;{{employee.employeeNumber}}

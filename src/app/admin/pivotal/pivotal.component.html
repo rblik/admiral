@@ -30,7 +30,7 @@
     </p-column>
     <p-column field="duration" header="משך" [sortable]="true">
       <template let-col let-vraag="rowData" pTemplate="body">
-        <span [innerHTML]="vraag[col.field] | minutesToHours"></span>
+        <span class="hebrew-direct" [innerHTML]="vraag[col.field] | minutesToHours"></span>
       </template>
     </p-column>
     <p-column field="to" header="עד" [sortable]="true">

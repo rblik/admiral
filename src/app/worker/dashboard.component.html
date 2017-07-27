@@ -21,7 +21,7 @@
             <div style="text-align: center">
                 <h3>דיווח שעות עבודה</h3>
             </div>
-            <div *ngIf="!dayBydayLock">
+            <div *ngIf="!dayBydayLock && !inCreation">
               <button type="button" class="btn btn-xs btn-info" title="הוסף דיווח" (click)="create()">&nbsp;הוסף דיווח&nbsp;<i class="fa fa-plus" aria-hidden="true"></i></button>
             </div>
             <div class="row hebrew-direct" style="margin-top: 1em">
@@ -37,13 +37,14 @@
                 </label>
                 <button type="button" iconPos="right" pButton icon="fa-clock-o" (click)="makeWholeDay()" label="24"></button>
                 <br>
-                <label for="clientsDropdown" *ngIf="isPivotal && !isEdit">
+                <label for="clientsDropdown" *ngIf="isPivotal && !isEdit" style="padding: 0.5em 0 0.5em 0">
                   <p-dropdown [options]="clientsDropdown" [style]="{'text-align':'center'}" id="clientsDropdown" panelStyleClass="form-control pull-right" [(ngModel)]="workInfoItem.agreementId" [filter]="true"></p-dropdown>
                 </label>
                 <br>
                 <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" placeholder="תיאור הפעילות " id="dayWorkInfoComment" class="form-control" [maxlength]="75"></textarea>
                 <br>
-                <button type="button" id="confirmWorkInfoButton" class="pull-left" pButton icon="fa-check" iconPos="right" (click)="save(workInfoItem)" label="שמור"></button>
+                <button type="button" id="cancelWorkInfoButton" class="pull-left ui-button-danger" style="border-width: 0" pButton icon="fa-undo" iconPos="right" (click)="cancel()" label="בטל"></button>
+                <button type="button" id="confirmWorkInfoButton" class="pull-left ui-button-text" style="border-width: 0" pButton icon="fa-check" iconPos="right" (click)="save(workInfoItem)" label="שמור"></button>
               </div>
             </div>
             <div class="row">
@@ -67,7 +68,7 @@
                   <td style="width: 20%" *ngIf="isPivotal">{{workInfo.clientName}}</td>
                   <td style="width: 10%">{{workInfo.from | time}}</td>
                   <td style="width: 10%">{{workInfo.to | time}}</td>
-                  <td style="width: 10%" class="english-direct">{{workInfo.duration | minutesToHours}}</td>
+                  <td style="width: 10%" class="hebrew-direct">{{workInfo.duration | minutesToHours}}</td>
                   <td [ngStyle]="{'width': (!dayBydayLock)? '65%':'45%'}" class="hebrew-direct" style="word-wrap: break-word; text-align: right">{{workInfo.comment}}</td>
                   <td style="width: 13%" *ngIf="!dayBydayLock">
                     <button title="לערוך" type="button" class="btn btn-xs btn-warning" (click)="edit(workInfo)" style="font-size: smaller"><i class="fa fa-pencil fa-fw"></i>&nbsp;ערוך&nbsp;</button>
@@ -82,11 +83,11 @@
 
           </div>
         </div>
-        <div class="modal-footer">
+        <!--<div class="modal-footer">
           <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button class="pull-left" type="button" pButton icon="fa-check" (click)="closeDialog()" label="Ok"></button>
+            <button style="direction: rtl" class="pull-left" type="button" pButton icon="fa-close" (click)="closeDialog()" iconPos="right" label="סגור"></button>
           </div>
-        </div>
+        </div>-->
       </div>
     </div>
   </div>
@@ -108,6 +109,8 @@
 
   <span style="margin: 0 auto; font-weight: bold">סה''כ שעות עבודה מדווחות - </span>
   <span id="sumByMonth" style="margin: 0 auto; font-weight: bold">{{sumByMonth | minutesToHours}}</span>
-  <span id="defaultMonthHours" style="margin: 0 auto; font-weight: bold">{{'/ '+(defaultMonthHours?defaultMonthHours:0) + 'h'}}</span>
+  <br>
+  <span style="margin: 0 auto; font-weight: bold">תקן חודשי - </span>
+  <span id="defaultMonthHours" style="margin: 0 auto; font-weight: bold">{{(defaultMonthHours?defaultMonthHours:0) + " ש'"}}</span>
 </div>
 </div>

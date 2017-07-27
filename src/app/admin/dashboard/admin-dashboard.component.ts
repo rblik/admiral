@@ -50,6 +50,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   private firstAdminRender: boolean = true;
   private firstDayOfMonth: Date;
   private firstDayOfNextMonth: Date;
+  private inCreation: boolean = false;
   private pluu: Event[] = [];
   private header: { left: string; center: string; right: string };
   private defaultMonthHours: number = 0;
@@ -134,11 +135,13 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
       this.lockClass = this.lock? 'fa-lock': 'fa-unlock';
       $('#lockUnlockButton').removeClass('fa-lock').removeClass('fa-unlock').addClass(this.lockClass);
       this.refreshAllInfos(workInfos);
-
-      setTimeout(() => {
-        jQuery('.fc-content').css('direction', 'rtl');
-      }, 10);
     });
+  }
+
+  private setAsyncDirection() {
+    setTimeout(() => {
+      jQuery('.fc-content').css('direction', 'rtl');
+    }, 10);
   }
 
   addButtons(calendar) {
@@ -193,12 +196,13 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     this.sumByMonth = 0;
     this.pluu.splice(0, this.pluu.length);
     this.pluu.push.apply(this.pluu, this.getEvents(workInfos));
+    this.setAsyncDirection();
   }
 
   private getEvents(workInfos: WorkInfo[]): Event[] {
     return workInfos.map(info => {
       this.sumByMonth += info.duration;
-      return new Event(info.clientName + ' - ' + this.minToHours.transform(info.duration, true), info.date, info.duration);
+      return new Event(this.minToHours.transform(info.duration, true) + " - " + info.clientName, info.date, info.duration);
     });
   }
 
@@ -223,6 +227,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     let currentDate = this.timeService.getDateString(date);
     this.isPivotal = true;
     this.error = '';
+    this.inCreation = false;
     this.createDialog = false;
     this.activeAgreementId = null;
     this.dayForCreatingWorkInfos = new Date(currentDate);
@@ -298,6 +303,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     this.workInfoItem.agreementId = !this.isPivotal? this.activeAgreementId : this.clientsDropdown[0].value;
     this.workInfoItem.date = this.activeDate;
     this.workInfoItem.duration = 0;
+    this.inCreation = true;
     this.createDialog = true;
     setTimeout(function () {
       jQuery('#dayWorkInfoFrom').find(':input').focus();
@@ -322,6 +328,13 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     }, 500);
   }
 
+  cancel() {
+    this.error = '';
+    this.inCreation = false;
+    this.createDialog = false;
+    jQuery('#dayWorkInfoForm').focus();
+  }
+
   save(workInfo: WorkInfo) {
     if (this.timeService.validate(workInfo)) {
       this.error = "טווח זמן שגוי";
@@ -331,6 +344,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     this.upsertWorkInfoSubscription = this.workService.save(workInfo.agreementId, this.convertToUnit(workInfo), this.employee.id, this.adminUnitsUrl)
       .subscribe(workUnit => {
         this.error = '';
+        this.inCreation = false;
         let date = new Date(workUnit.date);
         let saved: WorkInfo = this.convertToInfo(workUnit, workInfo.agreementId);
         saved.clientName = this.getClientNameByAgreementId(workInfo.agreementId);
