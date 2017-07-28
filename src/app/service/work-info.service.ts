@@ -81,9 +81,7 @@ export class WorkInfoService {
     return this.http.get(this.defaultChoiceUrl, options)
       .map(res => res.json())
       .catch(e => {
-        let json = e.json();
-        let s = json.details[0];
-        return Observable.throw(s);
+        return Observable.throw("קודם צריך ליצור את ברירת המחדל");
       });
   }
 

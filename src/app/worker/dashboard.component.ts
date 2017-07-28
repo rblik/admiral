@@ -60,6 +60,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private defaultMonthHours: number = 0;
   private inCreation: boolean = false;
   private isEnabled: boolean = false;
+  private defaultChoiceError: string;
 
   constructor(private notificationBarService: NotificationBarService, private minToHours: MinutesToHoursPipe, private timeService: TimeService, private downloadService: UserDownloadService, private monthInfoService: MonthInfoService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
     this.types = [];
@@ -72,11 +73,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     };
   }
 
-  private fillDefaultChoice() {
+  fillDefaultChoice() {
     this.workService.getDefaultChoice().subscribe(choice => {
       if (!!choice.start) this.workInfoItem.from = choice.start;
       if (!!choice.finish) this.workInfoItem.to = choice.finish;
       if (!!choice.agreement.id) this.workInfoItem.agreementId = choice.agreement.id;
+    }, err => {
+      this.defaultChoiceError = err;
     })
   }
 
@@ -235,6 +238,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.isPivotal = true;
     this.error = '';
     this.inCreation = false;
+    this.defaultChoiceError = '';
     this.createDialog = false;
     this.activeAgreementId = null;
     this.dayForCreatingWorkInfos = new Date(currentDate);
@@ -299,7 +303,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       event.target.value.indexOf('_') == -1
       && event.target.parentElement.attributes.id.nodeValue === 'dayWorkInfoTo'
       && ((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 37)) {
-      jQuery('#clientsDropdown').find("div.ui-helper-hidden-accessible").find(":text").get(0).focus();
+      let clientsDropdown = jQuery('#clientsDropdown').find("div.ui-helper-hidden-accessible").find(":text").get(0);
+      if (!!clientsDropdown) clientsDropdown.focus();
     }
   }
 

@@ -68,3 +68,9 @@ td, th:not(:first-child) {
   border-width: 1px;
   border-radius: 3px;
 }
+
+.underscored {
+ color: red;
+  text-decoration-color: red;
+  text-decoration: underline;
+}

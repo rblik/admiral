@@ -18,6 +18,10 @@
         </div>
         <div class="modal-body" style="width: 90%; margin: 0 auto">
           <div style="min-height: 100%">
+            <span id="defaultChoiceError" (click)="defaultChoiceError = ''" style="position: absolute; font-size: smaller; color: red; direction: rtl; margin-top: 3em"
+                  class="hebrew-direct">
+              {{defaultChoiceError}}
+            </span>
             <div style="text-align: center">
                 <h3>דיווח שעות עבודה</h3>
             </div>
@@ -56,8 +60,7 @@
                 <br>
                 <button type="button" id="cancelWorkInfoButton" class="pull-left ui-button-danger" style="border-width: 0" pButton icon="fa-undo" iconPos="right" (click)="cancel()" label="בטל"></button>
                 <button type="button" id="confirmWorkInfoButton" class="pull-left ui-button-text" style="border-width: 0" pButton icon="fa-check" iconPos="right" (click)="save(workInfoItem)" label="שמור"></button>
-                <label for="isEnabled" class="pull-left" style="padding-left: 1em">לשמור כברירת מחדל
-                  <p-checkbox id="isEnabled" [(ngModel)]="isEnabled" binary="true"></p-checkbox>
+                <label for="isEnabled" class="pull-left" [ngClass]="(!!defaultChoiceError && defaultChoiceError.length > 0)? 'underscored':''" style="padding-left: 1em">לשמור כברירת מחדל<p-checkbox id="isEnabled" [(ngModel)]="isEnabled" binary="true"></p-checkbox>
                 </label>
               </div>
             </div>
