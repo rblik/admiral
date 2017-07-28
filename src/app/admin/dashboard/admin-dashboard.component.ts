@@ -272,61 +272,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     });
   }
 
-  addButtons(calendar) {
-    if ($('.fc-right').children().length == 0) {
-
-      let nextPrevGroupDiv = $('<div>').addClass('button-group');
-
-      let nextButton = $('<button>')
-        .addClass("fc-prev-button ui-button ui-state-default ui-corner-left")
-        .attr({
-          type: "button"
-        })
-        .on('click', function () {
-          calendar.next();
-        }).html('<span class="ui-icon ui-icon-circle-triangle-w"></span>');
-      nextButton.append('</button>');
-
-      let prevButton = $('<button>')
-        .addClass("fc-next-button ui-button ui-state-default ui-corner-right")
-        .attr({
-          type: "button"
-        })
-        .on('click', function () {
-          calendar.prev();
-        }).html('<span class="ui-icon ui-icon-circle-triangle-e"></span>');
-      prevButton.append('</button>');
-
-      let a = $('<a>').css('cursor', 'pointer').css('font-size', 'large');
-      let i = $('<i>').css('color', 'black');
-      i.attr('id', 'lockUnlockButton');
-      i.addClass('fa');
-      let t = this;
-      a.click(function () {
-        t.lockUnlock();
-      });
-      a.append(i);
-
-      let spanWithName = $('<span>').attr('id', 'adminSpanWithName').text(this.employee.surname + ' ' + this.employee.name).css('font-size', 'large');
-      nextPrevGroupDiv.append(nextButton);
-      nextPrevGroupDiv.append(prevButton);
-      nextPrevGroupDiv.append('</div>');
-
-      $('.fc-left').prepend(nextPrevGroupDiv);
-      $('.fc-right').prepend(spanWithName);
-      $('.fc-right').prepend(a);
-      calendar.gotoDate(this.pointDate);
-    }
-    $('#adminSpanWithName').text(this.employee.surname + ' ' + this.employee.name);
-  }
-
-  private getEvents(workInfos: WorkInfo[]): Event[] {
-    return workInfos.map(info => {
-      this.sumByMonth += info.duration;
-      return new Event(this.minToHours.transform(info.duration, true) + " - " + info.clientName, info.date, info.duration);
-    });
-  }
-
   getDayByMonth(sunday: Date, offset: number): Date {
     return this.timeService.getRelativeMonthDay(sunday, offset);
   }
@@ -502,15 +447,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   makeWholeDay(): void {
     this.workInfoItem.from = "09:00";
     this.workInfoItem.to = "18:00";
-  }
-
-  saveHoursSum(hoursSum: number) {
-    this.lockService.saveMonthInfo(this.timeService.getDateString(this.firstDayOfMonth), this.lock, hoursSum,this.employee.id)
-      .subscribe(monthInfo => {
-        this.lockClass = 'fa-lock';
-        $('#lockUnlockButton').removeClass('fa-unlock').addClass(this.lockClass);
-        this.sumByMonth = hoursSum;
-      });
   }
 
   lockUnlock(firstDayOfMonth?: Date){
