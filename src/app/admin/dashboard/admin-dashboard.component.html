@@ -24,19 +24,29 @@
             <div class="row hebrew-direct" style="margin-top: 1em">
               <div *ngIf="createDialog" class="form-group" (keyup)="checkForCtrlEnter($event)">
                 <!--<p-calendar [(ngModel)]="tes" [stepMinute]=10 hourFormat="24" readonlyInput="true" dataType="string" [timeOnly]="true"></p-calendar>-->
-                <label for="dayWorkInfoFrom">
-                  &nbsp;מ&nbsp;
-                  <p-inputMask [(ngModel)]="workInfoItem.from" (keyup)="jump($event)" id="dayWorkInfoFrom" mask="99:99" inputStyleClass="form-control" [maxlength]="5"></p-inputMask>
-                </label>
-                <label for="dayWorkInfoTo">
-                  &nbsp;עד&nbsp;
-                  <p-inputMask [(ngModel)]="workInfoItem.to" (keyup)="jump($event)" mask="99:99" id="dayWorkInfoTo" inputStyleClass="form-control" [maxlength]="5"></p-inputMask>
-                </label>
-                <button type="button" iconPos="right" pButton icon="fa-clock-o" (click)="makeWholeDay()" label="דיווח שעות מלא"></button>
-                <br>
-                <label for="clientsDropdown" *ngIf="isPivotal && !isEdit" style="padding: 0.5em 0 0.5em 0">
-                  <p-dropdown [options]="clientsDropdown" [style]="{'text-align':'center'}" id="clientsDropdown" panelStyleClass="form-control pull-right" [(ngModel)]="workInfoItem.agreementId" [filter]="true"></p-dropdown>
-                </label>
+                <div class="btn-group" style="padding: 0 0 0.5em 0">
+                  <button type="button" class="btn ui-button-secondary" style="font-size: xx-small" iconPos="right" pButton icon="fa-clock-o" (click)="makeWholeDay()" label="דיווח שעות מלא"></button>
+                </div>
+                <div style="text-align: center; position: relative;">
+                  <label for="dayWorkInfoFrom">
+                    &nbsp;מ-
+                    <p-inputMask [style]="{'width':'5em'}" [(ngModel)]="workInfoItem.from" (keyup)="jump($event)"
+                                 id="dayWorkInfoFrom" mask="99:99" inputStyleClass="form-control"
+                                 [maxlength]="5"></p-inputMask>
+                  </label>
+                  <label for="dayWorkInfoTo">
+                    &nbsp;עד&nbsp;
+                    <p-inputMask [style]="{'width':'5em'}" [(ngModel)]="workInfoItem.to" (keyup)="jump($event)"
+                                 mask="99:99" id="dayWorkInfoTo" inputStyleClass="form-control"
+                                 [maxlength]="5"></p-inputMask>
+                  </label>
+                  &nbsp;
+                  <label for="clientsDropdown" *ngIf="isPivotal && !isEdit" style="padding: 0.5em 0 0.5em 0">
+                    <p-dropdown [options]="clientsDropdown" [style]="{'text-align':'center'}" id="clientsDropdown"
+                                panelStyleClass="form-control pull-right" [(ngModel)]="workInfoItem.agreementId"
+                                [filter]="true"></p-dropdown>
+                  </label>
+                </div>
                 <br>
                 <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" placeholder="תיאור הפעילות " id="dayWorkInfoComment" class="form-control" [maxlength]="75"></textarea>
                 <br>
@@ -94,11 +104,11 @@
       <div class="container" style="padding: 1em">
         <div class="row">
           <div class="col-md-1"></div>
-          <div class="col-md-1 pull-left">
-            <button class="btn" (click)="search(clientsUi)"><i class="fa fa-search" aria-hidden="true"></i></button>
-          </div>
-          <div class="col-md-1 pull-left">
+          <div class=" pull-left">
             <ss-multiselect-dropdown [options]="clientsCheckboxOptions" [texts]="clientsCheckboxTexts" [settings]="clientsCheckboxSettings" [(ngModel)]="clientsUi"></ss-multiselect-dropdown>
+          </div>
+          <div class="pull-left">
+            <a class="btn" id="lupa" (click)="search(clientsUi)"><i style="color: #1a1a1a; font-size: x-large" class="fa fa-search" aria-hidden="true"></i></a>
           </div>
           <div class="col-md-4 pull-right">
             <button (click)="moveWeekForward()" class="btn btn-sm btn-info"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;שבוע הבה&nbsp;</button>
@@ -111,13 +121,13 @@
         <thead class="hebrew-direct" style="font-size: inherit">
         <tr class="hebrew-direct">
           <th colspan="2" style="width: 10%">סה"כ</th>
-          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 6))" style="cursor: pointer">{{getDayByWeek(currentSunday, 6) | hebrewDate}}</a></th>
-          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 5))" style="cursor: pointer">{{getDayByWeek(currentSunday, 5) | hebrewDate}}</a></th>
-          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 4))" style="cursor: pointer">{{getDayByWeek(currentSunday, 4) | hebrewDate}}</a></th>
-          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 3))" style="cursor: pointer">{{getDayByWeek(currentSunday, 3) | hebrewDate}}</a></th>
-          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 2))" style="cursor: pointer">{{getDayByWeek(currentSunday, 2) | hebrewDate}}</a></th>
-          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 1))" style="cursor: pointer">{{getDayByWeek(currentSunday, 1) | hebrewDate}}</a></th>
-          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(currentSunday)" style="cursor: pointer">{{currentSunday | hebrewDate}}</a></th>
+          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 6))" style="cursor: pointer; font-size: smaller">{{getDayByWeek(currentSunday, 6) | hebrewDate}}</a></th>
+          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 5))" style="cursor: pointer; font-size: smaller">{{getDayByWeek(currentSunday, 5) | hebrewDate}}</a></th>
+          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 4))" style="cursor: pointer; font-size: smaller">{{getDayByWeek(currentSunday, 4) | hebrewDate}}</a></th>
+          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 3))" style="cursor: pointer; font-size: smaller">{{getDayByWeek(currentSunday, 3) | hebrewDate}}</a></th>
+          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 2))" style="cursor: pointer; font-size: smaller">{{getDayByWeek(currentSunday, 2) | hebrewDate}}</a></th>
+          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(getDayByWeek(currentSunday, 1))" style="cursor: pointer; font-size: smaller">{{getDayByWeek(currentSunday, 1) | hebrewDate}}</a></th>
+          <th colspan="1" style="width: 10%"><a (click)="showPivotalWorkDayDialog(currentSunday)" style="cursor: pointer; font-size: smaller">{{currentSunday | hebrewDate}}</a></th>
           <th colspan="2" style="width: 10%">פרויקט</th>
           <th colspan="2" style="width: 10%">שם לקוח</th>
         </tr>

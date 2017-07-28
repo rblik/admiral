@@ -23,6 +23,7 @@ export class EmployeeFormComponent implements OnInit, OnChanges, OnDestroy{
   private localStDepSubscription: Subscription;
   private getDepartmentsSubscription: Subscription;
   private upsertEmployeeSubscription: Subscription;
+  private he: any;
 
   constructor(private departmentService: DepartmentService,
               private timeService: TimeService,
@@ -46,6 +47,11 @@ export class EmployeeFormComponent implements OnInit, OnChanges, OnDestroy{
   }
 
   ngOnInit(): void {
+    this.he = {
+      firstDayOfWeek: 0,
+      dayNamesMin: ["א'","ב'","ג'","ד'","ה'","ו'","ש'"],
+      monthNames: [ "ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר" ]
+    };
     this.getDepartments();
     this.subscribeOnEditedDepartment();
     this.fillTheForm();

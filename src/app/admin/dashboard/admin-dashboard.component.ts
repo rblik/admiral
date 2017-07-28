@@ -184,6 +184,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
       let currentDate = workInfo.date;
       this.isPivotal = false;
       this.error = '';
+      this.inCreation = false;
       this.createDialog = false;
       this.clientForCreatingWorkInfos = agreement.clientName;
       this.dayForCreatingWorkInfos = new Date(currentDate);
@@ -315,17 +316,16 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
       && event.target.selectionStart === 0) {
       (<HTMLInputElement>jQuery('#dayWorkInfoFrom').find(':input').get(0)).focus();
     } else if (
-      event.keyCode == 40
-      && (event.target.parentElement.attributes.id.nodeValue === 'dayWorkInfoFrom'
-      || event.target.parentElement.attributes.id.nodeValue === 'dayWorkInfoTo')
-      && this.isPivotal
-      && !this.isEdit) {
-      jQuery('#clientsDropdown').find("div.ui-helper-hidden-accessible").find(":text").get(0).focus();
-    } else if (
       event.target.value.indexOf('_') == -1
       && event.target.parentElement.attributes.id.nodeValue === 'dayWorkInfoFrom'
       && ((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 37)) {
       jQuery('#dayWorkInfoTo').find(':input').focus();
+    } else if (
+      event.target.value.indexOf('_') == -1
+      && event.target.parentElement.attributes.id.nodeValue === 'dayWorkInfoTo'
+      && ((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 37)) {
+      let clientsDropdown = jQuery('#clientsDropdown').find("div.ui-helper-hidden-accessible").find(":text").get(0);
+      if (!!clientsDropdown) clientsDropdown.focus();
     }
   }
 
@@ -368,7 +368,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
       return;
     }
 
-    this.upsertWorkInfoSubscription = this.workService.save(workInfo.agreementId, this.convertToUnit(workInfo), this.employee.id, this.adminUnitsUrl)
+    this.upsertWorkInfoSubscription = this.workService.save(false, workInfo.agreementId, this.convertToUnit(workInfo), this.employee.id, this.adminUnitsUrl)
       .subscribe(workUnit => {
         this.error = '';
         this.inCreation = false;

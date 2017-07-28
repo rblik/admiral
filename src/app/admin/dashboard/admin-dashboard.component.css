@@ -59,3 +59,7 @@ td, th:not(:first-child) {
   border-width: 1px;
   border-radius: 3px;
 }
+
+#lupa :hover {
+  opacity: 0.5;
+}

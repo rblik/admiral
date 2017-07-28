@@ -59,6 +59,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private firstDayOfNextMonth: Date;
   private defaultMonthHours: number = 0;
   private inCreation: boolean = false;
+  private isEnabled: boolean = false;
 
   constructor(private notificationBarService: NotificationBarService, private minToHours: MinutesToHoursPipe, private timeService: TimeService, private downloadService: UserDownloadService, private monthInfoService: MonthInfoService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
     this.types = [];
@@ -69,6 +70,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
       center: 'title',
       right: ''
     };
+  }
+
+  private fillDefaultChoice() {
+    this.workService.getDefaultChoice().subscribe(choice => {
+      if (!!choice.start) this.workInfoItem.from = choice.start;
+      if (!!choice.finish) this.workInfoItem.to = choice.finish;
+      if (!!choice.agreement.id) this.workInfoItem.agreementId = choice.agreement.id;
+    })
   }
 
   private getAgreementsWithWorkAndRender() {
@@ -282,17 +291,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
       && event.target.selectionStart === 0) {
       (<HTMLInputElement>jQuery('#dayWorkInfoFrom').find(':input').get(0)).focus();
     } else if (
-      event.keyCode == 40
-      && (event.target.parentElement.attributes.id.nodeValue === 'dayWorkInfoFrom'
-      || event.target.parentElement.attributes.id.nodeValue === 'dayWorkInfoTo')
-      && this.isPivotal
-      && !this.isEdit) {
-      jQuery('#clientsDropdown').find("div.ui-helper-hidden-accessible").find(":text").get(0).focus();
-    } else if (
       event.target.value.indexOf('_') == -1
       && event.target.parentElement.attributes.id.nodeValue === 'dayWorkInfoFrom'
       && ((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 37)) {
       jQuery('#dayWorkInfoTo').find(':input').focus();
+    } else if (
+      event.target.value.indexOf('_') == -1
+      && event.target.parentElement.attributes.id.nodeValue === 'dayWorkInfoTo'
+      && ((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 37)) {
+      jQuery('#clientsDropdown').find("div.ui-helper-hidden-accessible").find(":text").get(0).focus();
     }
   }
 
@@ -310,6 +317,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.workInfoItem.date = this.activeDate;
     this.workInfoItem.duration = 0;
     this.inCreation = true;
+    this.isEnabled = false;
     this.createDialog = true;
     setTimeout(function () {
       jQuery('#dayWorkInfoFrom').find(':input').focus();
@@ -346,7 +354,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.error = "טווח זמן שגוי";
       return;
     }
-    this.upsertWorkInfoSubscription = this.workService.save(workInfo.agreementId, this.convertToUnit(workInfo))
+    this.upsertWorkInfoSubscription = this.workService.save(this.isEnabled, workInfo.agreementId, this.convertToUnit(workInfo))
       .subscribe(workUnit => {
         this.error = '';
         this.inCreation = false;

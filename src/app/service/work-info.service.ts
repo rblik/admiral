@@ -11,10 +11,11 @@ import {Url} from "../url";
 export class WorkInfoService {
   private unitsUrl: string;
   private agreementsUrl: string;
-  private adminUnitsUrl: string;
+  private defaultChoiceUrl: string;
   constructor(private http: Http, private authService: AuthService) {
     this.agreementsUrl = Url.getUrl("/agreements");
     this.unitsUrl = Url.getUrl("/units");
+    this.defaultChoiceUrl = Url.getUrl("/profile/defaultchoice");
   }
 
   public getMonthWork(sundayDate: string, nextSundayDate: string, employeeId?: number, adminUnitsUrl?: string): Observable<WorkInfo[]> {
@@ -47,9 +48,10 @@ export class WorkInfoService {
     return this.http.get(this.agreementsUrl, options).map(res => res.json());
   }
 
-  public save(agreementId: number, workUnit: WorkUnit, employeeId?: number, adminUnitsUrl?: string): Observable<WorkUnit> {
+  public save(isDefault: boolean, agreementId: number,workUnit: WorkUnit, employeeId?: number, adminUnitsUrl?: string): Observable<WorkUnit> {
     let params = new URLSearchParams();
     params.append("agreementId", agreementId.toString());
+    params.append("isDefault", isDefault.toString());
     if (!!employeeId) params.append("employeeId", employeeId.toString());
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.authService.getToken());
@@ -70,6 +72,19 @@ export class WorkInfoService {
     headers.append("Authorization", this.authService.getToken());
     let options = new RequestOptions({headers: headers, search: params});
     this.http.delete((!!adminUnitsUrl ? adminUnitsUrl : this.unitsUrl) + "/" + unitId, options).subscribe(() => {});
+  }
+
+  public getDefaultChoice(): Observable<any> {
+    let headers = new Headers({'Content-Type': 'application/json'});
+    headers.append("Authorization", this.authService.getToken());
+    let options = new RequestOptions({headers: headers});
+    return this.http.get(this.defaultChoiceUrl, options)
+      .map(res => res.json())
+      .catch(e => {
+        let json = e.json();
+        let s = json.details[0];
+        return Observable.throw(s);
+      });
   }
 
 }

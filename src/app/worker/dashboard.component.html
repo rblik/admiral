@@ -27,24 +27,38 @@
             <div class="row hebrew-direct" style="margin-top: 1em">
               <div *ngIf="createDialog" class="form-group" (keyup)="checkForCtrlEnter($event)">
                 <!--<p-calendar [(ngModel)]="tes" [stepMinute]=10 hourFormat="24" readonlyInput="true" dataType="string" [timeOnly]="true"></p-calendar>-->
-                <label for="dayWorkInfoFrom">
-                  &nbsp;מ&nbsp;
-                  <p-inputMask [(ngModel)]="workInfoItem.from" (keyup)="jump($event)" id="dayWorkInfoFrom" mask="99:99" inputStyleClass="form-control" [maxlength]="5"></p-inputMask>
-                </label>
-                <label for="dayWorkInfoTo">
-                  &nbsp;עד&nbsp;
-                  <p-inputMask [(ngModel)]="workInfoItem.to" (keyup)="jump($event)" mask="99:99" id="dayWorkInfoTo" inputStyleClass="form-control" [maxlength]="5"></p-inputMask>
-                </label>
-                <button type="button" iconPos="right" pButton icon="fa-clock-o" (click)="makeWholeDay()" label="דיווח שעות מלא"></button>
-                <br>
-                <label for="clientsDropdown" *ngIf="isPivotal && !isEdit" style="padding: 0.5em 0 0.5em 0">
-                  <p-dropdown [options]="clientsDropdown" [style]="{'text-align':'center'}" id="clientsDropdown" panelStyleClass="form-control pull-right" [(ngModel)]="workInfoItem.agreementId" [filter]="true"></p-dropdown>
-                </label>
+                <div class="btn-group" style="padding: 0 0 0.5em 0">
+                  <button type="button" class="btn ui-button-secondary" style="font-size: xx-small" iconPos="right" pButton icon="fa-clock-o" (click)="makeWholeDay()" label="דיווח שעות מלא"></button>
+                  <button type="button" class="btn ui-button-text" style="font-size:xx-small" iconPos="right" pButton icon="fa-clock-o" (click)="fillDefaultChoice()" label="ברירת מחדל"></button>
+                </div>
+                <div style="text-align: center; position: relative;">
+                  <label for="dayWorkInfoFrom">
+                    &nbsp;מ-
+                    <p-inputMask [style]="{'width':'5em'}" [(ngModel)]="workInfoItem.from" (keyup)="jump($event)"
+                                 id="dayWorkInfoFrom" mask="99:99" inputStyleClass="form-control"
+                                 [maxlength]="5"></p-inputMask>
+                  </label>
+                  <label for="dayWorkInfoTo">
+                    &nbsp;עד&nbsp;
+                    <p-inputMask [style]="{'width':'5em'}" [(ngModel)]="workInfoItem.to" (keyup)="jump($event)"
+                                 mask="99:99" id="dayWorkInfoTo" inputStyleClass="form-control"
+                                 [maxlength]="5"></p-inputMask>
+                  </label>
+                  &nbsp;
+                  <label for="clientsDropdown" *ngIf="isPivotal && !isEdit" style="padding: 0.5em 0 0.5em 0">
+                    <p-dropdown [options]="clientsDropdown" [style]="{'text-align':'center'}" id="clientsDropdown"
+                                panelStyleClass="form-control pull-right" [(ngModel)]="workInfoItem.agreementId"
+                                [filter]="true"></p-dropdown>
+                  </label>
+                </div>
                 <br>
                 <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" placeholder="תיאור הפעילות " id="dayWorkInfoComment" class="form-control" [maxlength]="75"></textarea>
                 <br>
                 <button type="button" id="cancelWorkInfoButton" class="pull-left ui-button-danger" style="border-width: 0" pButton icon="fa-undo" iconPos="right" (click)="cancel()" label="בטל"></button>
                 <button type="button" id="confirmWorkInfoButton" class="pull-left ui-button-text" style="border-width: 0" pButton icon="fa-check" iconPos="right" (click)="save(workInfoItem)" label="שמור"></button>
+                <label for="isEnabled" class="pull-left" style="padding-left: 1em">לשמור כברירת מחדל
+                  <p-checkbox id="isEnabled" [(ngModel)]="isEnabled" binary="true"></p-checkbox>
+                </label>
               </div>
             </div>
             <div class="row">
