@@ -49,7 +49,7 @@
                                  [maxlength]="5"></p-inputMask>
                   </label>
                   &nbsp;
-                  <label for="clientsDropdown" *ngIf="isPivotal && !isEdit" style="padding: 0.5em 0 0.5em 0">
+                  <label for="clientsDropdown" *ngIf="isPivotal" style="padding: 0.5em 0 0.5em 0">
                     <p-dropdown [options]="clientsDropdown" [style]="{'text-align':'center'}" id="clientsDropdown"
                                 panelStyleClass="form-control pull-right" [(ngModel)]="workInfoItem.agreementId"
                                 [filter]="true"></p-dropdown>

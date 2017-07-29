@@ -61,6 +61,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private inCreation: boolean = false;
   private isEnabled: boolean = false;
   private defaultChoiceError: string;
+  private editedWorkInfo: WorkInfo;
 
   constructor(private notificationBarService: NotificationBarService, private minToHours: MinutesToHoursPipe, private timeService: TimeService, private downloadService: UserDownloadService, private monthInfoService: MonthInfoService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
     this.types = [];
@@ -331,8 +332,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   edit(workInfo: WorkInfo) {
     this.isEdit = true;
+    this.cacheEdited(workInfo);
     this.workInfoItem = workInfo;
     this.createDialog = true;
+  }
+
+  private cacheEdited(workInfo: WorkInfo) {
+    this.editedWorkInfo = new WorkInfo();
+    this.editedWorkInfo.date = workInfo.date;
+    this.editedWorkInfo.duration = workInfo.duration;
+    this.editedWorkInfo.agreementId = workInfo.agreementId;
   }
 
   closeDialog() {
@@ -419,15 +428,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private replaceInAllWorkInfos(workInfo: WorkInfo, duration: number, isNotNew: boolean) {
-    for (let i = 0; i < this.workInfos.length; i++) {
+    if (isNotNew) {
+      this.removeInAllWorkInfos(this.editedWorkInfo);
+    }
+    /*for (let i = 0; i < this.workInfos.length; i++) {
       if (this.workInfos[i].date === workInfo.date && this.workInfos[i].agreementId == workInfo.agreementId) {
-        if (isNotNew) {
-          this.workInfos[i].duration -= duration;
-        }
         this.workInfos[i].duration += workInfo.duration;
         return;
       }
-    }
+    }*/
     this.workInfos.push(workInfo);
   }
 
