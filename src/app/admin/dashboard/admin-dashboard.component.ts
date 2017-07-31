@@ -261,7 +261,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
           this.employee.id, this.adminUnitsUrl),
         this.lockService.ckeckIsLockedForMonthAndEmployee(
           this.currentSunday.getFullYear(),
-          this.currentSunday.getMonth() - 1,
+          this.currentSunday.getMonth(),
           this.employee.id)
       ]).subscribe(([workInfos, monthInfo]) => {
       this.workInfos = workInfos;
@@ -451,20 +451,19 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
 
   lockUnlock(firstDayOfMonth?: Date){
     if (!this.lock) {
-      this.lockService.saveMonthInfo(this.timeService.getDateString(this.firstDayOfMonth), true, this.sumByMonth,this.employee.id)
+      this.lockService.saveLock(this.timeService.getDateString(this.currentSunday), true, this.sumByMonth,this.employee.id)
         .subscribe(monthInfo => {
-          this.lockClass = 'fa-lock';
-          $('#lockUnlockButton').removeClass('fa-unlock').addClass(this.lockClass);
-          this.lock = true;
         });
+      this.lockClass = 'fa-lock';
+      $('#lockUnlockButton').removeClass('fa-unlock').addClass(this.lockClass);
+      this.lock = true;
     } else {
-
-      this.lockService.removeLock(this.timeService.getDateString(this.firstDayOfMonth), this.employee.id)
+      this.lockService.removeLock(this.timeService.getDateString(this.currentSunday), this.employee.id)
         .subscribe(() => {
-          this.lockClass = 'fa-unlock';
-          $('#lockUnlockButton').removeClass('fa-lock').addClass(this.lockClass);
-          this.lock = false;
         });
+      this.lockClass = 'fa-unlock';
+      $('#lockUnlockButton').removeClass('fa-lock').addClass(this.lockClass);
+      this.lock = false;
     }
   }
 

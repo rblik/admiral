@@ -9,8 +9,11 @@
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
           <span class="glyphicon glyphicon-cog"></span> הגדרות</a>
         <ul class="dropdown-menu" >
+          <li *ngIf="profile.roles.indexOf('ROLE_ADMIN') != -1" ><a (click)="prepareMonthHoursStandardForm()" class="hebrew-direct " style="cursor: pointer">
+            <span class="fa fa-clock-o pull-right"></span><span class="pull-left" style="font-size: smaller; font-weight: bolder"> הגדרת תקן חודשי</span></a></li>
+          <li role="separator" class="divider"></li>
           <li ><a (click)="preparePasswordForm(); op.toggle($event)" class="hebrew-direct " style="cursor: pointer">
-            <span class="glyphicon glyphicon-lock pull-right"></span><span class="pull-left" style="font-size: small; font-weight: bolder"> שינוי סיסמא</span></a></li>
+            <span class="fa fa-lock pull-right"></span><span class="pull-left" style="font-size: smaller; font-weight: bolder"> שינוי סיסמא</span></a></li>
         </ul>
 
       </li>
@@ -62,3 +65,36 @@
     </div>
   </div>
 </p-overlayPanel>
+<button id="openNavbarMonthHoursStandardFormButton" [hidden]="true" data-toggle="modal" data-target="#navbarMonthHoursStandardForm"></button>
+<div id="navbarMonthHoursStandardForm" tabindex='-1' class="modal fade" onclose="" role="dialog">
+  <div class="modal-dialog" style="margin-right: 45%">
+    <div class="modal-content" style="width: 180%;">
+      <div class="modal-header noselect" style="text-align: center">
+        <a id="monthHoursStandardFormClose" style="float: left" data-dismiss="modal"><span class="fa fa-fw fa-close"
+                                                                                style="color: #1a1a1a; cursor: pointer; font-size: large"></span></a>
+        <p-dataGrid [value]="standartsUi.reverse()" [paginator]="true" [rows]="12">
+          <p-header>
+            <h4 style="font-weight: bold">{{'הגדרת תקן חודשי שנת '+currYear}}</h4>
+            <div class="hebrew-direct">
+              <p-spinner id="spinnerId" [(ngModel)]="currYear" [min]="2000" (onChange)="goToYear()" [max]="3000" [thousandSeparator]="''" [size]="4"></p-spinner>
+            </div>
+          </p-header>
+          <template let-standard pTemplate="item">
+            <div style="padding:1px; font-size: smaller" class="ui-g-12 ui-md-1">
+              <p-panel [style]="{'height':'8em'}">
+                <p-header>
+                  <span *ngIf="standard" style="font-weight: bold; font-size: smaller; text-align: center">{{getHeader(standard.year, standard.month) | hebrewDate : 'year-month'}}</span>
+                </p-header>
+                <div *ngIf="standard && !(isEditedStandard == standard.month)" class="hebrew-direct">{{(standard.hoursSum)? standard.hoursSum + " ש'": ""}}</div>
+                <input *ngIf="standard && (isEditedStandard == standard.month)" [(ngModel)]="numberForEditing" pattern="\d*" maxlength="4" type="text" class="form-control" style="width: 100%">
+                <i title="לערוך" *ngIf="standard && !(isEditedStandard == standard.month)" class="fa fa-pencil-square-o" (click)="editStandard(standard)" style="cursor:pointer"></i>
+                <i title="לשמור" *ngIf="standard && (isEditedStandard == standard.month)" class="fa fa-check-square-o" (click)="saveStandard(standard)" style="cursor:pointer"></i>
+                <i title="לבטל" *ngIf="standard && (isEditedStandard == standard.month)" class="fa fa-undo" (click)="cancelStandard()" style="cursor:pointer"></i>
+              </p-panel>
+            </div>
+          </template>
+        </p-dataGrid>
+      </div>
+    </div>
+  </div>
+</div>

@@ -2,3 +2,12 @@
   background-color: rgba(104, 157, 255, 0.32);
   border-color: rgba(104, 157, 255, 0.32);
 }
+.ui-widget-content {
+  border-width: 0;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

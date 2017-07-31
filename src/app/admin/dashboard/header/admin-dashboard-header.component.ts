@@ -6,7 +6,6 @@ import {Employee} from "../../../model/employee";
 import {Department} from "../../../model/department";
 import {ActivatedRoute, Router} from "@angular/router";
 import {TimeService} from "../../../service/time.service";
-import {AdminMonthInfoService} from "../../service/admin-month-info.service";
 import {IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings} from 'angular-2-dropdown-multiselect';
 
 @Component({
@@ -17,13 +16,11 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
 
   private employees: Employee[];
   private employeesUi: SelectItem[] = [];
-  private employeeIds: number[];
   private departmentsUi: SelectItem[] = [];
   private chosenEmployee: Employee;
   private chosenDepartment: Department;
   private error: string;
   private getEmployeesSubscription: Subscription;
-  private updateSumHoursForMonthSubscription: Subscription;
   private searchDate: Date;
   private message: string;
   private employeesCheckboxOptions: IMultiSelectOption[] = [];
@@ -34,9 +31,7 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
   constructor(private employeeService: EmployeeService,
               private router: Router,
               private route: ActivatedRoute,
-              private monthInfoService: AdminMonthInfoService,
               private timeService: TimeService) {
-    this.fixDropdownCheckbox();
   }
 
   ngOnInit(): void {
@@ -57,7 +52,6 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
 
   ngOnDestroy(): void {
     if (this.getEmployeesSubscription) this.getEmployeesSubscription.unsubscribe();
-    if (this.updateSumHoursForMonthSubscription) this.updateSumHoursForMonthSubscription.unsubscribe();
   }
 
   getEmployees(): void {
@@ -69,27 +63,6 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
     }, error => {
       this.error = error
     });
-  }
-
-  private fixDropdownCheckbox() {
-    this.employeesCheckboxOptions = [];
-    this.employeeIds = [];
-    this.employeesCheckboxSettings = {
-      enableSearch: true,
-      displayAllSelectedText: false,
-      dynamicTitleMaxItems: 0,
-      showCheckAll: true,
-      showUncheckAll: true
-    };
-    this.employeesCheckboxTexts = {
-      checkAll: 'בחר כולם',
-      uncheckAll: 'בטל בחירה',
-      checked: 'עובד נבחר',
-      checkedPlural: 'עובדים נבחרו',
-      searchPlaceholder: 'חפש',
-      defaultTitle: 'בחר עובד',
-      allSelected: 'כלם נבחרו',
-    };
   }
 
   private fillDropDownList(employees: Employee[]) {
@@ -109,34 +82,6 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
         arr.push(employee.department.id);
       }
     });
-  }
-
-  showUpdatingMonthHoursForm() {
-    let updateSumMonthHoursFormOpen = document.getElementById('updateSumMonthHoursFormOpen');
-    if (updateSumMonthHoursFormOpen != null) {
-      updateSumMonthHoursFormOpen.click();
-    }
-  }
-
-  closeUpdatingMonthHoursForm() {
-    let updateSumMonthHoursFormClose = document.getElementById('updateSumMonthHoursFormClose');
-    if (updateSumMonthHoursFormClose != null) {
-      updateSumMonthHoursFormClose.click();
-    }
-  }
-
-  updateSumHoursForMonth(hoursSum: string) {
-    let date = this.timeService.getDateString(this.searchDate);
-    this.updateSumHoursForMonthSubscription = this.monthInfoService.updateSumHoursForMonth(date, this.employeeIds, +hoursSum)
-      .subscribe(monthInfos => {
-        this.message = 'הנתונים רועננו';
-        $("#errorSuccessHoursField").css('color', 'green');
-      }, err => {
-        this.message = err;
-        $("#errorSuccessHoursField").css('color', 'red');
-      });
-    this.closeUpdatingMonthHoursForm();
-    this.router.navigate(['/app/admin/dashboard']);
   }
 
   getEmployeesUi(department: Department) {

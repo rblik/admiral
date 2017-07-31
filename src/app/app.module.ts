@@ -24,7 +24,10 @@ import {
   SelectButtonModule,
   SharedModule,
   ScheduleModule,
-  OverlayPanelModule
+  OverlayPanelModule,
+  DataGridModule,
+  PanelModule,
+  SpinnerModule
 } from "primeng/primeng";
 import {Ng2Webstorage} from "ng2-webstorage";
 import {AuthGuardService} from "./service/auth-guard.service";
@@ -60,6 +63,9 @@ import {UserDownloadService} from "./service/user-download.service";
     InputTextareaModule,
     Ng2Webstorage,
     MyCommonModule,
+    DataGridModule,
+    PanelModule,
+    SpinnerModule,
     CheckboxModule,
     ScheduleModule,
     MultiselectDropdownModule,

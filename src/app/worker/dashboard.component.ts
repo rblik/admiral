@@ -137,12 +137,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     uploadGroupDiv.append(downloadTemplate);
     uploadGroupDiv.append(chooseXslLabel);
     uploadGroupDiv.append(uploadButton);
-    if (!this.lock) {
-      fcRight.prepend(uploadGroupDiv);
-      fcRight.prepend(errorSuccessField);
-    } else {
-      downloadPivotal.addClass('ui-corner-left');
-    }
+    fcRight.prepend(uploadGroupDiv);
+    fcRight.prepend(errorSuccessField);
+    // downloadPivotal.addClass('ui-corner-left');
     fcRight.prepend(downloadPivotal);
 
     chooseXslInput.on('click touchstart', function () {
@@ -477,20 +474,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   uploadReport(calendar?) {
-    let chooseXslInput = (<HTMLInputElement>document.getElementById('chooseXslInput'));
-    if (!!chooseXslInput.files[0]
-      && chooseXslInput.files[0]
-      && (chooseXslInput.value.indexOf('.xls') !== -1
-      || chooseXslInput.value.indexOf('.xlsx') !== -1)) {
-      this.downloadService.uploadReports(this.firstDayOfMonth.getFullYear(), this.firstDayOfMonth.getMonth(), chooseXslInput.files[0])
-        .subscribe(res => {
-          this.refreshSuccessField('green', 'הקובץ הועלה בהצלחה');
-          this.getMonthAndRender(calendar);
-        }, err => {
-          this.refreshSuccessField('red', err);
-        });
+    if (this.lock) {
+      this.refreshSuccessField('red', 'החודש הזה כבר נעול לשינוים');
+      return;
     } else {
-      this.refreshSuccessField('red', 'קודם תבחר את הקובץ הנכון');
+      let chooseXslInput = (<HTMLInputElement>document.getElementById('chooseXslInput'));
+      if (!!chooseXslInput.files[0]
+        && chooseXslInput.files[0]
+        && (chooseXslInput.value.indexOf('.xls') !== -1
+          || chooseXslInput.value.indexOf('.xlsx') !== -1)) {
+        this.downloadService.uploadReports(this.firstDayOfMonth.getFullYear(), this.firstDayOfMonth.getMonth(), chooseXslInput.files[0])
+          .subscribe(res => {
+            this.refreshSuccessField('green', 'הקובץ הועלה בהצלחה');
+            this.getMonthAndRender(calendar);
+          }, err => {
+            this.refreshSuccessField('red', err);
+          });
+      } else {
+        this.refreshSuccessField('red', 'קודם תבחר את הקובץ הנכון');
+      }
     }
   }
 

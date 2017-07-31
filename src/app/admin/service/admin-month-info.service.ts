@@ -4,6 +4,7 @@ import {Headers, Http, RequestOptions, URLSearchParams} from "@angular/http";
 import {AuthService} from "../../service/auth.service";
 import {Observable} from "rxjs/Observable";
 import {MonthInfo} from "../../model/month-info";
+import {MonthlyStandard} from "../../model/monthly-standard";
 
 @Injectable()
 export class AdminMonthInfoService {
@@ -26,16 +27,18 @@ export class AdminMonthInfoService {
       .map(res => res.json());
   }
 
-  public saveMonthInfo(dateStr: string, locked: boolean, hoursSum: number, employeeId: number): Observable<MonthInfo>{
+  public saveLock(dateStr: string, locked: boolean, hoursSum: number, employeeId: number): Observable<MonthInfo>{
+    let date = new Date(dateStr);
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.auth.getToken());
     let params = new URLSearchParams();
     params.append('employeeId', employeeId.toString());
-    let options = new RequestOptions({headers: headers, search: params});
-    let date = new Date(dateStr);
     let year = date.getFullYear();
+    params.append('year', year.toString());
     let month = date.getMonth() + 1;
-    return this.http.post(this.monthInfoUrl, JSON.stringify(new MonthInfo(year, month, locked, hoursSum)), options)
+    params.append('month', month.toString());
+    let options = new RequestOptions({headers: headers, search: params});
+    return this.http.post(this.monthInfoUrl, "{}", options)
       .map(res => res.json())
       .catch(e => {
         let s = e.json().details[0];
@@ -62,19 +65,19 @@ export class AdminMonthInfoService {
       });
   }
 
-  public updateSumHoursForMonth(dateStr: string, employeeIds: number[], hoursSum: number) {
+  public updateSumHoursForMonth(dateStr: string, hoursSum: number) {
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.auth.getToken());
     let date = new Date(dateStr);
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
     let params = new URLSearchParams();
+    params.append('year', year.toString());
+    params.append('month', month.toString());
+    params.append('hoursSum', hoursSum.toString());
     let options = new RequestOptions({headers: headers, search: params});
 
-    let monthInfo = new MonthInfo(year, month, false, hoursSum);
-    let dto = {'monthInfo':monthInfo, 'employeeIds':employeeIds};
-
-    return this.http.put(this.monthInfoUrl, JSON.stringify(dto), options)
+    return this.http.put(this.monthInfoUrl, "{}", options)
       .map(res => res.json())
       .catch(e => {
         let s = e.json().details[0];
