@@ -48,7 +48,7 @@
                   </label>
                 </div>
                 <br>
-                <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" placeholder="תיאור הפעילות " id="dayWorkInfoComment" class="form-control" [maxlength]="75"></textarea>
+                <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" placeholder="תיאור הפעילות " id="dayWorkInfoComment" class="form-control" [maxlength]="255"></textarea>
                 <br>
                 <button type="button" id="cancelWorkInfoButton" class="pull-left ui-button-danger" style="border-width: 0" pButton icon="fa-undo" iconPos="right" (click)="cancel()" label="בטל"></button>
                 <button type="button" id="confirmWorkInfoButton" class="pull-left ui-button-text" style="border-width: 0" pButton icon="fa-check" iconPos="right" (click)="save(workInfoItem)" label="שמור"></button>

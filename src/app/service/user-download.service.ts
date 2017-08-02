@@ -44,9 +44,15 @@ export class UserDownloadService {
           let s2 = errArr[1] === "" ? "" : " בשורות: " + errArr[1] + " קיימים תאים ריקים";
           return Observable.throw(s1 + s2);
         } else if (json.cause=='TimeOverlappingException') {
-          return Observable.throw("כמה תקופות עבודה כבר תפוסות.")
+          return Observable.throw("אירעה שגיאה בטעינת הקובץ, הזנת שעות חופפות על אותה המשימה.")
         } else if (json.cause=='DateLockedException') {
           return Observable.throw("החודש הזה סגור לשינויים.")
+        } else if (json.cause=='TimeRangeException') {
+          return Observable.throw("אירעה שגיאה בטעינת הקובץ. אנא בדוק את השעות שהזנת.")
+        } else if (json.cause=='NotFoundException') {
+          return Observable.throw("אירעה שגיאה בטעינת הקובץ. אנא בדוק את אנא בדוק את מזהי פרויקטים שהזנת.")
+        } else {
+          return Observable.throw("אירעה שגיאה בטעינת הקובץ, אנא בדוק את המיהמנות הנתונים שהזנת.");
         }
       });
   }
