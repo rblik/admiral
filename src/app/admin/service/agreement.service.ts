@@ -49,4 +49,14 @@ export class AgreementService {
       .map(res => res.json())
       .catch(e => Observable.throw(e.json().details[0]));
   }
+
+  public remove(agreementId: number): Observable<any> {
+    return this.http.delete(this.agreementsUrl + "/" + agreementId, {
+      headers: new Headers({'Authorization': this.auth.getToken()})
+    }).map(res => res)
+      .catch(e => {
+        let s = e.json().details[0];
+        return Observable.throw(s);
+      });
+  }
 }

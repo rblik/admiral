@@ -9,6 +9,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SelectItem} from "primeng/primeng";
 import {Agreement} from "../../model/agreement";
 import {Subscription} from "rxjs/Subscription";
+import {AgreementService} from "../service/agreement.service";
 
 @Component({
   selector: 'client-detail',
@@ -35,10 +36,14 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
   private tariffTypesUi: SelectItem[] = [];
   private currenciesUi: SelectItem[] = [];
   private project: Project;
+  private projectForRemove: Project;
+  private displayRemoveProjectDialog: boolean;
+  private agreementForRemove: Agreement;
 
   constructor(private clientService: ClientService,
               private _fb: FormBuilder,
               private projectService: ProjectService,
+              private agreementService: AgreementService,
               private route: ActivatedRoute) {
     this.formProject = new Project();
     this.fillCreationForm();
@@ -113,6 +118,60 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
     let openProjForm = document.getElementById('openProjectFormElem');
     if (openProjForm) {
       openProjForm.click();
+    }
+  }
+
+  popupDeleteProject(proj: Project) {
+    this.projectForRemove = proj;
+    let removeProjForm = document.getElementById('removeProjectFormElem');
+    if (removeProjForm) {
+      removeProjForm.click();
+    }
+    this.displayRemoveProjectDialog = true;
+  }
+
+  popupDeleteAgreement(proj: Project, agreem: Agreement) {
+    this.agreementForRemove = agreem;
+    this.projectForRemove = proj;
+    let removeAgreementForm = document.getElementById('removeAgreementFormElem');
+    if (removeAgreementForm) {
+      removeAgreementForm.click();
+    }
+  }
+
+  submitRemoveProject() {
+    this.projectService.remove(this.projectForRemove.id).subscribe(success => {
+    });
+    this.client.projects.forEach((proj, index) => {
+      if (proj.id == this.projectForRemove.id) {
+        this.client.projects.splice(index, 1);
+        return;
+      }
+    });
+    if (this.client.projects.length === 0) {
+      this.client.projects = null;
+    }
+    this.projectForRemove = null;
+    let removeProjForm = document.getElementById('closeProjectRemoveElem');
+    if (removeProjForm) {
+      removeProjForm.click();
+    }
+  }
+
+  submitRemoveAgreement() {
+    this.agreementService.remove(this.agreementForRemove.id).subscribe(success => {
+    });
+    this.projectForRemove.workAgreements.forEach((agreement, index) => {
+      if (agreement.id == this.agreementForRemove.id) {
+        this.projectForRemove.workAgreements.splice(index, 1);
+        return;
+      }
+    });
+    this.agreementForRemove = null;
+    this.projectForRemove = null;
+    let removeProjForm = document.getElementById('closeAgreementRemoveElem');
+    if (removeProjForm) {
+      removeProjForm.click();
     }
   }
 

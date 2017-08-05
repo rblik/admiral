@@ -14,6 +14,7 @@ import {Subscription} from "rxjs/Subscription";
   styleUrls: ['./project-employee-form.component.css']
 })
 export class ProjectEmployeeFormComponent implements OnInit, OnChanges, OnDestroy {
+  private isEditAgreement: boolean;
   ngOnDestroy(): void {
     if (this.getEmployeesSubscription) this.getEmployeesSubscription.unsubscribe();
     if (this.upsertAgreementSubscription) this.upsertAgreementSubscription.unsubscribe();
@@ -132,6 +133,7 @@ export class ProjectEmployeeFormComponent implements OnInit, OnChanges, OnDestro
   }
 
   private fillTheCreationForm() {
+    this.isEditAgreement = false;
     this.agreementCreationForm = this._fb.group({
       id: [],
       active: [true],
@@ -147,6 +149,7 @@ export class ProjectEmployeeFormComponent implements OnInit, OnChanges, OnDestro
   }
 
   private fillTheEditingForm() {
+    this.isEditAgreement = true;
     if (!!this.agreement) {
       this.agreementCreationForm = this._fb.group({
         id: [this.agreement.id],

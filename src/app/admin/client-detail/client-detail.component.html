@@ -30,6 +30,11 @@
               <span><a style="cursor: pointer" (click)="popupEdit(proj)"><i class="fa fa-pencil" aria-hidden="true"></i></a></span>
             </template>
           </p-column>
+          <p-column header="מחק" [style]="{'width':'8%'}">
+            <template let-col let-proj="rowData" pTemplate="body">
+              <span><a style="cursor: pointer" (click)="popupDeleteProject(proj)"><i class="fa fa-times" aria-hidden="true"></i></a></span>
+            </template>
+          </p-column>
           <p-column expander="true" styleClass="col-icon" [style]="{'width':'7%'}"></p-column>
           <template let-proj pTemplate="rowexpansion">
             <table class="table table-responsive table-condensed hebrew-direct" style="margin: 0 auto;width: 75%; border: none">
@@ -43,6 +48,7 @@
                     <td colspan="5">{{agreement.employee.name + ' ' + agreement.employee.surname}}</td>
                     <td colspan="4">{{agreement.tariff.amount}} {{agreement.tariff.currency | currencyPipe}} {{agreement.tariff.type | tariffType}}</td>
                     <td colspan="1"><a style="cursor: pointer; text-align: center" (click)="popupEditAgreement(proj, agreement)"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+                    <td colspan="1"><a style="cursor: pointer; text-align: center" (click)="popupDeleteAgreement(proj, agreement)"><i class="fa fa-times" aria-hidden="true"></i></a></td>
                   </tr>
               </tbody>
             </table>
@@ -97,6 +103,64 @@
     </div>
   </div>
 </div>
+<button id="removeProjectFormElem" [hidden]="true" data-toggle="modal" data-target="#projectRemoveForm"></button>
+<div id="projectRemoveForm" tabindex='-1' class="modal fade" onclose="" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content hebrew-direct" style="margin: 30% auto; width: 80%">
+      <div class="modal-header" style="text-align: center">
+        <a style="font-weight: bold; font-size: large" id="closeProjectRemoveElem" class="close pull-left" data-dismiss="modal"><span class="fa fa-fw fa-close" style="color: #1a1a1a; cursor: pointer; font-size: large"></span></a>
+        <span class="modal-title" style="font-weight: bold; font-size: large"> אישור </span>
+      </div>
+      <div class="modal-body hebrew-direct" style="margin: 0 auto; text-align: center; font-size: larger">
+        <div class="row">
+          <div class="col-sm-10 pull-left">
+            <span>האם ברצונך למחוק את הפרויקט </span><span style="font-weight: bolder">{{(projectForRemove? projectForRemove.name : '')}}?</span>
+            <br>
+            <span>כל דיווחי שעות קשורים אליו יימחקו איתו!</span>
+          </div>
+          <div class="col-sm-2 pull-right">
+            <i class="fa fa-exclamation-triangle fa-3x" style="padding-right: 50%" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
 
+        <div class="modal-footer pull-left">
+          <div class="pull-left">
+            <button type="button" (click)="submitRemoveProject()" pButton icon="fa-check" label="כן"></button>
+            <button type="button" class="ui-button-danger" pButton icon="fa-close" data-dismiss="modal" (click)="displayRemoveProjectDialog=false" label="לא"></button>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+<button id="removeAgreementFormElem" [hidden]="true" data-toggle="modal" data-target="#agreementRemoveForm"></button>
+<div id="agreementRemoveForm" tabindex='-1' class="modal fade" onclose="" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content hebrew-direct" style="margin: 30% auto; width: 100%">
+      <div class="modal-header" style="text-align: center">
+        <a style="font-weight: bold; font-size: large" id="closeAgreementRemoveElem" class="close pull-left" data-dismiss="modal"><span class="fa fa-fw fa-close" style="color: #1a1a1a; cursor: pointer; font-size: large"></span></a>
+        <span class="modal-title" style="font-weight: bold; font-size: large"> אישור </span>
+      </div>
+      <div class="modal-body hebrew-direct" style="margin: 0 auto; text-align: center; font-size: larger">
+        <div class="row">
+          <div class="col-sm-10 pull-left">
+            <span>האם ברצונך לנתק את העובד </span><span style="font-weight: bolder">{{(agreementForRemove? agreementForRemove.employee.name : '')}}</span><span> מהפרויקט </span><span style="font-weight: bold">{{(projectForRemove? projectForRemove.name : '')}}?</span>
+            <br>
+            <span>כל דיווחי שעות קשורים אליו יימחקו איתו!</span>
+          </div>
+          <div class="col-sm-2 pull-right">
+            <i class="fa fa-exclamation-triangle fa-3x" style="padding-right: 50%" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer pull-left">
+        <div class="pull-left">
+          <button type="button" (click)="submitRemoveAgreement()" pButton icon="fa-check" label="כן"></button>
+          <button type="button" class="ui-button-danger" pButton icon="fa-close" data-dismiss="modal" label="לא"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <client-form id="clientEditionForm" (outputClient)="syncClient($event)" [clientForCreation]="client" tabindex='-1' class="modal fade" onclose="" role="dialog"></client-form>
-

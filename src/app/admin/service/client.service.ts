@@ -44,4 +44,14 @@ export class ClientService {
           return Observable.throw(s);
       });
   }
+
+  public remove(clientId: number): Observable<any> {
+    return this.http.delete(this.clientUrl + "/" + clientId, {
+      headers: new Headers({'Authorization': this.auth.getToken()})
+    }).map(res => res)
+      .catch(e => {
+        let s = e.json().details[0];
+        return Observable.throw(s);
+      });
+  }
 }
