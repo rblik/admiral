@@ -38,6 +38,7 @@ import {NotificationBarModule} from "angular2-notification-bar";
 import {SlimLoadingBarModule} from "ng2-slim-loading-bar";
 import {MonthInfoService} from "./service/month-info.service";
 import {UserDownloadService} from "./service/user-download.service";
+import {PasswordStrengthBarModule} from "ng2-password-strength-bar";
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import {UserDownloadService} from "./service/user-download.service";
     Ng2Webstorage,
     MyCommonModule,
     CommonModule,
+    PasswordStrengthBarModule,
     DataGridModule,
     PanelModule,
     SpinnerModule,

@@ -23,6 +23,9 @@ export class NavBarComponent implements OnInit, OnDestroy {
   private numberForEditing: number;
   private currYear: number;
   private standartsUi: MonthlyStandard[] = new Array(12);
+  private account: string;
+  private newPassword: string;
+  private confirmNewPassword: string;
 
   constructor(private authService: AuthService, private monthInfoService: MonthInfoService) {
     this.currYear = new Date().getFullYear();

@@ -55,13 +55,31 @@
   </div>
   <div *ngIf="!passwordChangeSuccess" class="row">
     <div class="form-group">
+        <form name="myForm" novalidate>
       <div class="col-md-2 pull-left">
-        <a class="btn btn-warning" (click)="updatePassword(updatePassInput.value); updatePassInput.value=''"><i style="font-size: large; color: white"
-                                                                                                                class="fa fa-cog {{requstStarted?'fa-spin':''}}"></i></a>
+        <button type="submit" [disabled]="!newPassword || !confirmNewPassword || !(newPassword===confirmNewPassword)" class="btn btn-warning"
+                (click)="updatePassword(newPassword); newPassword=''">
+          <i style="font-size: large; color: white" class="fa fa-cog {{requstStarted?'fa-spin':''}}"></i></button>
       </div>
       <div class="col-md-9 pull-right">
-        <input #updatePassInput required type="password" class="form-control">
+        <label style="text-align: center">סיסמא חדשה
+          <input #updatePassInput [(ngModel)]="newPassword" name="newPassword" required type="password"
+                 class="form-control">
+        </label>
+        <ng2-password-strength-bar
+            [passwordToCheck]="newPassword"
+            [barLabel]="barLabel">
+          </ng2-password-strength-bar>
+        <label style="text-align: center">אימות סיסמא חדשה
+          <input #updatePassInputAffirm [(ngModel)]="confirmNewPassword" name="confirmNewPassword" required
+                 type="password" class="form-control">
+        </label>
+        <ng2-password-strength-bar
+          [passwordToCheck]="confirmNewPassword"
+          [barLabel]="barLabel">
+        </ng2-password-strength-bar>
       </div>
+        </form>
     </div>
   </div>
 </p-overlayPanel>
