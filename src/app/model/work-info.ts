@@ -19,4 +19,5 @@ export class WorkInfo {
   amount: number;
   currency: string;
   type: string;
+  isActiveAgreement: boolean;
 }

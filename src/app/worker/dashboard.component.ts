@@ -316,7 +316,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   create() {
     this.isEdit = false;
     this.workInfoItem = new WorkInfo();
-    this.workInfoItem.agreementId = !this.isPivotal? this.activeAgreementId : this.clientsDropdown[0].value;
+    this.workInfoItem.agreementId = !this.isPivotal ? this.activeAgreementId : this.clientsDropdown[0].value;
     this.workInfoItem.date = this.activeDate;
     this.workInfoItem.duration = 0;
     this.inCreation = true;
@@ -371,6 +371,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.inCreation = false;
         let saved: WorkInfo = this.convertToInfo(workUnit, workInfo.agreementId);
         saved.clientName = this.getClientNameByAgreementId(workInfo.agreementId);
+        saved.isActiveAgreement = true;
         this.replaceInDayWorkInfos(saved);
         this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
         this.refreshAllInfos(this.workInfos);

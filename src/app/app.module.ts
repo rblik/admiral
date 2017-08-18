@@ -11,7 +11,7 @@ import {DashboardComponent} from "./worker/dashboard.component";
 import {HomeComponent} from "./home/home.component";
 import {TimeService} from "./service/time.service";
 import {WorkInfoService} from "./service/work-info.service";
-import {DatePipe} from "@angular/common";
+import {CommonModule, DatePipe} from "@angular/common";
 import {
   ButtonModule,
   CalendarModule,
@@ -63,6 +63,7 @@ import {UserDownloadService} from "./service/user-download.service";
     InputTextareaModule,
     Ng2Webstorage,
     MyCommonModule,
+    CommonModule,
     DataGridModule,
     PanelModule,
     SpinnerModule,

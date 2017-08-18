@@ -25,7 +25,7 @@
             <div style="text-align: center">
                 <h3>דיווח שעות עבודה</h3>
             </div>
-            <div *ngIf="!dayBydayLock && !inCreation">
+            <div *ngIf="!dayBydayLock && !inCreation && !!clientsDropdown[0]">
               <button type="button" class="btn btn-xs btn-info" title="הוסף דיווח" (click)="create()">&nbsp;הוסף דיווח&nbsp;<i class="fa fa-plus" aria-hidden="true"></i></button>
             </div>
             <div class="row hebrew-direct" style="margin-top: 1em">
@@ -88,10 +88,10 @@
                   <td style="width: 10%" class="hebrew-direct">{{workInfo.duration | minutesToHours}}</td>
                   <td [ngStyle]="{'width': (!dayBydayLock)? '65%':'45%'}" class="hebrew-direct" style="word-wrap: break-word; text-align: right">{{workInfo.comment}}</td>
                   <td style="width: 13%" *ngIf="!dayBydayLock">
-                    <button title="לערוך" type="button" class="btn btn-xs btn-warning" (click)="edit(workInfo)" style="font-size: smaller"><i class="fa fa-pencil fa-fw"></i>&nbsp;ערוך&nbsp;</button>
+                    <button [disabled]="!workInfo.isActiveAgreement" title="לערוך" type="button" class="btn btn-xs btn-warning" (click)="edit(workInfo)" style="font-size: smaller"><i class="fa fa-pencil fa-fw"></i>&nbsp;ערוך&nbsp;</button>
                   </td>
                   <td style="width: 13%" *ngIf="!dayBydayLock">
-                    <button title="למחוק" type="button" class="btn btn-xs btn-danger" (click)="remove(workInfo)" style="font-size: smaller"><i class="fa fa-trash-o fa-fw"></i>&nbsp;מחק&nbsp;</button>
+                    <button [disabled]="!workInfo.isActiveAgreement" title="למחוק" type="button" class="btn btn-xs btn-danger" (click)="remove(workInfo)" style="font-size: smaller"><i class="fa fa-trash-o fa-fw"></i>&nbsp;מחק&nbsp;</button>
                   </td>
                 </tr>
                 </tbody>

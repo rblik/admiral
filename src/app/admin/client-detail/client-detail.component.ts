@@ -121,15 +121,6 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  popupDeleteProject(proj: Project) {
-    this.projectForRemove = proj;
-    let removeProjForm = document.getElementById('removeProjectFormElem');
-    if (removeProjForm) {
-      removeProjForm.click();
-    }
-    this.displayRemoveProjectDialog = true;
-  }
-
   popupDeleteAgreement(proj: Project, agreem: Agreement) {
     this.agreementForRemove = agreem;
     this.projectForRemove = proj;
