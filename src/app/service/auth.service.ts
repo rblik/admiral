@@ -30,6 +30,13 @@ export class AuthService {
       });
   }
 
+  isNotFreshPass() {
+    let retrieve = this.localSt.retrieve('lastRegistrationCheck');
+
+    let dayInMillis = 1000 * 60 * 60 * 24;
+    return !retrieve || retrieve === 0 || retrieve + dayInMillis * 100 < new Date().getMilliseconds();
+  }
+
   public storeProfile(): void {
     this.http.get(this.profileUrl, this.getOptions()).map(res => res.json()).catch(e => Observable.throw('Unauthorized'))
       .subscribe(employee => {
@@ -62,12 +69,33 @@ export class AuthService {
     return this.localSt.retrieve("TOKEN");
   }
 
+  public getLastRegistrationCheck(): number {
+    return this.localSt.retrieve("lastRegistrationCheck");
+  }
+
   public tokenObserv(): Observable<string> {
     return this.localSt.observe('TOKEN');
   }
 
+  public lastRegistrationCheckObserv(): Observable<number> {
+    return this.localSt.observe("lastRegistrationCheck");
+  }
+
   public getProfile(): Employee {
     return JSON.parse(this.localSt.retrieve("employee"));
+  }
+
+  public getLastPassUpdate(): number {
+    let profile = this.getProfile();
+    if (!profile) return 0;
+    else return profile.lastRegistrationCheck;
+  }
+
+  public updateProfile(newTs: number) {
+    // let profile = this.getProfile();
+    // profile.lastRegistrationCheck = newTs;
+    // this.localSt.store('employee', JSON.stringify(profile));
+    this.localSt.store('lastRegistrationCheck', newTs);
   }
 
   public profileObserv(): Observable<string> {
@@ -78,5 +106,6 @@ export class AuthService {
     this.router.navigate(['/app']);
     this.localSt.clear('TOKEN');
     this.localSt.clear('employee');
+    this.localSt.clear('lastRegistrationCheck');
   }
 }

@@ -4,6 +4,7 @@ import {Employee} from "../model/employee";
 import {Subscription} from "rxjs/Subscription";
 import {MonthlyStandard} from "../model/monthly-standard";
 import {MonthInfoService} from "../service/month-info.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'main-navbar',
@@ -26,16 +27,21 @@ export class NavBarComponent implements OnInit, OnDestroy {
   private account: string;
   private newPassword: string;
   private confirmNewPassword: string;
+  private lastRegistrationCheck: number;
 
-  constructor(private authService: AuthService, private monthInfoService: MonthInfoService) {
+  constructor(private authService: AuthService, private monthInfoService: MonthInfoService, private router: Router) {
     this.currYear = new Date().getFullYear();
   }
 
   ngOnInit(): void {
     this.profile = this.authService.getProfile();
+    this.lastRegistrationCheck = this.authService.getLastRegistrationCheck();
     this.authSubscription = this.authService.profileObserv().subscribe(employee => {
       this.profile = JSON.parse(employee);
     });
+    this.authService.lastRegistrationCheckObserv().subscribe(lastRegistrationCheck => {
+      this.lastRegistrationCheck = lastRegistrationCheck;
+    })
   }
 
   prepareMonthHoursStandardForm() {
@@ -45,11 +51,8 @@ export class NavBarComponent implements OnInit, OnDestroy {
   }
 
   private getStandards(year : number) {
-    let sd = [];
-    console.log(sd[5]);
     for (let i = 0; i< 12; i++) {
       this.standartsUi[i] = new MonthlyStandard(year, i+1);
-      console.log(this.standartsUi[i])
     }
     this.monthInfoService.getSumHoursForMonths(year).subscribe(standarts => {
       this.standarts = standarts.map(value => {
@@ -58,17 +61,11 @@ export class NavBarComponent implements OnInit, OnDestroy {
         let month = +value.yearMonth.substr(5, 2);
         let monthlyStandard = new MonthlyStandard(year, month);
         monthlyStandard.hoursSum = value.hoursSum;
-        console.log('monthlyStandard');
-        console.log(monthlyStandard);
-        console.log('monthlyStandard');
         return monthlyStandard;
       });
-      console.log(this.standarts);
-      console.log(this.standartsUi);
       this.standarts.forEach((value, index, array) => {
         this.standartsUi[value.month - 1] = value;
       });
-      console.log(this.standartsUi);
     });
   }
 
@@ -89,11 +86,19 @@ export class NavBarComponent implements OnInit, OnDestroy {
         this.passwordUpdateSubscrption = this.authService.changeOwnPass(newPass).subscribe(response => {
           this.requstStarted = false;
           this.passwordChangeSuccess = 'הסיסמה עודכנה בהצלחה';
+          let milliseconds = new Date().getMilliseconds();
+          this.lastRegistrationCheck = milliseconds;
+          this.authService.updateProfile(milliseconds);
+          this.router.navigateByUrl('/app/dashboard');
         }, e => {
           this.passwordChangeFailure = e;
         });
       }
     }
+  }
+
+  isNotFreshPass(){
+    return this.authService.isNotFreshPass();
   }
 
   getHeader(year: number, month: number): Date {

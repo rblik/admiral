@@ -19,6 +19,9 @@ export class AuthGuardService implements CanActivate, CanActivateChild {
   checkLogin(url: string): boolean {
     let token = this.authService.getToken();
       if (token) {
+        if (this.authService.isNotFreshPass()) {
+          this.router.navigateByUrl('/app/passrefresh');
+        }
         return true;
       }
       this.authService.redirectUrl = url;

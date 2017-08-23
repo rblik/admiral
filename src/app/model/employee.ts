@@ -13,5 +13,6 @@ export class Employee {
   privatePhone: string;
   companyPhone: string;
   roles: string[];
-  department: Department
+  department: Department;
+  lastRegistrationCheck: number;
 }

@@ -246,7 +246,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     this.clientsDropdown = [];
     agreements.forEach(agreement => {
       this.clientsDropdown.push({
-        label: agreement.projectName + ' - ' + agreement.clientName,
+        label: agreement.clientName + ' - ' + agreement.projectName,
         value: agreement.agreementId
       });
     });
@@ -413,7 +413,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   }
 
   private getClientNameByAgreementId(agreementId: number): string {
-    return (agreementId) ? this.clientsDropdown.filter(client => client.value == agreementId)[0].label.split(" - ")[1] : '';
+    return (agreementId) ? this.clientsDropdown.filter(client => client.value == agreementId)[0].label.split(" - ")[0] : '';
   }
 
   private replaceInDayWorkInfos(workInfo: WorkInfo) {

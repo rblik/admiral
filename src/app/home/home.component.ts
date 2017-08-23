@@ -40,6 +40,7 @@ export class HomeComponent implements OnInit, OnDestroy{
       .subscribe(jwt => {
           this.isFirstTime = true;
           this.localSt.store("TOKEN", jwt.token);
+          this.localSt.store('lastRegistrationCheck', jwt.lastRegistrationCheck);
           this.authService.storeProfile();
           this.error = '';
           let redirect = this.authService.redirectUrl && this.authService.redirectUrl != '/app/admin' ? this.authService.redirectUrl : '/app/dashboard';

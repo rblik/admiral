@@ -140,7 +140,6 @@ export class IncomeComponent implements OnInit, OnDestroy{
         arr.push(agreement.clientId);
       }
     });
-    console.log(this.clientUi);
 
     this.arrSortPipe.transform(buff, "label");
     this.clientUi = this.clientUi.slice(0,1).concat(buff);

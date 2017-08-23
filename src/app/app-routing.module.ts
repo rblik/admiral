@@ -4,12 +4,19 @@ import {NgModule} from "@angular/core";
 import {HomeComponent} from "./home/home.component";
 import {AuthGuardService} from "./service/auth-guard.service";
 import {AdminAuthGuardService} from "./service/admin-auth-guard.service";
+import {PassrefreshComponent} from "./passrefresh/passrefresh.component";
+import {AuthGuardTokenOnlyService} from "./service/auth-guard-token-only-service";
 
 const routes: Routes = [
   {
     path: 'app/dashboard',
     component: DashboardComponent,
     canActivate: [AuthGuardService]
+  },
+  {
+    path: 'app/passrefresh',
+    component: PassrefreshComponent,
+    canActivate: [AuthGuardTokenOnlyService]
   },
   {
     path: 'app',

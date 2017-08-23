@@ -39,13 +39,16 @@ import {SlimLoadingBarModule} from "ng2-slim-loading-bar";
 import {MonthInfoService} from "./service/month-info.service";
 import {UserDownloadService} from "./service/user-download.service";
 import {PasswordStrengthBarModule} from "ng2-password-strength-bar";
+import {PassrefreshComponent} from "./passrefresh/passrefresh.component";
+import {AuthGuardTokenOnlyService} from "./service/auth-guard-token-only-service";
 
 @NgModule({
   declarations: [
     AppComponent,
     NavBarComponent,
     DashboardComponent,
-    HomeComponent
+    HomeComponent,
+    PassrefreshComponent
   ],
   imports: [
     BrowserModule,
@@ -83,6 +86,7 @@ import {PasswordStrengthBarModule} from "ng2-password-strength-bar";
     DatePipe,
     AuthGuardService,
     AdminAuthGuardService,
+    AuthGuardTokenOnlyService,
     UserDownloadService
   ],
   bootstrap: [AppComponent]

@@ -56,10 +56,8 @@ export class MonthInfoService {
     let headers = new Headers();
     headers.append("Authorization", this.authService.getToken());
     let options = new RequestOptions({headers: headers, search: params});
-    console.log(year);
     return this.http.get(this.monthInfoAUrl, options)
       .map(res => {
-        console.log(year);
         return res.json();
       });
   }

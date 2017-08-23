@@ -37,22 +37,33 @@
                 </div>
                 <div style="text-align: center; position: relative;">
                   <label for="dayWorkInfoFrom">
-                    &nbsp;מ-
+                    &nbsp;מ-&nbsp;<br>
                     <p-inputMask [style]="{'width':'5em'}" [(ngModel)]="workInfoItem.from" (keyup)="jump($event)"
                                  id="dayWorkInfoFrom" mask="99:99" inputStyleClass="form-control"
                                  [maxlength]="5"></p-inputMask>
                   </label>
                   <label for="dayWorkInfoTo">
-                    &nbsp;עד&nbsp;
+                    &nbsp;עד-&nbsp;<br>
                     <p-inputMask [style]="{'width':'5em'}" [(ngModel)]="workInfoItem.to" (keyup)="jump($event)"
                                  mask="99:99" id="dayWorkInfoTo" inputStyleClass="form-control"
                                  [maxlength]="5"></p-inputMask>
                   </label>
                   &nbsp;
-                  <label for="clientsDropdown" *ngIf="isPivotal" style="padding: 0.5em 0 0.5em 0">
-                    <p-dropdown [options]="clientsDropdown" [style]="{'text-align':'center'}" id="clientsDropdown"
-                                panelStyleClass="form-control pull-right" [(ngModel)]="workInfoItem.agreementId"
-                                [filter]="true"></p-dropdown>
+                  <label for="clientsDropdown" *ngIf="isPivotal" style="padding: 0.5em 0 0.5em 0" class="hebrew-direct">
+                    &nbsp;לקוח - פרויקט&nbsp;<br>
+                    <p-dropdown [options]="clientsDropdown" id="clientsDropdown"
+                                [(ngModel)]="workInfoItem.agreementId"
+                                [filter]="true">
+                      <template let-proj pTemplate="item" class="english-direct">
+                        <div class="row english-direct" style="text-align: right;">
+                          <div class="english-direct col-sm-11">
+                            <span class="pull-right">{{proj.label.split(' - ')[0]}}</span>
+                            <span class="pull-right">{{'&nbsp;-&nbsp;'}}</span>
+                            <span class="pull-right">{{proj.label.split(' - ')[1]}}</span>
+                          </div>
+                        </div>
+                      </template>
+                    </p-dropdown>
                   </label>
                 </div>
                 <br>
