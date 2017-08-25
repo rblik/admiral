@@ -80,10 +80,14 @@ export class NavBarComponent implements OnInit, OnDestroy {
   }
 
   updatePassword(newPass: string) {
+    this.passwordChangeSuccess = null;
+    this.passwordChangeFailure = null;
     if (!!newPass) {
       if (newPass != '') {
         this.requstStarted = true;
         this.passwordUpdateSubscrption = this.authService.changeOwnPass(newPass).subscribe(response => {
+          this.newPassword = "";
+          this.confirmNewPassword = "";
           this.requstStarted = false;
           this.passwordChangeSuccess = 'הסיסמה עודכנה בהצלחה';
           let milliseconds = new Date().getMilliseconds();
@@ -91,7 +95,10 @@ export class NavBarComponent implements OnInit, OnDestroy {
           this.authService.updateProfile(milliseconds);
           this.router.navigateByUrl('/app/dashboard');
         }, e => {
-          this.passwordChangeFailure = e;
+          this.newPassword = "";
+          this.confirmNewPassword = "";
+          this.requstStarted = false;
+          this.passwordChangeFailure = "הסיסמא שהוזנה היא סיסמה הישנה";
         });
       }
     }
