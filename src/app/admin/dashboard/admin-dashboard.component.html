@@ -41,17 +41,29 @@
                                  [maxlength]="5"></p-inputMask>
                   </label>
                   &nbsp;
-                  <label for="clientsDropdown" *ngIf="isPivotal" style="padding: 0.5em 0 0.5em 0" class="hebrew-direct">
-                    &nbsp;לקוח - פרויקט&nbsp;<br>
-                    <p-dropdown [options]="clientsDropdown" id="clientsDropdown"
-                                [(ngModel)]="workInfoItem.agreementId"
+                  <label for="clientsDropdownDash" *ngIf="isPivotal" style="padding: 0.5em 0 0.5em 0" class="hebrew-direct">
+                    &nbsp;לקוח&nbsp;<br>
+                    <p-dropdown [options]="clientsDropdown" id="clientsDropdownDash"
+                                [(ngModel)]="chosenClient" (onChange)="getProjectsUi(chosenClient)"
                                 [filter]="true">
-                      <template let-proj pTemplate="item" class="english-direct">
-                        <div class="row english-direct" style="text-align: right;">
-                          <div class="english-direct col-sm-11">
-                            <span class="pull-right">{{proj.label.split(' - ')[0]}}</span>
-                            <span class="pull-right">{{'&nbsp;-&nbsp;'}}</span>
-                            <span class="pull-right">{{proj.label.split(' - ')[1]}}</span>
+                      <template let-cl pTemplate="item">
+                        <div class="row" style="text-align: right;">
+                          <div class="col-sm-11">
+                            <span class="hebrew-direct pull-right">{{cl.label}}</span>
+                          </div>
+                        </div>
+                      </template>
+                    </p-dropdown>
+                  </label>
+                  <label for="projectsDropdownDash" *ngIf="isPivotal">
+                    &nbsp;פרויקט&nbsp;<br>
+                    <p-dropdown [options]="projectsDropdown" id="projectsDropdownDash"
+                                [(ngModel)]="chosenAgreement" (onChange)="getClient(chosenAgreement)"
+                                [filter]="true">
+                      <template let-proj pTemplate="item">
+                        <div class="row" style="text-align: right;">
+                          <div class="col-sm-11">
+                            <span class="hebrew-direct pull-right">{{proj.label}}</span>
                           </div>
                         </div>
                       </template>

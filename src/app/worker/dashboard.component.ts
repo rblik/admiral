@@ -15,6 +15,7 @@ import {MonthInfoService} from "../service/month-info.service";
 import {UserDownloadService} from "../service/user-download.service";
 import {NotificationBarService, NotificationType} from "angular2-notification-bar";
 import {MinutesToHoursPipe} from "../pipe/minutes-to-hours.pipe";
+import {ArraySortPipe} from "../pipe/array-sort.pipe";
 
 @Component({
   selector: 'worker-dashboard',
@@ -40,6 +41,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private isPivotal: boolean;
   private isEdit: boolean;
   private clientsDropdown: SelectItem[] = [];
+  private projectsDropdown: SelectItem[] = [];
+  private chosenClient;
   private localStSubscription: Subscription;
   private getAgreementsSubscription: Subscription;
   private weekWorkSubscription: Subscription;
@@ -62,8 +65,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private isEnabled: boolean = false;
   private defaultChoiceError: string;
   private editedWorkInfo: WorkInfo;
+  private chosenAgreement: any;
+  private agreementsUi: AgreementDto[] = [];
 
-  constructor(private notificationBarService: NotificationBarService, private minToHours: MinutesToHoursPipe, private timeService: TimeService, private downloadService: UserDownloadService, private monthInfoService: MonthInfoService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
+  constructor(private arrSortPipe: ArraySortPipe, private notificationBarService: NotificationBarService, private minToHours: MinutesToHoursPipe, private timeService: TimeService, private downloadService: UserDownloadService, private monthInfoService: MonthInfoService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
     this.types = [];
     this.sumByMonth = 0;
     // this.neededSumByMonth = 0;
@@ -76,9 +81,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   fillDefaultChoice() {
     this.workService.getDefaultChoice().subscribe(choice => {
+      // console.log(choice);
       if (!!choice.start) this.workInfoItem.from = choice.start;
       if (!!choice.finish) this.workInfoItem.to = choice.finish;
-      if (!!choice.agreement.id) this.workInfoItem.agreementId = choice.agreement.id;
+      if (!!choice.agreement.id) this.chosenAgreement = choice.agreement.id;
+        // this.chosenClient = this.chosenAgreement.clientId;
+        this.chosenAgreement = choice.agreement.id;
+      this.getClient(this.chosenAgreement);
     }, err => {
       this.defaultChoiceError = err;
     })
@@ -87,7 +96,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private getAgreementsWithWorkAndRender() {
     this.getAgreementsSubscription = this.workService.getWorkAgreements().subscribe(agreements => {
       this.agreements = agreements;
-      this.getClientsUi(agreements);
+      this.agreementsUi = agreements;
+      // this.getClientsUi(agreements);
+      // this.getProjectsUi(this.chosenClient);
+      // this.getClientsUi();
     });
   }
 
@@ -155,6 +167,33 @@ export class DashboardComponent implements OnInit, OnDestroy {
     errorSuccessField.click(eventObject => errorSuccessField.text(''));
   }
 
+  getProjectsUi(clientId: number) {
+    this.chosenAgreement = null;
+    this.initProjectsDropDown();
+    let arr = [];
+    let filter = this.agreementsUi.filter(function (agreement) {
+      return clientId != null ? agreement.clientId === clientId : true;
+    });
+    filter.forEach(agreement => {
+      if (arr.indexOf(agreement.agreementId) == -1) {
+        this.projectsDropdown.push({
+          label: agreement.projectName,
+          value: agreement.agreementId
+        });
+        arr.push(agreement.agreementId);
+      }
+    });
+  }
+
+  private initClientsDropDown() {
+    this.clientsDropdown = [];
+    this.clientsDropdown.push({label: "בחר לקוח", value: null});
+  }
+  private initProjectsDropDown() {
+    this.projectsDropdown = [];
+    this.projectsDropdown.push({label: "בחר פרויקט", value: null});
+  }
+
   getMonthAndRender(calendar?: any) {
     if (this.firstRender) {
       this.addButtons(calendar);
@@ -218,6 +257,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.initProjectsDropDown();
+    this.initClientsDropDown();
     this.localStSubscription = this.sessionStorageService.observe('employee')
       .subscribe((employee) => this.employee = JSON.parse(employee));
     this.getAgreementsWithWorkAndRender();
@@ -314,9 +355,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   create() {
+    this.chosenAgreement = null;
+    this.chosenClient = null;
+    this.initProjectsDropDown();
+    this.initClientsDropDown();
+    this.getProjectsUi(this.chosenClient);
+    this.getClientsUi();
     this.isEdit = false;
     this.workInfoItem = new WorkInfo();
-    this.workInfoItem.agreementId = !this.isPivotal ? this.activeAgreementId : this.clientsDropdown[0].value;
+    this.workInfoItem.agreementId = !this.isPivotal ? this.activeAgreementId : this.projectsDropdown[0].value;
     this.workInfoItem.date = this.activeDate;
     this.workInfoItem.duration = 0;
     this.inCreation = true;
@@ -365,12 +412,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.error = "טווח זמן שגוי";
       return;
     }
-    this.upsertWorkInfoSubscription = this.workService.save(this.isEnabled, workInfo.agreementId, this.convertToUnit(workInfo))
+    this.upsertWorkInfoSubscription = this.workService.save(this.isEnabled, this.chosenAgreement, this.convertToUnit(workInfo))
       .subscribe(workUnit => {
         this.error = '';
         this.inCreation = false;
-        let saved: WorkInfo = this.convertToInfo(workUnit, workInfo.agreementId);
-        saved.clientName = this.getClientNameByAgreementId(workInfo.agreementId);
+        let saved: WorkInfo = this.convertToInfo(workUnit, this.chosenAgreement);
+        saved.clientName = this.getClientNameByAgreementId(this.chosenAgreement);
         saved.isActiveAgreement = true;
         this.replaceInDayWorkInfos(saved);
         this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
@@ -443,18 +490,28 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.workInfoItem.to = "18:00";
   }
 
-  private getClientsUi(agreements: AgreementDto[]) {
-    this.clientsDropdown = [];
-    agreements.forEach(agreement => {
-      this.clientsDropdown.push({
-        label: agreement.clientName + ' - ' + agreement.projectName,
-        value: agreement.agreementId
-      });
+  private getClientsUi() {
+    this.initClientsDropDown();
+    let arr = [];
+    let buff = this.clientsDropdown.slice(1,this.clientsDropdown.length);
+    this.agreements.forEach(agreement => {
+      if (arr.indexOf(agreement.clientId) == -1) {
+
+        this.clientsDropdown.push({
+          label: agreement.clientName,
+          value: agreement.clientId
+        });
+        arr.push(agreement.clientId);
+      }
     });
+    this.arrSortPipe.transform(buff, "label");
+    // this.clientsDropdown = this.clientsDropdown.slice(0,1).concat(buff);
   }
 
   private getClientNameByAgreementId(agreementId: number): string {
-    return (agreementId) ? this.clientsDropdown.filter(client => client.value == agreementId)[0].label.split(" - ")[0] : '';
+    return (agreementId) ? this.agreements.filter(agreement => {
+      return agreement.agreementId === agreementId
+    })[0].clientName:"";
   }
 
   pivotalReport(calendar: any, template?: boolean) {
@@ -534,5 +591,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (this.localStSubscription) this.localStSubscription.unsubscribe();
     if (this.weekWorkSubscription) this.weekWorkSubscription.unsubscribe();
     if (this.downloadReportSubscription) this.downloadReportSubscription.unsubscribe();
+  }
+
+  getClient(agreementId: number) {
+    if (!agreementId) this.chosenClient = null;
+    else {
+      this.chosenClient = null;
+      let filter = this.agreements.filter(function (agreement) {
+        return agreementId != null ? agreement.agreementId === agreementId : true;
+      });
+      this.chosenClient = filter[0].clientId;
+    }
   }
 }

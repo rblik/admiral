@@ -16,6 +16,7 @@ import {AdminMonthInfoService} from "../service/admin-month-info.service";
 import {AgreementService} from "../service/agreement.service";
 import {WorkUnit} from "../../model/work-unit";
 import {MinutesToHoursPipe} from "../../pipe/minutes-to-hours.pipe";
+import {ArraySortPipe} from "../../pipe/array-sort.pipe";
 
 @Component({
   selector: 'admin-dashboard',
@@ -34,8 +35,9 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   private clientsCheckboxSettings: IMultiSelectSettings;
   private clientsCheckboxTexts: IMultiSelectTexts;
   private lockClass: string;
-  private agreements: AgreementDto[];
+  private agreements: AgreementDto[] = [];
   private clientsDropdown: SelectItem[] = [];
+  private projectsDropdown: SelectItem[] = [];
   private workInfos: WorkInfo[];
   private lock: boolean;
   private dayByDayLock: boolean;
@@ -66,10 +68,13 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   private defaultMonthHours: number = 0;
   private pointDate: Date;
   private clientForCreatingWorkInfos: string;
+  private chosenClient: any;
+  private chosenAgreement: number;
 
   constructor(private route: ActivatedRoute,
               private employeeService: EmployeeService,
               private timeService: TimeService,
+              private arrSortPipe: ArraySortPipe,
               private lockService: AdminMonthInfoService,
               private agreementService: AgreementService,
               private minToHours: MinutesToHoursPipe,
@@ -207,6 +212,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
+    this.initClientsDropDown();
+    this.initProjectsDropDown();
     this.weekOffset = 0;
     this.route.queryParams.subscribe((params: Params) => {
       let date = params['date'];
@@ -226,7 +233,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   private getAgreementsWithWorkAndRender() {
     this.getAgreementsSubscription = this.agreementService.getAgreementsByEmployee(this.employee.id).subscribe(agreements => {
       this.agreements = agreements;
-      this.getClientsUi(agreements);
+      this.getProjectsUi(this.chosenClient);
+      this.getClientsUi();
       this.fillDropDownList(agreements);
       this.getWorkForWeekAndRender();
     });
@@ -242,14 +250,40 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     });
   }
 
-  private getClientsUi(agreements: AgreementDto[]) {
-    this.clientsDropdown = [];
-    agreements.forEach(agreement => {
-      this.clientsDropdown.push({
-        label: agreement.clientName + ' - ' + agreement.projectName,
-        value: agreement.agreementId
-      });
+  getProjectsUi(clientId: number) {
+    this.chosenAgreement = null;
+    let buff = [];
+    let arrAgreemId = [];
+    let filter = this.agreements.filter(function (agreement) {
+      return clientId != null ? agreement.clientId === clientId : true;
     });
+    filter.forEach(agreement => {
+      if (arrAgreemId.indexOf(agreement.agreementId) == -1) {
+        buff.push({
+          label: agreement.projectName,
+          value: agreement.agreementId
+        });
+        arrAgreemId.push(agreement.agreementId);
+      }
+    });
+    this.arrSortPipe.transform(buff, "label");
+    this.projectsDropdown = this.projectsDropdown.slice(0,1).concat(buff);
+  }
+
+  private getClientsUi() {
+    let arr = [];
+    let buff = this.clientsDropdown.slice(1, this.clientsDropdown.length);
+    this.agreements.forEach(agreement => {
+      if (arr.indexOf(agreement.clientId) === -1) {
+        this.clientsDropdown.push({
+          label: agreement.clientName,
+          value: agreement.clientId
+        });
+        arr.push(agreement.clientId);
+      }
+    });
+    this.arrSortPipe.transform(buff, "label");
+    // this.clientsDropdown = this.clientsDropdown.slice(0,1).concat(buff);
   }
 
   private getWorkForWeekAndRender() {
@@ -324,7 +358,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
       event.target.value.indexOf('_') == -1
       && event.target.parentElement.attributes.id.nodeValue === 'dayWorkInfoTo'
       && ((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 37)) {
-      let clientsDropdown = jQuery('#clientsDropdown').find("div.ui-helper-hidden-accessible").find(":text").get(0);
+      let clientsDropdown = jQuery('#clientsDropdownDash').find("div.ui-helper-hidden-accessible").find(":text").get(0);
       if (!!clientsDropdown) clientsDropdown.focus();
     }
   }
@@ -337,9 +371,15 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   }
 
   create() {
+    this.initProjectsDropDown();
+    this.initClientsDropDown();
+    this.getProjectsUi(this.chosenClient);
+    this.getClientsUi();
+    this.chosenClient = null;
+    this.chosenAgreement = null;
     this.isEdit = false;
     this.workInfoItem = new WorkInfo();
-    this.workInfoItem.agreementId = !this.isPivotal? this.activeAgreementId : this.clientsDropdown[0].value;
+    this.workInfoItem.agreementId = !this.isPivotal ? this.activeAgreementId : this.projectsDropdown[0].value;
     this.workInfoItem.date = this.activeDate;
     this.workInfoItem.duration = 0;
     this.inCreation = true;
@@ -368,13 +408,12 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
       return;
     }
 
-    this.upsertWorkInfoSubscription = this.workService.save(false, workInfo.agreementId, this.convertToUnit(workInfo), this.employee.id, this.adminUnitsUrl)
+    this.upsertWorkInfoSubscription = this.workService.save(false, this.chosenAgreement, this.convertToUnit(workInfo), this.employee.id, this.adminUnitsUrl)
       .subscribe(workUnit => {
         this.error = '';
         this.inCreation = false;
-        let date = new Date(workUnit.date);
-        let saved: WorkInfo = this.convertToInfo(workUnit, workInfo.agreementId);
-        saved.clientName = this.getClientNameByAgreementId(workInfo.agreementId);
+        let saved: WorkInfo = this.convertToInfo(workUnit, this.chosenAgreement);
+        saved.clientName = this.getClientNameByAgreementId(this.chosenAgreement);
         this.replaceInDayWorkInfos(saved);
         this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
         this.search(null);
@@ -413,7 +452,9 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   }
 
   private getClientNameByAgreementId(agreementId: number): string {
-    return (agreementId) ? this.clientsDropdown.filter(client => client.value == agreementId)[0].label.split(" - ")[0] : '';
+    return (agreementId) ? this.agreements.filter(agreement => {
+      return agreement.agreementId === agreementId
+    })[0].clientName:"";
   }
 
   private replaceInDayWorkInfos(workInfo: WorkInfo) {
@@ -502,5 +543,25 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   private initWeekBorders(offset: number) {
     this.currentSunday = this.timeService.getWeekDay(offset);
     this.nextSunday = this.timeService.getWeekDay(offset + 7);
+  }
+
+  getClient(agreementId: number) {
+    if (!agreementId) this.chosenClient = null;
+    else {
+      this.chosenClient = null;
+      let filter = this.agreements.filter(function (agreement) {
+        return agreementId != null ? agreement.agreementId === agreementId : true;
+      });
+      this.chosenClient = filter[0].clientId;
+    }
+  }
+
+  private initClientsDropDown() {
+    this.clientsDropdown = [];
+    this.clientsDropdown.push({label: "בחר לקוח", value: null});
+  }
+  private initProjectsDropDown() {
+    this.projectsDropdown = [];
+    this.projectsDropdown.push({label: "בחר פרויקט", value: null});
   }
 }
