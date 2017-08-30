@@ -51,7 +51,9 @@
     הסיסמה עודכנה בהצלחה
   </div>
   <div style="text-align: center" *ngIf="passwordChangeFailure" class="alert alert-danger">
-    {{passwordChangeFailure}}
+    {{passwordChangeFailure}}<br>
+    {{passwordChangeFailure2}}<br>
+    {{passwordChangeFailure3}}
   </div>
   <div *ngIf="!passwordChangeSuccess" class="row">
     <div class="form-group">
@@ -61,24 +63,24 @@
                 (click)="updatePassword(newPassword); newPassword=''">
           <i style="font-size: large; color: white" class="fa fa-cog {{requstStarted?'fa-spin':''}}"></i></button>
       </div>
-      <div class="col-md-9 pull-right">
-        <label style="text-align: center">סיסמא חדשה
-          <input #updatePassInput [(ngModel)]="newPassword" name="newPassword" required type="password"
-                 class="form-control">
-        </label>
-        <ng2-password-strength-bar
-            [passwordToCheck]="newPassword"
-            [barLabel]="barLabel">
-          </ng2-password-strength-bar>
-        <label style="text-align: center">אימות סיסמא חדשה
-          <input #updatePassInputAffirm [(ngModel)]="confirmNewPassword" name="confirmNewPassword" required
-                 type="password" class="form-control">
-        </label>
-        <ng2-password-strength-bar
-          [passwordToCheck]="confirmNewPassword"
-          [barLabel]="barLabel">
-        </ng2-password-strength-bar>
-      </div>
+          <div class="col-md-9 pull-right">
+            <label style="text-align: center">סיסמא חדשה
+              <input #updatePassInput [(ngModel)]="newPassword" name="newPassword" required type="password"
+                     class="form-control">
+            </label>
+            <ng2-password-strength-bar
+              [passwordToCheck]="newPassword"
+              [barLabel]="barLabel">
+            </ng2-password-strength-bar>
+            <label style="text-align: center">אימות סיסמא חדשה
+              <input #updatePassInputAffirm [(ngModel)]="confirmNewPassword" name="confirmNewPassword" required
+                     type="password" class="form-control">
+            </label>
+            <ng2-password-strength-bar
+              [passwordToCheck]="confirmNewPassword"
+              [barLabel]="barLabel">
+            </ng2-password-strength-bar>
+          </div>
         </form>
     </div>
   </div>

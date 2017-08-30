@@ -52,7 +52,7 @@
                   <label for="clientsDropdown" *ngIf="isPivotal" style="padding: 0.5em 0 0.5em 0" class="hebrew-direct">
                     &nbsp;לקוח&nbsp;<br>
                     <p-dropdown [options]="clientsDropdown" id="clientsDropdown"
-                                [(ngModel)]="chosenClient" (onChange)="getProjectsUi(chosenClient)"
+                                [(ngModel)]="chosenClient"  (keyup)="jump($event)"  [style]="{'z-index': '9999'}" (onChange)="getProjectsUi(chosenClient)"
                                 [filter]="true">
                       <template let-cl pTemplate="item">
                         <div class="row" style="text-align: right;">
@@ -66,7 +66,7 @@
                   <label for="projectsDropdown" *ngIf="isPivotal">
                     &nbsp;פרויקט&nbsp;<br>
                     <p-dropdown [options]="projectsDropdown" id="projectsDropdown"
-                                [(ngModel)]="chosenAgreement" (onChange)="getClient(chosenAgreement)"
+                                [(ngModel)]="chosenAgreement" (keyup)="jump($event)" [style]="{'z-index': '9999'}" (onChange)="getClient(chosenAgreement)"
                                 [filter]="true">
                       <template let-proj pTemplate="item">
                         <div class="row" style="text-align: right;">

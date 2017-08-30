@@ -329,18 +329,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   jump(event?: any) {
-    if (
+    if ((event.keyCode == 37) && event.target.parentElement.parentElement.parentElement.id=='clientsDropdown') {
+      let projectsDropdown = jQuery('#projectsDropdown').find("div.ui-helper-hidden-accessible").find(":text").get(0);
+      if (!!projectsDropdown) projectsDropdown.focus();
+    } else if ((event.keyCode == 39) && event.target.parentElement.parentElement.parentElement.id=='clientsDropdown') {
+      jQuery('#dayWorkInfoTo').find(':input').focus();
+    } else if ((event.keyCode == 39) && event.target.parentElement.parentElement.parentElement.id=='projectsDropdown') {
+      let clientsDropdown = jQuery('#clientsDropdown').find("div.ui-helper-hidden-accessible").find(":text").get(0);
+      if (!!clientsDropdown) clientsDropdown.focus();
+    } else if (
       event.keyCode == 39
+      && !!event.target.parentElement.attributes.id
       && event.target.parentElement.attributes.id.nodeValue === 'dayWorkInfoTo'
       && event.target.selectionStart === 0) {
       (<HTMLInputElement>jQuery('#dayWorkInfoFrom').find(':input').get(0)).focus();
     } else if (
-      event.target.value.indexOf('_') == -1
+      !!event.target.parentElement.attributes.id
+      && event.target.value.indexOf('_') == -1
       && event.target.parentElement.attributes.id.nodeValue === 'dayWorkInfoFrom'
       && ((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 37)) {
       jQuery('#dayWorkInfoTo').find(':input').focus();
     } else if (
-      event.target.value.indexOf('_') == -1
+      !!event.target.parentElement.attributes.id
+      && event.target.value.indexOf('_') == -1
       && event.target.parentElement.attributes.id.nodeValue === 'dayWorkInfoTo'
       && ((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 37)) {
       let clientsDropdown = jQuery('#clientsDropdown').find("div.ui-helper-hidden-accessible").find(":text").get(0);
@@ -525,7 +536,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           let appType = this.downloadService.xlsType();
           let blob = new Blob([res.blob()], {type: appType});
           let profile = this.auth.getProfile();
-          fileSaver.saveAs(blob, profile.name + "_" + profile.surname + (template ? "_Template_" + "WorkHours_" : "_MonthWork_") + year + "_" + month + '.' + this.selectedType);
+          fileSaver.saveAs(blob, profile.email.split("@")[0] + (template ? "_Template_" + "WorkHours_" : "_MonthWork_") + year + "_" + month + '.' + this.selectedType);
         },
         err => {
           this.notificationBarService.create({message: 'הורדה נכשלה', type: NotificationType.Error});

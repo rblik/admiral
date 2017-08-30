@@ -28,6 +28,8 @@ export class NavBarComponent implements OnInit, OnDestroy {
   private newPassword: string;
   private confirmNewPassword: string;
   private lastRegistrationCheck: number;
+  private passwordChangeFailure2: string;
+  private passwordChangeFailure3: string;
 
   constructor(private authService: AuthService, private monthInfoService: MonthInfoService, private router: Router) {
     this.currYear = new Date().getFullYear();
@@ -82,8 +84,12 @@ export class NavBarComponent implements OnInit, OnDestroy {
   updatePassword(newPass: string) {
     this.passwordChangeSuccess = null;
     this.passwordChangeFailure = null;
+    this.passwordChangeFailure2 = null;
+    this.passwordChangeFailure3 = null;
     if (!!newPass) {
       if (newPass != '') {
+        if (!this.isWeak(newPass)) {
+
         this.requstStarted = true;
         this.passwordUpdateSubscrption = this.authService.changeOwnPass(newPass).subscribe(response => {
           this.newPassword = "";
@@ -100,6 +106,14 @@ export class NavBarComponent implements OnInit, OnDestroy {
           this.requstStarted = false;
           this.passwordChangeFailure = "הסיסמא שהוזנה היא סיסמה הישנה";
         });
+        } else {
+          this.newPassword = "";
+          this.confirmNewPassword = "";
+          this.requstStarted = false;
+          this.passwordChangeFailure = 'הסיסמא אינה עומדת בדרישות.';
+          this.passwordChangeFailure2 = 'יש לוודה כי הסיסמא כוללת מינימום 6 תווים';
+          this.passwordChangeFailure3 = 'מתוכם לפחות אות גדולה, ספרה או סימן פיסוק';
+        }
       }
     }
   }
@@ -141,5 +155,30 @@ export class NavBarComponent implements OnInit, OnDestroy {
   cancelStandard() {
     this.isEditedStandard = -1;
     this.numberForEditing = 0;
+  }
+
+  private isWeak(p: string): boolean {
+    if (p.length < 6) return true;
+    else {
+      let _force = 0;
+      let _regex = /[$-/:-?{-~!"^_`\[\]]/g;
+      let _lowerLetters = /[a-z]+/.test(p);
+      let _upperLetters = /[A-Z]+/.test(p);
+      let _numbers = /[0-9]+/.test(p);
+      let _symbols = _regex.test(p);
+      let _flags = [_lowerLetters, _upperLetters, _numbers, _symbols];
+      let _passedMatches = 0;
+      for (let _i = 0, _flags_1 = _flags; _i < _flags_1.length; _i++) {
+        let _flag = _flags_1[_i];
+        _passedMatches += _flag === true ? 1 : 0;
+      }
+      _force += 2 * p.length + ((p.length >= 10) ? 1 : 0);
+      _force += _passedMatches * 10;
+      _force = (p.length <= 6) ? Math.min(_force, 10) : _force;
+      _force = (_passedMatches === 1) ? Math.min(_force, 10) : _force;
+      _force = (_passedMatches === 2) ? Math.min(_force, 20) : _force;
+      _force = (_passedMatches === 3) ? Math.min(_force, 40) : _force;
+      return _force < 40;
+    }
   }
 }
