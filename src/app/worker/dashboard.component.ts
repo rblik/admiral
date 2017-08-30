@@ -16,6 +16,7 @@ import {UserDownloadService} from "../service/user-download.service";
 import {NotificationBarService, NotificationType} from "angular2-notification-bar";
 import {MinutesToHoursPipe} from "../pipe/minutes-to-hours.pipe";
 import {ArraySortPipe} from "../pipe/array-sort.pipe";
+import {AuthService} from "../service/auth.service";
 
 @Component({
   selector: 'worker-dashboard',
@@ -68,7 +69,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private chosenAgreement: any;
   private agreementsUi: AgreementDto[] = [];
 
-  constructor(private arrSortPipe: ArraySortPipe, private notificationBarService: NotificationBarService, private minToHours: MinutesToHoursPipe, private timeService: TimeService, private downloadService: UserDownloadService, private monthInfoService: MonthInfoService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
+  constructor(private arrSortPipe: ArraySortPipe, private auth: AuthService, private notificationBarService: NotificationBarService, private minToHours: MinutesToHoursPipe, private timeService: TimeService, private downloadService: UserDownloadService, private monthInfoService: MonthInfoService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
     this.types = [];
     this.sumByMonth = 0;
     // this.neededSumByMonth = 0;
@@ -523,7 +524,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe(res => {
           let appType = this.downloadService.xlsType();
           let blob = new Blob([res.blob()], {type: appType});
-          fileSaver.saveAs(blob, 'week_work' + from + '-' + to + '.' + this.selectedType);
+          let profile = this.auth.getProfile();
+          fileSaver.saveAs(blob, profile.name + "_" + profile.surname + (template ? "_Template_" + "WorkHours_" : "_MonthWork_") + year + "_" + month + '.' + this.selectedType);
         },
         err => {
           this.notificationBarService.create({message: 'הורדה נכשלה', type: NotificationType.Error});
@@ -602,5 +604,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
       this.chosenClient = filter[0].clientId;
     }
+  }
+
+  getDirection(label: any) {
+    let firstChar = label.charAt(0);
+    let isEnglish = /^[A-Za-z0-9]*$/.test(firstChar);
+    return isEnglish? "pull-left" : "pull-right"
   }
 }

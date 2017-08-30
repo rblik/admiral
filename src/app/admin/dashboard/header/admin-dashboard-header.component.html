@@ -10,8 +10,15 @@
                   [style]="{'text-align':'center'}"
                   (onChange)="getEmployeesUi(chosenDepartment)"></p-dropdown>
       <p-dropdown [options]="employeesUi" [(ngModel)]="chosenEmployee" [filter]="true"
-                  [style]="{'text-align':'center', 'width': '12em'}"
-                  [panelStyle]="{'align-content': 'center'}"></p-dropdown>
+                  [style]="{'width': '12em'}">
+        <template let-emp pTemplate="item">
+          <div class="row" style="text-align: right;">
+            <div class="col-sm-11">
+              <span class="hebrew-direct pull-right">{{emp.label}}</span>
+            </div>
+          </div>
+        </template>
+      </p-dropdown>
       <p-calendar [(ngModel)]="searchDate" [locale]="he" [style]="{'text-align':'center', 'width': '7em'}"
                   [inputStyle]="{'text-align':'center', 'width':'100%'}" id="startDateId"
                   dateFormat="dd.mm.yy"></p-calendar>

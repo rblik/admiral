@@ -32,8 +32,8 @@
               <div *ngIf="createDialog" class="form-group" (keyup)="checkForCtrlEnter($event)">
                 <!--<p-calendar [(ngModel)]="tes" [stepMinute]=10 hourFormat="24" readonlyInput="true" dataType="string" [timeOnly]="true"></p-calendar>-->
                 <div class="btn-group" style="padding: 0 0 0.5em 0">
-                  <button type="button" class="btn ui-button-secondary" style="font-size: xx-small" iconPos="right" pButton icon="fa-clock-o" (click)="makeWholeDay()" label="דיווח שעות מלא"></button>
-                  <button type="button" class="btn ui-button-text" style="font-size:xx-small" iconPos="right" pButton icon="fa-clock-o" (click)="fillDefaultChoice()" label="ברירת מחדל"></button>
+                  <button type="button" class="btn ui-button-secondary" style="font-size: xx-small" iconPos="right" pButton icon="fa-clock-o" (click)="makeWholeDay()" label="יום עבודה מלא 9-18"></button>
+                  <button type="button" class="btn ui-button-text" style="font-size:xx-small" iconPos="right" pButton icon="fa-clock-o" (click)="fillDefaultChoice()" label="דווח לקוח ושעות ברירת מחדל"></button>
                 </div>
                 <div style="text-align: center; position: relative;">
                   <label for="dayWorkInfoFrom">
@@ -57,7 +57,7 @@
                       <template let-cl pTemplate="item">
                         <div class="row" style="text-align: right;">
                           <div class="col-sm-11">
-                            <span class="hebrew-direct pull-right">{{cl.label}}</span>
+                            <span [ngClass]="getDirection(cl.label)" class="hebrew-direct ">{{cl.label}}</span>
                           </div>
                         </div>
                       </template>
@@ -71,7 +71,7 @@
                       <template let-proj pTemplate="item">
                         <div class="row" style="text-align: right;">
                           <div class="col-sm-11">
-                            <span class="hebrew-direct pull-right">{{proj.label}}</span>
+                            <span [ngClass]="getDirection(proj.label)" class="hebrew-direct">{{proj.label}}</span>
                           </div>
                         </div>
                       </template>
@@ -83,7 +83,7 @@
                 <br>
                 <button type="button" id="cancelWorkInfoButton" class="pull-left ui-button-danger" style="border-width: 0" pButton icon="fa-undo" iconPos="right" (click)="cancel()" label="בטל"></button>
                 <button type="button" id="confirmWorkInfoButton" class="pull-left ui-button-text" style="border-width: 0" pButton icon="fa-check" iconPos="right" (click)="save(workInfoItem)" label="שמור"></button>
-                <label for="isEnabled" class="pull-left" [ngClass]="(!!defaultChoiceError && defaultChoiceError.length > 0)? 'underscored':''" style="padding-left: 1em">לשמור כברירת מחדל<p-checkbox id="isEnabled" [(ngModel)]="isEnabled" binary="true"></p-checkbox>
+                <label for="isEnabled" class="pull-left" [ngClass]="(!!defaultChoiceError && defaultChoiceError.length > 0)? 'underscored':''" style="padding-left: 1em">קבע דיווח זה כברירת מחדל<p-checkbox id="isEnabled" [(ngModel)]="isEnabled" binary="true"></p-checkbox>
                 </label>
               </div>
             </div>
@@ -136,10 +136,10 @@
     </div>
   </div>
   <input type="file" style="display: none" id="chooseXslInput" accept=".xls,.xlsx"/>
-  <button class="pull-right ui-button ui-state-default ui-corner-left hebrew-direct" id="uploadButton" (click)="uploadReport(cal)"><i class="fa fa-upload save-button" aria-hidden="true" style="color: white"></i>&nbsp;להעלות דיווחים&nbsp;</button>
-  <button class="pull-right ui-button ui-state-default  hebrew-direct" aria-hidden="true" id="chooseXslLabel"><i class="fa fa-file-excel-o save-button" aria-hidden="true" style="color: white"></i>&nbsp;בחר קובץ&nbsp;</button>
-  <button class="pull-right ui-button ui-state-default" id="downloadTemplate" (click)="pivotalReport(cal, true)">&nbsp;שבלונה&nbsp;<i class="fa fa-table save-button" aria-hidden="true" style="color: white"></i></button>
-  <button class="pull-right ui-button ui-state-default ui-corner-right" id="downloadPivotal" (click)="pivotalReport(cal)">&nbsp;XLS שעות גולמי&nbsp;<i class="fa fa-download save-button" aria-hidden="true" style="color: white"></i>&nbsp;</button>
+  <button class="pull-right ui-button ui-state-default ui-corner-left hebrew-direct" id="uploadButton" (click)="uploadReport(cal)"><i class="fa fa-upload save-button" aria-hidden="true" style="color: white"></i>&nbsp;טען קובץ דיווח&nbsp;</button>
+  <button class="pull-right ui-button ui-state-default  hebrew-direct" aria-hidden="true" id="chooseXslLabel"><i class="fa fa-file-excel-o save-button" aria-hidden="true" style="color: white"></i>&nbsp;בחר קובץ דיווח לטעינה&nbsp;</button>
+  <button class="pull-right ui-button ui-state-default hebrew-direct" id="downloadTemplate" (click)="pivotalReport(cal, true)"><i class="fa fa-table save-button" aria-hidden="true" style="color: white"></i>&nbsp;הורד Template שעות דיווח&nbsp;</button>
+  <button class="pull-right ui-button ui-state-default ui-corner-right" id="downloadPivotal" (click)="pivotalReport(cal)">&nbsp;הורד קובץ דיווח שעות לאקסל&nbsp;<i class="fa fa-download save-button" aria-hidden="true" style="color: white"></i>&nbsp;</button>
 <div class="hebrew-direct" style="text-align: center">
 
   <span style="margin: 0 auto; font-weight: bold">סה''כ שעות עבודה מדווחות - </span>
