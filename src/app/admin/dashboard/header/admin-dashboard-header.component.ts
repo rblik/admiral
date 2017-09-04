@@ -7,6 +7,8 @@ import {Department} from "../../../model/department";
 import {ActivatedRoute, Router} from "@angular/router";
 import {TimeService} from "../../../service/time.service";
 import {IMultiSelectOption, IMultiSelectTexts, IMultiSelectSettings} from 'angular-2-dropdown-multiselect';
+import {AdminMonthInfoService} from "../../service/admin-month-info.service";
+import {LocalStorageService, SessionStorageService} from "ng2-webstorage";
 
 @Component({
   selector: 'admin-dashboard-header',
@@ -22,6 +24,7 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
   private error: string;
   private getEmployeesSubscription: Subscription;
   private searchDate: Date;
+  private globalLock: string;
   private message: string;
   private employeesCheckboxOptions: IMultiSelectOption[] = [];
   private employeesCheckboxSettings: IMultiSelectSettings;
@@ -31,7 +34,9 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
   constructor(private employeeService: EmployeeService,
               private router: Router,
               private route: ActivatedRoute,
-              private timeService: TimeService) {
+              private timeService: TimeService,
+              private lockService: AdminMonthInfoService,
+              private localStorage: SessionStorageService) {
   }
 
   ngOnInit(): void {
@@ -52,6 +57,19 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
 
   ngOnDestroy(): void {
     if (this.getEmployeesSubscription) this.getEmployeesSubscription.unsubscribe();
+  }
+  lockUnlock(lockstatus?: Boolean){
+    if (!lockstatus) {
+      this.lockService.saveLock(this.timeService.getDateString(this.searchDate),false, 0,null)
+        .subscribe(monthInfo => {
+        });
+      this.localStorage.store("globalLock", true);
+    } else {
+      this.lockService.removeLock(this.timeService.getDateString(this.searchDate),null)
+        .subscribe(monthInfo => {
+        });
+      this.localStorage.store("globalLock", false);
+    }
   }
 
   getEmployees(): void {

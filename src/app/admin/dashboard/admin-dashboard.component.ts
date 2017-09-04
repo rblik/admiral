@@ -17,6 +17,7 @@ import {AgreementService} from "../service/agreement.service";
 import {WorkUnit} from "../../model/work-unit";
 import {MinutesToHoursPipe} from "../../pipe/minutes-to-hours.pipe";
 import {ArraySortPipe} from "../../pipe/array-sort.pipe";
+import {SessionStorageService} from "ng2-webstorage";
 
 @Component({
   selector: 'admin-dashboard',
@@ -78,6 +79,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
               private lockService: AdminMonthInfoService,
               private agreementService: AgreementService,
               private minToHours: MinutesToHoursPipe,
+              private localStorage: SessionStorageService,
               private workService: WorkInfoService) {
     this.adminUnitsUrl = Url.getUrl("/admin/dashboard/units");
     this.sumByMonth = 0;
@@ -212,6 +214,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
+    this.localStorage.observe("globalLock").subscribe(ifLock => {
+      this.lock = ifLock;
+      this.lockClass = this.lock? 'fa-lock': 'fa-unlock';
+    });
     this.initClientsDropDown();
     this.initProjectsDropDown();
     this.weekOffset = 0;

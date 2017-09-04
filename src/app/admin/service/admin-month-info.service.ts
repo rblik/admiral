@@ -27,12 +27,12 @@ export class AdminMonthInfoService {
       .map(res => res.json());
   }
 
-  public saveLock(dateStr: string, locked: boolean, hoursSum: number, employeeId: number): Observable<MonthInfo>{
+  public saveLock(dateStr: string, locked: boolean, hoursSum: number, employeeId?: number): Observable<MonthInfo> {
     let date = new Date(dateStr);
     let headers = new Headers({'Content-Type': 'application/json'});
     headers.append("Authorization", this.auth.getToken());
     let params = new URLSearchParams();
-    params.append('employeeId', employeeId.toString());
+    if (!!employeeId) params.append('employeeId', employeeId.toString());
     let year = date.getFullYear();
     params.append('year', year.toString());
     let month = date.getMonth() + 1;
@@ -46,14 +46,14 @@ export class AdminMonthInfoService {
       });
   }
 
-  public removeLock(dateStr: string, employeeId: number): Observable<any>{
+  public removeLock(dateStr: string, employeeId?: number): Observable<any> {
     let headers = new Headers();
     headers.append("Authorization", this.auth.getToken());
     let date = new Date(dateStr);
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
     let params = new URLSearchParams();
-    params.append('employeeId', employeeId.toString());
+    if (!!employeeId) params.append('employeeId', employeeId.toString());
     params.append('year', year.toString());
     params.append('month', month.toString());
     let options = new RequestOptions({headers: headers, search: params});

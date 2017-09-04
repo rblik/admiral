@@ -1,9 +1,16 @@
 <div class="page-header" style="margin-top: 0; margin-bottom: 0">
   <div class="row hebrew-direct" width="75%" style="position: relative">
-    <div class="col-sm-2 pull-right"></div>
-    <div style="text-align: center; font-size: 300%" class="col-sm-3 pull-right">
+    <div class="col-sm-1 pull-right"></div>
+    <div style="text-align: center; font-size: 300%" class="col-sm-4 pull-right">
       דיווח שעות
+      <button class="btn btn-sm btn-info"  (click)="lockUnlock(true)"><i
+        class="fa fa-unlock" aria-hidden="true"></i>&nbsp; פתח&nbsp;
+      </button>
+      <button class="btn btn-sm btn-info"  (click)="lockUnlock(false)"><i
+        class="fa fa-lock" aria-hidden="true"></i>&nbsp; לחסום&nbsp;
+      </button>
     </div>
+
     <div class="col-sm-1 pull-left"></div>
     <div style="margin-top: 1em; text-align: center; vertical-align: bottom" class="col-sm-7 pull-left">
       <p-dropdown [options]="departmentsUi" [(ngModel)]="chosenDepartment" [filter]="true"
@@ -19,6 +26,7 @@
           </div>
         </template>
       </p-dropdown>
+
       <p-calendar [(ngModel)]="searchDate" [locale]="he" [style]="{'text-align':'center', 'width': '7em'}"
                   [inputStyle]="{'text-align':'center', 'width':'100%'}" id="startDateId"
                   dateFormat="dd.mm.yy"></p-calendar>
