@@ -108,4 +108,15 @@ export class AuthService {
     this.localSt.clear('employee');
     this.localSt.clear('lastRegistrationCheck');
   }
+
+  generateNewPass(mail: string) {
+    let credentials = new Credentials();
+    credentials.email = mail;
+    credentials.password = "";
+    return this.http.post(this.authUrl+ "/restorepassword", JSON.stringify(credentials), new RequestOptions({headers: new Headers({'Content-Type': 'application/json'})}))
+      .map(res => res.json())
+      .catch(e => {
+          return Observable.throw('Wrong credentials');
+      });
+  }
 }

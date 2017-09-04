@@ -27,7 +27,7 @@ import {
   OverlayPanelModule,
   DataGridModule,
   PanelModule,
-  SpinnerModule
+  SpinnerModule, GrowlModule
 } from "primeng/primeng";
 import {Ng2Webstorage} from "ng2-webstorage";
 import {AuthGuardService} from "./service/auth-guard.service";
@@ -74,6 +74,7 @@ import {AuthGuardTokenOnlyService} from "./service/auth-guard-token-only-service
     SpinnerModule,
     CheckboxModule,
     ScheduleModule,
+    GrowlModule,
     MultiselectDropdownModule,
     NotificationBarModule,
     SlimLoadingBarModule.forRoot()

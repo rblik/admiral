@@ -139,13 +139,16 @@ export class NavBarComponent implements OnInit, OnDestroy {
   }
 
   saveStandard(standard: MonthlyStandard) {
-    standard.hoursSum = this.numberForEditing;
-    this.isEditedStandard = -1;
-    this.monthInfoService
-      .updateSumHoursForMonth(standard.year + "-" + standard.month + "-01", this.numberForEditing)
-      .subscribe(monthInfo => {
-      });
-    this.numberForEditing = 0;
+    let float = Number.parseFloat(this.numberForEditing.toString());
+    if (!!float) {
+      standard.hoursSum = this.numberForEditing;
+      this.isEditedStandard = -1;
+      this.monthInfoService
+        .updateSumHoursForMonth(standard.year + "-" + standard.month + "-01", this.numberForEditing)
+        .subscribe(monthInfo => {
+        });
+      this.numberForEditing = 0;
+    } else return
   }
 
   goToYear() {

@@ -5,6 +5,7 @@ import {Credentials} from "../model/credentials";
 import {Router} from "@angular/router";
 import {SessionStorageService} from "ng2-webstorage";
 import {Employee} from "../model/employee";
+import {Message} from 'primeng/primeng';
 
 @Component({
   selector: 'app-home',
@@ -15,6 +16,7 @@ export class HomeComponent implements OnInit, OnDestroy{
   isRegistered: boolean;
   token: string;
   error: string;
+  msgs: Message[] = [];
   credentials: Credentials;
   private jwtSubscription: Subscription;
   LOGO = require("../../assets/logo-naya.gif");
@@ -25,6 +27,16 @@ export class HomeComponent implements OnInit, OnDestroy{
 
   constructor(private authService: AuthService, private localSt: SessionStorageService, private router: Router) {
     this.credentials = new Credentials();
+  }
+
+  showSuccess(msg: string) {
+    this.msgs = [];
+    this.msgs.push({severity:'success', summary:'הצלחה', detail:msg});
+  }
+
+  showError(msg: string) {
+    this.msgs = [];
+    this.msgs.push({severity:'error', summary:'שגיאה', detail:msg});
   }
 
   ngOnInit(): void {
@@ -56,5 +68,19 @@ export class HomeComponent implements OnInit, OnDestroy{
     if (this.authSubscription) this.authSubscription.unsubscribe();
     if (this.jwtSubscription) this.jwtSubscription.unsubscribe();
     if (this.authTokenSubscription) this.authTokenSubscription.unsubscribe();
+  }
+
+  generateNewPass() {
+    let mail = this.credentials.email;
+    if (!mail || mail.length==0) {
+      this.showError('נא הזן אימייל תקני אליו יישלח מייל עם הסיסמא החדשה');
+    } else {
+      this.authService.generateNewPass(mail).subscribe(res => {
+        this.showSuccess('סיסמתך החדשה נשלחה אליך במייל');
+      }, err => {
+        this.showError('כתובת הדוא"ל לא תקנית');
+      });
+    }
+
   }
 }

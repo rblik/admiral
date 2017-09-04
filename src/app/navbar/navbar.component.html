@@ -106,7 +106,7 @@
                   <span *ngIf="standard" style="font-weight: bold; font-size: smaller; text-align: center">{{getHeader(standard.year, standard.month) | hebrewDate : 'year-month'}}</span>
                 </p-header>
                 <div *ngIf="standard && !(isEditedStandard == standard.month)" class="hebrew-direct">{{(standard.hoursSum)? standard.hoursSum + " ש'": ""}}</div>
-                <input *ngIf="standard && (isEditedStandard == standard.month)" [(ngModel)]="numberForEditing" pattern="\d*" maxlength="4" type="text" class="form-control" style="width: 100%">
+                <input *ngIf="standard && (isEditedStandard == standard.month)" [(ngModel)]="numberForEditing" pattern="\d*" maxlength="5" type="text" class="form-control" style="width: 100%">
                 <i title="לערוך" *ngIf="standard && !(isEditedStandard == standard.month)" class="fa fa-pencil-square-o" (click)="editStandard(standard)" style="cursor:pointer"></i>
                 <i title="לשמור" *ngIf="standard && (isEditedStandard == standard.month)" class="fa fa-check-square-o" (click)="saveStandard(standard)" style="cursor:pointer"></i>
                 <i title="לבטל" *ngIf="standard && (isEditedStandard == standard.month)" class="fa fa-undo" (click)="cancelStandard()" style="cursor:pointer"></i>
