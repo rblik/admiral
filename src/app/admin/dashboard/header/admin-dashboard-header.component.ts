@@ -85,7 +85,7 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
 
   private fillDropDownList(employees: Employee[]) {
     employees.forEach(employee => {
-      this.employeesCheckboxOptions.push({id: employee.id, name: employee.surname + ' ' + employee.name});
+       this.employeesCheckboxOptions.push({id: employee.id, name: employee.surname + ' ' + employee.name});
     });
   }
 
@@ -109,7 +109,7 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
       return department != null ? employee.department.id === department.id : true;
     });
     this.employeesUi.push({label: "בחר עובד", value: null});
-    filter.forEach(employee => this.employeesUi.push({label: employee.name + ' ' + employee.surname, value: employee}));
+    filter.forEach(employee =>  this.employeesUi.push({label: employee.name + ' ' + employee.surname, value: employee}));
   }
 
   showDashboard(chosenEmployee: Employee){

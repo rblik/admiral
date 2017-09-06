@@ -114,9 +114,9 @@ export class AuthService {
     credentials.email = mail;
     credentials.password = "";
     return this.http.post(this.authUrl+ "/restorepassword", JSON.stringify(credentials), new RequestOptions({headers: new Headers({'Content-Type': 'application/json'})}))
-      .map(res => res.json())
+      .map(res => res)
       .catch(e => {
-          return Observable.throw('Wrong credentials');
+        return Observable.throw('Wrong credentials');
       });
   }
 }
