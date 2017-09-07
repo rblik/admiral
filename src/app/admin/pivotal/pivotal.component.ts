@@ -11,6 +11,7 @@ import {NotificationBarService, NotificationType} from "angular2-notification-ba
 import {Subscription} from "rxjs/Subscription";
 import {Router} from "@angular/router";
 import {ArraySortPipe} from "../../pipe/array-sort.pipe";
+import {single} from "rxjs/operator/single";
 
 @Component({
   selector: 'pivotal',
