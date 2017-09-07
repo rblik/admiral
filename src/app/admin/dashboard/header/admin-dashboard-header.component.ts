@@ -73,7 +73,7 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
   }
 
   getEmployees(): void {
-    this.getEmployeesSubscription = this.employeeService.getAll().subscribe(employees => {
+    this.getEmployeesSubscription = this.employeeService.getAllEnabled().subscribe(employees => {
       this.employees = employees;
       this.fillDropDownList(employees);
       this.getEmployeesUi(this.chosenDepartment);

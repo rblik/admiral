@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
+import {Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import * as fileSaver from "file-saver";
 import {TimeService} from "../service/time.service";
 import {WorkInfoService} from "../service/work-info.service";
@@ -68,18 +68,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private editedWorkInfo: WorkInfo;
   private chosenAgreement: any;
   private agreementsUi: AgreementDto[] = [];
+  private scale: number;
+
+
 
   constructor(private arrSortPipe: ArraySortPipe, private auth: AuthService, private notificationBarService: NotificationBarService, private minToHours: MinutesToHoursPipe, private timeService: TimeService, private downloadService: UserDownloadService, private monthInfoService: MonthInfoService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
     this.types = [];
     this.sumByMonth = 0;
     // this.neededSumByMonth = 0;
+    console.log('Width: ' + window.innerWidth);
+    console.log('Height: ' + window.innerHeight);
+    this.scale=Math.round(window.innerHeight*0.67-innerHeight*0.09)
+    this.getAgreementsWithWorkAndRender();
     this.header = {
       left: 'today',
       center: 'title',
       right: ''
     };
   }
-
   fillDefaultChoice() {
     this.workService.getDefaultChoice().subscribe(choice => {
       // console.log(choice);
@@ -93,7 +99,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.defaultChoiceError = err;
     })
   }
-
   private getAgreementsWithWorkAndRender() {
     this.getAgreementsSubscription = this.workService.getWorkAgreements().subscribe(agreements => {
       this.agreements = agreements;
@@ -172,6 +177,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.chosenAgreement = null;
     this.initProjectsDropDown();
     let arr = [];
+    let single = this.agreementsUi;
     let filter = this.agreementsUi.filter(function (agreement) {
       return clientId != null ? agreement.clientId === clientId : true;
     });
@@ -184,7 +190,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         arr.push(agreement.agreementId);
       }
     });
+    if(arr.length==1){
+      this.chosenAgreement=arr[0];
+    }
   }
+
 
   private initClientsDropDown() {
     this.clientsDropdown = [];
@@ -262,7 +272,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.initClientsDropDown();
     this.localStSubscription = this.sessionStorageService.observe('employee')
       .subscribe((employee) => this.employee = JSON.parse(employee));
-    this.getAgreementsWithWorkAndRender();
+
   }
 
   getDayByMonth(sunday: Date, offset: number): Date {

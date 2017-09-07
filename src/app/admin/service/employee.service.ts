@@ -23,6 +23,15 @@ export class EmployeeService {
         return Observable.throw(s)
       });
   }
+  public getAllEnabled(): Observable<Employee[]> {
+    return this.http.get(this.employeesUrl+"/all", {
+      headers: new Headers({'Authorization': this.auth.getToken()})
+    }).map(res => res.json())
+      .catch(e => {
+        let s = e.json().details[0];
+        return Observable.throw(s)
+      });
+  }
 
   public get(employeeId: number): Observable<Employee> {
     return this.http.get(this.employeesUrl + '/' + employeeId, {

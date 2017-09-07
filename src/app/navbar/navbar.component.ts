@@ -111,7 +111,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
           this.confirmNewPassword = "";
           this.requstStarted = false;
           this.passwordChangeFailure = 'הסיסמא אינה עומדת בדרישות.';
-          this.passwordChangeFailure2 = 'יש לוודה כי הסיסמא כוללת מינימום 6 תווים';
+          this.passwordChangeFailure2 = 'יש לוודא כי הסיסמא כוללת מינימום 6 תווים';
           this.passwordChangeFailure3 = 'מתוכם לפחות אות גדולה, ספרה או סימן פיסוק';
         }
       }
