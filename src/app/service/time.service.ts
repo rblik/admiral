@@ -71,18 +71,20 @@ export class TimeService {
     return months;
   }
 
-  public validate(workInfo: WorkInfo): boolean {
+  public validate(workInfo: WorkInfo): string {
     if (!workInfo.from || !workInfo.to) {
-      return true;
+      return "טווח זמן שגוי";
     }
       let fromH = workInfo.from.substr(0, 2);
       let fromM = workInfo.from.substr(3, 2);
       let toH = workInfo.to.substr(0, 2);
       let toM = workInfo.to.substr(3, 2);
-      return parseInt(fromH) > 23
+   if( parseInt(fromH) > 23
             || parseInt(fromM) > 59
             || parseInt(toH) > 23
             || parseInt(toM) > 59
-            || workInfo.from > workInfo.to;
+            || workInfo.from > workInfo.to){
+     return "טווח זמן שגוי";
+   };
   }
 }

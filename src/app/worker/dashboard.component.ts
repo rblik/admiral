@@ -76,8 +76,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.types = [];
     this.sumByMonth = 0;
     // this.neededSumByMonth = 0;
-    console.log('Width: ' + window.innerWidth);
-    console.log('Height: ' + window.innerHeight);
+    // console.log('Width: ' + window.innerWidth);
+    // console.log('Height: ' + window.innerHeight);
     this.scale=Math.round(window.innerHeight*0.67-innerHeight*0.09)
     this.getAgreementsWithWorkAndRender();
     this.header = {
@@ -192,6 +192,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
     if(arr.length==1){
       this.chosenAgreement=arr[0];
+      this.getClient(arr[0]);
     }
   }
 
@@ -430,8 +431,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   save(workInfo: WorkInfo) {
-    if (this.timeService.validate(workInfo)) {
-      this.error = "טווח זמן שגוי";
+    if(!this.chosenAgreement){
+      this.error="מלא את כל הפרטים";
+      return
+    }
+    if (!!this.timeService.validate(workInfo)) {
+      this.error =this.timeService.validate(workInfo);
       return;
     }
     this.upsertWorkInfoSubscription = this.workService.save(this.isEnabled, this.chosenAgreement, this.convertToUnit(workInfo))
