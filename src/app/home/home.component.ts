@@ -6,6 +6,9 @@ import {Router} from "@angular/router";
 import {SessionStorageService} from "ng2-webstorage";
 import {Employee} from "../model/employee";
 import {Message} from 'primeng/primeng';
+import {FrontalMessage} from "../model/frontalmessage";
+import {FrontalMessageService} from "../service/frontalmessage.service";
+import {parseLine} from "tslint/lib/test/lines";
 
 @Component({
   selector: 'app-home',
@@ -16,16 +19,18 @@ export class HomeComponent implements OnInit, OnDestroy{
   isRegistered: boolean;
   token: string;
   error: string;
+  frontalMessages:FrontalMessage[];
   msgs: Message[] = [];
   credentials: Credentials;
   private jwtSubscription: Subscription;
   LOGO = require("../../assets/logo-naya.gif");
+  SLOGAN = require("../../assets/transparent_slogan.gif");
   private authTokenSubscription: Subscription;
   private profile: Employee;
   private authSubscription: Subscription;
   private isFirstTime: boolean;
 
-  constructor(private authService: AuthService, private localSt: SessionStorageService, private router: Router) {
+  constructor(private authService: AuthService, private localSt: SessionStorageService, private router: Router, private frontalMessageService:FrontalMessageService) {
     this.credentials = new Credentials();
   }
 
@@ -39,7 +44,13 @@ export class HomeComponent implements OnInit, OnDestroy{
     this.msgs.push({severity:'error', summary:'שגיאה', detail:msg});
   }
 
+
   ngOnInit(): void {
+    this.frontalMessageService.getAllFrontalMessages().subscribe(messages => {
+      this.frontalMessages = messages.sort(function (a, b) {
+        return a.date - b.date;
+      });
+    });
     this.token = this.authService.getToken();
     this.authTokenSubscription = this.authService.tokenObserv().subscribe(token => this.token = token);
     this.authSubscription = this.authService.profileObserv().subscribe(employee => {

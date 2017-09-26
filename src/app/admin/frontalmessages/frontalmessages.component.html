@@ -1,0 +1,54 @@
+<button type="button" class="btn btn-xs btn-  info" title="הוסף " (click)="initFrontalMessageCreation()">&nbsp;הוסף &nbsp;<i class="fa fa-plus" aria-hidden="true"></i></button>
+
+
+  <span class="hebrew-direct col-md-3 pull-right " style="text-align: center"><b>נושא</b></span>
+  <span class="hebrew-direct col-md-5 pull-right " style="text-align: center"><b>טקסט</b></span>
+  <div>
+
+  <div *ngFor="let frontalmessage of frontalMessages" class="hebrew-direct row" style="margin-bottom: 10px; margin-top: 10px">
+    <span class="hebrew-direct col-md-3 pull-right " style="text-align: right">{{ frontalmessage.header }}</span>
+    <span class="hebrew-direct col-md-5 pull-right " style="text-align: right">{{ frontalmessage.content }}</span>
+    <button title="למחוק" type="button" class="btn btn-xs btn-danger pull-left" (click)="remove(frontalmessage)" style="font-size: smaller; margin-right: 10px"><i class="fa fa-trash-o fa-fw"></i>&nbsp;מחק&nbsp;</button>
+    <button title="לערוך" type="button" class="btn btn-xs btn-warning pull-left" (click)="openModalWindow(frontalmessage)" style="font-size: smaller"><i class="fa fa-pencil fa-fw"></i>&nbsp;ערוך&nbsp;</button>
+    <div *ngIf="createDialog">
+    </div>
+  </div>
+  </div>
+  <div style="margin-top: 15px">
+    <button id="frontalMessageFormButton" [hidden]="true" data-toggle="modal" data-target="#frontalMessageForm"></button>
+    <div id="frontalMessageForm" tabindex='-1' class="modal fade" onclose="" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content" [style.width]="'110%'">
+          <div class="modal-header noselect" style="text-align: center">
+            פרטי הודעה
+          </div>
+          <div class="modal-body" style="width: 90%; margin: 0 auto">
+            <div *ngIf="createDialog" class="modal-body " style="width: 90%; margin: 0 auto">
+              <div class="ui-g ui-fluid">
+                <div class="ui-g-4 ui-md-12 pull right">
+                  <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon pull-right">:נושא</span>
+                    <textarea [(ngModel)]='editedFrontalMessage.header' rows="2" cols="55" class="pull-left hebrew-direct" style="resize: vertical">
+                    </textarea>
+                  </div>
+                </div>
+                <div class="ui-g-4 ui-md-12">
+                  <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon pull-right" style="text-align: right">:טקסט</span>
+                    <textarea [(ngModel)]='editedFrontalMessage.content' rows="4" cols="55" class="pull-left hebrew-direct" style="resize: vertical" >
+                    </textarea>
+                  </div>
+                </div>
+              </div>
+              <a id="frontalMessageFormClose" style="float: left" [hidden]="true" data-dismiss="modal"><span class="fa fa-fw fa-close" style="color: #1a1a1a; cursor: pointer; font-size: large"></span></a>
+              <button type="button" id="confirmWorkInfoButton" class="btn btn-sm btn-info" style="border-width: 0" pButton icon="fa-check" iconPos="right" (click)="saveFrontalMessage()" label="שמור"></button>
+              <button type="button" id="closeDialogButton" class="btn btn-sm btn-danger" style="border-width: 0" pButton icon="fa-close" iconPos="right" (click)="closeModalWindow()" label="בטל"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+

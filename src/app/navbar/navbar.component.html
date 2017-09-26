@@ -29,6 +29,9 @@
         <a routerLink="/app/admin/dashboard" routerLinkActive="active" *ngIf="profile.roles.indexOf('ROLE_ADMIN') != -1">דיווחי שעות</a>
       </li>
       <li *ngIf="profile != null">
+        <a routerLink="/app/admin/frontalmessages" routerLinkActive="active" *ngIf="profile.roles.indexOf('ROLE_ADMIN') != -1">הודעות מסך כניסה</a>
+      </li>
+      <li *ngIf="profile != null">
         <a routerLink="/app/admin/employees" routerLinkActive="active" *ngIf="profile.roles.indexOf('ROLE_ADMIN') != -1">עובדים</a>
       </li>
       <li *ngIf="profile != null">

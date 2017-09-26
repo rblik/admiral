@@ -401,6 +401,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.isEdit = true;
     this.cacheEdited(workInfo);
     this.workInfoItem = workInfo;
+    this.getProjectsUi(workInfo.clientId);
+    this.getClientsUi();
     this.createDialog = true;
   }
 

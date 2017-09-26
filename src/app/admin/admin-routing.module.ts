@@ -12,6 +12,7 @@ import {EmployeeDetailComponent} from "./employee-detail/employee-detail.compone
 import {AdminDashboardHeaderComponent} from "./dashboard/header/admin-dashboard-header.component";
 import {AdminDashboardComponent} from "./dashboard/admin-dashboard.component";
 import {IncomeComponent} from "./income/income.component";
+import {FrontalMessagesComponent} from "./frontalmessages/frontalmessages.component";
 
 const routes: Routes = [
   {
@@ -61,6 +62,12 @@ const routes: Routes = [
         component: EmployeeDetailComponent
       }
     ]
+  },
+  {
+    path: 'frontalmessages',
+    component: FrontalMessagesComponent,
+    canActivate: [AdminAuthGuardService],
+    canActivateChild: [AdminAuthGuardService]
   },
   {
     path: 'dashboard',

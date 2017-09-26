@@ -41,6 +41,7 @@ import {UserDownloadService} from "./service/user-download.service";
 import {PasswordStrengthBarModule} from "ng2-password-strength-bar";
 import {PassrefreshComponent} from "./passrefresh/passrefresh.component";
 import {AuthGuardTokenOnlyService} from "./service/auth-guard-token-only-service";
+import {FrontalMessageService} from "./service/frontalmessage.service";
 
 @NgModule({
   declarations: [
@@ -80,6 +81,7 @@ import {AuthGuardTokenOnlyService} from "./service/auth-guard-token-only-service
     SlimLoadingBarModule.forRoot()
   ],
   providers: [
+    FrontalMessageService,
     AuthService,
     TimeService,
     WorkInfoService,

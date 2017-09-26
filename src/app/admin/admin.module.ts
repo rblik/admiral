@@ -35,9 +35,12 @@ import {AdminDashboardHeaderComponent} from "./dashboard/header/admin-dashboard-
 import {AdminDashboardComponent} from "./dashboard/admin-dashboard.component";
 import {AdminMonthInfoService} from "./service/admin-month-info.service";
 import {IncomeComponent} from "./income/income.component";
+import {AdminFrontalMessagesService} from "./service/admin-frontalmessages.service";
+import { FrontalMessagesComponent} from "./frontalmessages/frontalmessages.component";
 
 @NgModule({
   declarations: [
+    FrontalMessagesComponent,
     ReportComponent,
     MissingDaysComponent,
     PartialDaysComponent,
@@ -73,9 +76,10 @@ import {IncomeComponent} from "./income/income.component";
     MultiselectDropdownModule,
     ScheduleModule,
     NotificationBarModule,
-    OverlayPanelModule
+    OverlayPanelModule,
   ],
   providers: [
+    AdminFrontalMessagesService,
     DownloadService,
     ReportService,
     EmployeeService,
