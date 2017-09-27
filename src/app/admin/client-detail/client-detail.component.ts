@@ -31,6 +31,7 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
 
   private agreement: Agreement;
   private clientName: string;
+  private checkedEnabledProject:boolean
 
 
   private tariffTypesUi: SelectItem[] = [];
@@ -82,6 +83,7 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
     this.projectCreationForm = this._fb.group({
       id: [],
       name: [, [Validators.required]],
+      enabled:[true],
       tariff: this._fb.group({
         id: [],
         amount: [, [Validators.required]],
@@ -92,9 +94,12 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
   }
 
   private fillEditingForm(project: Project) {
+    console.log("filling")
+    console.log(project)
     this.projectCreationForm = this._fb.group({
       id: [project.id],
       name: [project.name, [Validators.required]],
+      enabled: [project.isEnabled],
       tariff: this._fb.group({
         id: [project.tariff.id],
         amount: [project.tariff.amount, [Validators.required]],
@@ -104,11 +109,17 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  check(checked:Boolean){
+    if(checked)this.formProject.isEnabled=true
+    else this.formProject.isEnabled=false
+  }
+
   popupEdit(project: Project) {
     this.labelForProjectPopup = 'עריכת פרויקט';
     this.formProject = new Project();
     this.formProject.name = project.name;
     this.formProject.id = project.id;
+    this.formProject.isEnabled=project.isEnabled;
     this.formProject.tariff = new Tariff();
     this.formProject.tariff.id = project.tariff.id;
     this.formProject.tariff.amount = project.tariff.amount;
@@ -190,6 +201,9 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
         this.client.projects.push(updated);
       } else this.client.projects.forEach(proj => {
         if (proj.id == value.id) {
+          console.log("updating")
+          console.log(value)
+          proj.isEnabled=value.enabled
           proj.name = value.name;
           proj.tariff = value.tariff;
           return;

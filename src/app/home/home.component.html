@@ -1,20 +1,23 @@
 <p-growl [(value)]="msgs" life="5000" [style]="{'text-align':'center'}"></p-growl>
-<span class="pull-right ui-panelmenu-header" style="position: relative" width="200" >
+<div class="row">
+<div class="pull-right col-md-pull-0" style="position: relative" width="200" >
 <ol class="hebrew-direct">
   <li style="width: 100px" *ngFor="let frontalmessage of frontalMessages">
     <div class="hebrew-direct "><u>{{ frontalmessage.header }}:</u></div>
     <div class="hebrew-direct ">{{ frontalmessage.content }}</div>
   </li>
 </ol>
-  </span>
-<div class="page-header" position="relative">
-  <div class="profile-name" style="margin:5% auto 3%; text-align:center;">
   </div>
-  <div style="text-align: center  ">
-    <img  [src]="LOGO" height="auto" width="auto" style="max-width: 25%; text-align: center; margin-left: 10%">
-  </div>
+  <div  position="relative" >
+    <div class="profile-name" style="margin:5% auto 3%; text-align:center;">
+    </div>
 
-</div>
+
+  </div>
+  <div class="col-md-4 col-sm-push-4">
+    <div style="text-align: center" >
+      <img  [src]="LOGO" height="auto" width="320" style="max-width: 100%; text-align: center; margin-bottom: 20px; margin-top: 20px">
+    </div>
 <div id="checkingSign">
   <div *ngIf="!!token && isFirstTime">
     <div *ngIf="profile != null" style="text-align:center;">
@@ -44,15 +47,15 @@
         <div class="pull-right">
         </div>
       </form>
-      <div style="text-align: center  ">
-        <img  [src]="SLOGAN" height="auto" width="auto" style="max-width: 100%; text-align: center;margin-top: 20px;">
-      </div>
       <div *ngIf="error" style="text-align: center" class="alert alert-danger">
         <strong>Error!</strong> {{error}}
       </div>
     </div>
-
+    <div style="text-align: center  ">
+      <img  [src]="SLOGAN" height="auto" width="auto" style="max-width: 100%; text-align: center;margin-top: 20px;">
+    </div>
   </div>
-
+</div>
 </div>
 
+</div>

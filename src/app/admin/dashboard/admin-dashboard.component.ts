@@ -187,10 +187,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   }
 
   showWorkDayDialog(workInfo: WorkInfo, agreement: AgreementDto) {
-      console.log(agreement)
-    console.log(workInfo)
-    this.chosenAgreement=agreement.agreementId
-    this.dayByDayLock = this.lock;
+     this.chosenAgreement=agreement.agreementId
+      this.dayByDayLock = this.lock;
       let currentDate = workInfo.date;
       this.isPivotal = false;
       this.error = '';
@@ -276,7 +274,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     });
     this.arrSortPipe.transform(buff, "label");
     this.projectsDropdown = this.projectsDropdown.slice(0,1).concat(buff);
-    // this.chosenAgreement = null;
+   // this.chosenAgreement = null;
 
   }
 
@@ -412,6 +410,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   }
 
   edit(workInfo: WorkInfo) {
+    this.chosenClient=workInfo.clientId
+    this.chosenAgreement=workInfo.agreementId
     this.isEdit = true;
     this.workInfoItem = workInfo;
     this.createDialog = true;

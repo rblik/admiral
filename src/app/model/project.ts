@@ -8,4 +8,5 @@ export class Project {
   client: Client;
   tariff: Tariff;
   workAgreements: Agreement[];
+  isEnabled:boolean;
 }
