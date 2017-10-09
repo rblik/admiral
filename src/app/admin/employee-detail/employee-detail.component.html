@@ -1,5 +1,8 @@
 <div *ngIf="employee" class="col-sm-12 col-md-7 jumbotron pull-left app-block">
   <div class="card">
+
+
+
     <div class="card-block">
       <h4 class="card-title hebrew-direct" style="font-weight: bold; text-align: center">{{employee.surname+'&nbsp;'+employee.name}}<span style="font-size: 50%" class="{{employee.enabled? 'label label-success': 'label label-danger'}}">{{employee.enabled? 'פעיל':'לא פעול'}}</span></h4>
       <ul class="list-group">
@@ -24,24 +27,53 @@
         <li *ngIf="employee.roles" class="list-group-item">{{(employee.roles.indexOf('ROLE_ADMIN')!=-1)?'&nbsp;Admin':'&nbsp;User'}}
           <span class="pull-right"><strong>סוג משתמש</strong></span></li>
       </ul>
+      <button *ngIf="this.showEnabled" (click)="toggleEnabledOnlyView()" class="btn btn-warning btn-sm">...לגנזך</button>
+      <button *ngIf="!this.showEnabled" (click)="toggleEnabledOnlyView()" class="btn btn-success btn-sm">...לפעולים</button>
+      <button (click)="openAddToProjectDialog()" class="btn btn-info btn-sm">הוםף לפרויקט</button>
+      <button type="button" style="display: none" id="addEmployeeToProjectButton" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">Open Modal</button>
+
       <h4 style="text-align: center">&nbsp;פרויקטים</h4>
 
-      <table class="table table-responsive table-condensed" style="margin: 0 auto;width: 75%">
-        <thead>
-        <tr>
-          <th>תעריף</th>
-          <th>שם לקוח</th>
-          <th>שם פרויקט</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let agreement of agreements" [ngStyle]="{'color': (agreement.active)? 'black':'red'}">
-          <td class="hebrew-direct" style="font-size: smaller">{{agreement.tariffAmount}} {{agreement.tariffCurrency | currencyPipe}} {{agreement.tariffType | tariffType}}</td>
-          <td style="font-weight: bold">{{agreement.clientName}}</td>
-          <td style="font-weight: bold">{{agreement.projectName}}</td>
-        </tr>
-        </tbody>
-      </table>
+      <div *ngIf="this.showEnabled">
+        <table class="table table-responsive table-condensed" style="margin: 0 auto;width: 75%">
+          <thead>
+          <tr>
+            <th></th>
+            <th>תעריף</th>
+            <th>שם לקוח</th>
+            <th>שם פרויקט</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let agreement of agreementsEn" [ngStyle]="{'color': (agreement.active)? 'black':'red'}">
+            <button class="btn btn-danger btn-xs" (click)="this.disableEmployeeFromProject(agreement.agreementId)" >מחק</button>
+            <td class="hebrew-direct" style="font-size: smaller">{{agreement.tariffAmount}} {{agreement.tariffCurrency | currencyPipe}} {{agreement.tariffType | tariffType}}</td>
+            <td style="font-weight: bold">{{agreement.clientName}}</td>
+            <td style="font-weight: bold">{{agreement.projectName}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div *ngIf="!this.showEnabled">
+        <table class="table table-responsive table-condensed" style="margin: 0 auto;width: 75%">
+          <thead>
+          <tr>
+            <th></th>
+            <th>תעריף</th>
+            <th>שם לקוח</th>
+            <th>שם פרויקט</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let agreement of agreementsDis" [ngStyle]="{'color': (agreement.active)? 'black':'red'}">
+            <button class="btn btn-success btn-xs" (click)="this.enableEmployeeInProject(agreement.agreementId)" >שחזר</button>
+            <td class="hebrew-direct" style="font-size: smaller">{{agreement.tariffAmount}} {{agreement.tariffCurrency | currencyPipe}} {{agreement.tariffType | tariffType}}</td>
+            <td style="font-weight: bold">{{agreement.clientName}}</td>
+            <td style="font-weight: bold">{{agreement.projectName}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
@@ -65,4 +97,70 @@
     </div>
   </div>
 </p-overlayPanel>
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content" style="width: 150%">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">בחירת פרתים</h4>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="this.isError" class="alert alert-danger hebrew-direct">
+          {{this.errorMessage}}
+        </div>
+        <div class="row">
+        <div class="col-md-offset-1 pull-right" style="margin-right:10% ">
+          <p>
+            <label for="projectsDropdownDash">
+              &nbsp;לקוח&nbsp;<br>
+              <p-dropdown [options]="clientsDropdown" id="clientsDropdownDash"
+                          [(ngModel)]="chosenClient" [style]="{'z-index': '9999','width':'200px'}"
+                          [filter]="true" (onChange)="getProjectsUi(chosenClient)">
+                <template let-cli pTemplate="item">
+                  <div class="row" style="text-align: right;">
+                    <div class="col-sm-11">
+                      <span class="hebrew-direct pull-right">{{cli.label}}</span>
+                    </div>
+                  </div>
+                </template>
+              </p-dropdown>
+            </label>
+          </p>
+        </div>
+        <div class="col-md-offset-2 pull-right" >
+        <p>
+          <label for="projectsDropdownDash">
+            &nbsp;פרויקט&nbsp;<br>
+            <p-dropdown [options]="projectsDropdown" id="projectsDropdownDash"
+                        [(ngModel)]="chosenProject" [style]="{'z-index': '9999','width':'200px'}"
+                        [filter]="true" (onChange)="this.getClient(chosenProject)">
+              <template let-proj pTemplate="item">
+                <div class="row" style="text-align: right;">
+                  <div class="col-sm-11">
+                    <span class="hebrew-direct pull-right">{{proj.label}}</span>
+                  </div>
+                </div>
+              </template>
+            </p-dropdown>
+          </label>
+        </p>
+        </div>
+        </div>
+        <div class="row " style="margin-top: 2%; margin-bottom: 2%; margin-left: 8%">
+          <p-dropdown [options]="tariffTypesUi" [style]="{'width':'10%'}" [(ngModel)]="selectedHoursCounting"></p-dropdown>
+          <p-dropdown [options]="currenciesUi" [style]="{'width':'10%'}" [(ngModel)]="selectedCurrency"></p-dropdown>
+          <input type="text" [(ngModel)]="selectedCurrencyAmount" style="width:55px">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal" id="additionToProjectCloseButton">בטל</button>
+        <button class="btn btn-success" (click)="this.submitAdditionToProject()">שמור</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 <employee-form *ngIf="employee" [employeeForCreation]="employee" id="employeeEditionForm" tabindex='-1' class="modal fade" onclose="" role="dialog"></employee-form>

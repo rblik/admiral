@@ -59,16 +59,20 @@ export class AdminDashboardHeaderComponent implements OnInit, OnDestroy{
     if (this.getEmployeesSubscription) this.getEmployeesSubscription.unsubscribe();
   }
   lockUnlock(lockstatus?: Boolean){
+    var offs= this.localStorage.retrieve("globalWeekOffset");
+     var tempDate =  new Date();
+    tempDate.setDate(this.searchDate.getDate()+offs)
     if (!lockstatus) {
-      this.lockService.saveLock(this.timeService.getDateString(this.searchDate),false, 0,null)
+      this.lockService.saveLock(this.timeService.getDateString(tempDate),false, 0,null)
         .subscribe(monthInfo => {
         });
       this.localStorage.store("globalLock", true);
     } else {
-      this.lockService.removeLock(this.timeService.getDateString(this.searchDate),null)
+      this.lockService.removeLock(this.timeService.getDateString(tempDate),null)
         .subscribe(monthInfo => {
         });
       this.localStorage.store("globalLock", false);
+
     }
   }
 

@@ -6,6 +6,7 @@ import {Observable} from "rxjs";
 import {Url} from "../../url";
 import {TimeService} from "../../service/time.service";
 import {Agreement} from "../../model/agreement";
+import {Employee} from "../../model/employee";
 
 @Injectable()
 export class AgreementService {
@@ -59,4 +60,15 @@ export class AgreementService {
         return Observable.throw(s);
       });
   }
+
+  public enable(agreementId: number): Observable<any> {
+    return this.http.put(this.agreementsUrl + "/" + agreementId, null,{
+      headers: new Headers({'Authorization': this.auth.getToken()})
+    }).map(res => res)
+      .catch(e => {
+        let s = e.json().details[0];
+        return Observable.throw(s);
+      });
+  }
+
 }

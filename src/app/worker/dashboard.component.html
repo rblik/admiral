@@ -88,6 +88,7 @@
                 <label for="isEnabled" class="pull-left" [ngClass]="(!!defaultChoiceError && defaultChoiceError.length > 0)? 'underscored':''" style="padding-left: 1em">קבע דיווח זה כברירת מחדל<p-checkbox id="isEnabled" [(ngModel)]="isEnabled" binary="true"></p-checkbox>
                 </label>
               </div>
+
             </div>
             <div class="row">
               <div *ngIf="error" style="text-align: center" class="alert alert-danger">
@@ -113,10 +114,10 @@
                   <td style="width: 10%" class="hebrew-direct">{{workInfo.duration | minutesToHours}}</td>
                   <td [ngStyle]="{'width': (!dayBydayLock)? '65%':'45%'}" class="hebrew-direct" style="word-wrap: break-word; text-align: right">{{workInfo.comment}}</td>
                   <td style="width: 13%" *ngIf="!dayBydayLock">
-                    <button [disabled]="!workInfo.isActiveAgreement" title="לערוך" type="button" class="btn btn-xs btn-warning" (click)="edit(workInfo)" style="font-size: smaller"><i class="fa fa-pencil fa-fw"></i>&nbsp;ערוך&nbsp;</button>
+                    <button [disabled]="!workInfo.isActiveAgreement||this.isInfoCotainsDisabled(workInfo)" title="לערוך" type="button" class="btn btn-xs btn-warning" (click)="edit(workInfo)" style="font-size: smaller"><i class="fa fa-pencil fa-fw"></i>&nbsp;ערוך&nbsp;</button>
                   </td>
                   <td style="width: 13%" *ngIf="!dayBydayLock">
-                    <button [disabled]="!workInfo.isActiveAgreement" title="למחוק" type="button" class="btn btn-xs btn-danger" (click)="remove(workInfo)" style="font-size: smaller"><i class="fa fa-trash-o fa-fw"></i>&nbsp;מחק&nbsp;</button>
+                    <button [disabled]="!workInfo.isActiveAgreement||this.isInfoCotainsDisabled(workInfo)" title="למחוק" type="button" class="btn btn-xs btn-danger" (click)="remove(workInfo)" style="font-size: smaller"><i class="fa fa-trash-o fa-fw"></i>&nbsp;מחק&nbsp;</button>
                   </td>
                 </tr>
                 </tbody>

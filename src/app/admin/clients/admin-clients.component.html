@@ -3,7 +3,11 @@
     <p style="text-align: center; font-size: 300%">לקוחות</p>
   </div>
   <div class="row">
-    <div class="col-sm-12 col-md-4 jumbotron-n pull-right app-block">
+    <div class="col-sm-12 col-md-4 jumbotron-n pull-right app-block " style="position: relative; text-align: right   ">
+      <div style="position: absolute;text-align: right; margin-left: 46% ">
+        <div *ngIf="this.showDisabledClients" style="color: red"><b>:לקוחות חסומים</b></div>
+        <div *ngIf="!this.showDisabledClients" style="color: green"><b>:לקוחות פעילים</b></div>
+      </div>
       <div class="list-group">
         <div>
           <p><i data-toggle="modal" data-keyboard="true" data-target="#clientCreationForm"
@@ -11,13 +15,25 @@
         </div>
         <p><input type="text" style="text-align: center" class="form-control" #searchBox placeholder="חפש"
                   (keyup)="search(searchBox.value)"></p>
-        <div class="module" *ngFor="let client of clientsUi" style="font-size: 75%; margin-bottom: 3%"
+        <div *ngIf="this.showDisabledClients">
+        <div class="module" *ngFor="let client of clientsUIDis" style="font-size: 75%; margin-bottom: 3%"
            (click)="toDetail(client.id)">{{client.name}}
+        </div>
+        </div>
+        <div *ngIf="!this.showDisabledClients">
+          <div class="module" *ngFor="let client of clientsUIEn" style="font-size: 75%; margin-bottom: 3%"
+               (click)="toDetail(client.id)">{{client.name}}
+          </div>
         </div>
       </div>
       <div *ngIf="errorClients" style="text-align: center" class="alert alert-danger">
         {{errorClients}}
       </div>
+    </div>
+    <div class="col-sm-1 pull-right ">
+      <button class="pull-right btn btn-warning"  *ngIf="!this.showDisabledClients" (click)="this.toggleViewEnabledDisabledClients()">...לגנזך</button>
+      <button class="pull-right btn btn-success"  *ngIf="this.showDisabledClients" (click)="this.toggleViewEnabledDisabledClients()">לפעילים</button>
+
     </div>
     <router-outlet></router-outlet>
   </div>

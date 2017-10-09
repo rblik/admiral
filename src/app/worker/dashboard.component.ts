@@ -17,6 +17,8 @@ import {NotificationBarService, NotificationType} from "angular2-notification-ba
 import {MinutesToHoursPipe} from "../pipe/minutes-to-hours.pipe";
 import {ArraySortPipe} from "../pipe/array-sort.pipe";
 import {AuthService} from "../service/auth.service";
+import {Message} from 'primeng/primeng';
+import {setTimeout} from "timers";
 
 @Component({
   selector: 'worker-dashboard',
@@ -69,6 +71,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private chosenAgreement: any;
   private agreementsUi: AgreementDto[] = [];
   private scale: number;
+  private msgs:Message[]=[];
+  private isDisabledError:boolean;
+  private editError:string;
 
 
 
@@ -397,13 +402,30 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }, 200);
   }
 
+  showError(msg: string) {
+    this.editError=msg;
+    this.isDisabledError=true;
+    setTimeout((): void => {
+    this.hideErrorMsg()
+    }, 5000);
+
+  }
+
+  hideErrorMsg(){
+    this.editError='';
+    this.isDisabledError=false;
+  }
+
   edit(workInfo: WorkInfo) {
     this.isEdit = true;
     this.cacheEdited(workInfo);
     this.workInfoItem = workInfo;
     this.getProjectsUi(workInfo.clientId);
     this.getClientsUi();
+
     this.createDialog = true;
+    this.chosenClient=workInfo.clientId
+    this.chosenAgreement=workInfo.agreementId
   }
 
   private cacheEdited(workInfo: WorkInfo) {
@@ -512,6 +534,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     }*/
     this.workInfos.push(workInfo);
+  }
+  isInfoCotainsDisabled(workInfo:WorkInfo):boolean{
+    var count=0;
+    this.agreementsUi.forEach(agr=>
+      {
+        if(agr.agreementId==workInfo.agreementId){
+          count++;
+        }
+      }
+    )
+    if(count!=1){
+      return true
+    }
+    else return false
   }
 
   makeWholeDay(): void {

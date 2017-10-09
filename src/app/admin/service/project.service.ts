@@ -23,6 +23,18 @@ export class ProjectService {
       });
   }
 
+  public getEnabledProjects(): Observable<Project[]> {
+    return this.http.get(this.projectsUrl+"/enabled", {
+      headers: new Headers({'Authorization': this.auth.getToken()})
+    }).map(res => res.json())
+      .catch(e => {
+        let s = e.json().details[0];
+        return Observable.throw(s);
+      });
+  }
+
+
+
   public getProjectsByEmployee(employeeId: number): Observable<Project[]> {
     let params = new URLSearchParams();
     params.append('employeeId', employeeId.toString());

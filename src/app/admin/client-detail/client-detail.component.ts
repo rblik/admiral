@@ -61,7 +61,10 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
   }
 
   syncClient(client) {
-    this.client = client;
+    var projects= this.client.projects;
+    var cliTemp=client;
+    cliTemp.projects=projects;
+    this.client = cliTemp;
   }
 
   ngOnDestroy(): void {

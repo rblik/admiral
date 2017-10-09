@@ -3,22 +3,42 @@
     <p style="text-align: center; font-size: 300%">עובדים</p>
   <department-form (departmentChoose)="filterByDepartment($event)"></department-form>
   </div>
-  <div class="row">
-    <div class="col-sm-12 col-md-4 jumbotron-n pull-right app-block">
-      <div class="list-group">
-        <div>
-          <p><i data-toggle="modal" data-keyboard="true" data-target="#employeeCreationForm"
-                class="module-plus module glyphicon glyphicon-plus"></i></p>
-        </div>
-        <p><input type="text" style="text-align: center" class="form-control" #searchBox placeholder="חפש"
-                  (keyup)="search(searchBox.value)"></p>
-        <div class="module" *ngFor="let employee of employeesUi" style="font-size: 75%; margin-bottom: 3%; text-align: left" position="relative"
-           (click)="toDetail(employee.id)">&nbsp;{{employee.name+'&nbsp;'+employee.surname}}<span class="badge pull-right" style="font-size: 75%; margin-top: 0.5%">{{employee.department.name}}</span>
-        </div>
+  <div  class="row">
+    <div class="col-sm-12 col-md-4 jumbotron-n pull-right app-block " style="position: relative; text-align: right   ">
+      <div style="position: absolute;text-align: right; margin-left: 46% ">
+        <div *ngIf="this.employeeIsDisabledShow" style="color: red"><b>:עובדים חסומים</b></div>
+        <div *ngIf="!this.employeeIsDisabledShow" style="color: green"><b>:עובדים פעילים</b></div>
       </div>
+
+        <p><i data-toggle="modal" data-keyboard="true" data-target="#employeeCreationForm"
+              class="module-plus module glyphicon glyphicon-plus  "></i></p>
+
+      <div class="list-group">
+        <div *ngIf="this.employeeIsDisabledShow">
+          <p><input type="text" style="text-align: center" class="form-control" #searchBox placeholder="חפש"
+                    (keyup)="search(searchBox.value)"></p>
+          <div class="module" *ngFor="let employee of employeesUiDis" style="font-size: 75%; margin-bottom: 3%; text-align: left" position="relative"
+               (click)="toDetail(employee.id)">&nbsp;{{employee.name+'&nbsp;'+employee.surname}}<span class="badge pull-right" style="font-size: 75%; margin-top: 0.5%">{{employee.department.name}}</span>
+          </div>
+        </div>
+        <div *ngIf="!this.employeeIsDisabledShow">
+
+          <p><input type="text" style="text-align: center" class="form-control" #searchBox placeholder="חפש"
+                    (keyup)="search(searchBox.value)"></p>
+          <div class="module" *ngFor="let employee of employeesUiEn" style="font-size: 75%; margin-bottom: 3%; text-align: left" position="relative"
+               (click)="toDetail(employee.id)">&nbsp;{{employee.name+'&nbsp;'+employee.surname}}<span class="badge pull-right" style="font-size: 75%; margin-top: 0.5%">{{employee.department.name}}</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
       <div *ngIf="errorEmployees" class="alert alert-danger pull-right">
         {{errorEmployees}}
       </div>
+    <div class="col-sm-1 pull-right ">
+      <button class="pull-right btn btn-warning"  *ngIf="!this.employeeIsDisabledShow" (click)="this.toggleViewEnabledDisabled()">...לגנזך</button>
+      <button class="pull-right btn btn-success"  *ngIf="this.employeeIsDisabledShow" (click)="this.toggleViewEnabledDisabled()">לפעילים</button>
+
     </div>
     <router-outlet></router-outlet>
   </div>

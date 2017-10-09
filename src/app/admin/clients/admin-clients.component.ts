@@ -14,10 +14,13 @@ import {ArraySortPipe} from "../../pipe/array-sort.pipe";
 export class AdminClientsComponent implements OnInit, OnDestroy {
   private clients: Client[];
   private clientsUi: Client[];
+  private clientsUIEn:Client[]=[]
+  private clientsUIDis:Client[]=[]
   private clientForCreation: Client;
   private errorClients: string;
   private getClientsSubscription: Subscription;
   private localStSubscription: Subscription;
+  private showDisabledClients:boolean=false;
 
   constructor(private clientService: ClientService,
               private router: Router,
@@ -33,6 +36,19 @@ export class AdminClientsComponent implements OnInit, OnDestroy {
     this.subscribeOnEditedClient();
   }
 
+  reInitClients(){
+    var tempEn=[];
+    var tempDis=[];
+    this.clientsUi.forEach(client=>{
+    if(client.isEnabled){
+      tempEn.push(client);
+    }
+    else tempDis.push(client)
+    });
+    this.clientsUIEn=tempEn;
+    this.clientsUIDis=tempDis;
+  }
+
   ngOnDestroy(): void {
     if (this.localStSubscription) this.localStSubscription.unsubscribe();
   }
@@ -46,11 +62,14 @@ export class AdminClientsComponent implements OnInit, OnDestroy {
         this.clientsUi.forEach(client => {
           if (client.id.toString() == editedClient.client.id.toString()) {
             client.name = editedClient.client.name;
+            client.isEnabled=editedClient.client.isEnabled;
+            this.reInitClients();
             return;
           }
         });
       }
       this.clientsUi = this.arrSortPipe.transform(this.clientsUi, 'name');
+      this.reInitClients();
     });
   }
 
@@ -58,15 +77,23 @@ export class AdminClientsComponent implements OnInit, OnDestroy {
     this.getClientsSubscription = this.clientService.getClients().subscribe(clients => {
       this.clients = clients;
       this.clientsUi = clients;
+      this.reInitClients();
     }, error => {
       this.errorClients = error;
     });
+  }
+
+  toggleViewEnabledDisabledClients(){
+    this.showDisabledClients=!this.showDisabledClients;
+    this.reInitClients();
+    this.search('')
   }
 
   search(value: string) {
     this.clientsUi = this.clients.filter(function (client) {
       return client.name.toLowerCase().match(value.toLowerCase());
     });
+    this.reInitClients();
   }
 
   toDetail(clientId: number) {

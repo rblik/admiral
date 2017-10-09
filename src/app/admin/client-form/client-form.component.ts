@@ -61,6 +61,7 @@ export class ClientFormComponent implements OnInit, OnChanges, OnDestroy{
     this.clientCreationForm = this._fb.group({
       name: ['', [Validators.required]],
       companyNumber: [''],
+      enabled:[true],
       clientNumber: [''],
       phones: this._fb.array([]),
       addresses: this._fb.array([])
@@ -95,6 +96,7 @@ export class ClientFormComponent implements OnInit, OnChanges, OnDestroy{
     this.clientCreationForm = this._fb.group({
       name: [client.name, [Validators.required]],
       companyNumber: [client.companyNumber],
+      enabled:[client.isEnabled],
       clientNumber: [client.clientNumber],
       phones: this._fb.array(!!client.phones? client.phones: []),
       addresses: this._fb.array([])

@@ -19,6 +19,7 @@
               <input type="text" class="form-control" formControlName="name">
             </label>
           </div>
+
           <div class="form-group col-md-6 pull-left">
             <label>ח.פ. לקוח
               <input type="text" class="form-control" formControlName="companyNumber">
@@ -29,6 +30,8 @@
               <input type="text" class="form-control" formControlName="clientNumber">
             </label>
           </div>
+          <div   class="col-md-6 pull-left">        <p-checkbox  formControlName="enabled" binary="true"></p-checkbox>
+        פעיל</div>
         </div>
 
         <div formArrayName="phones">

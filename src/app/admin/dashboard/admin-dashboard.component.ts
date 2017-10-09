@@ -71,6 +71,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
   private clientForCreatingWorkInfos: string;
   private chosenClient: any;
   private chosenAgreement: number;
+  private weekOffsetGlobal:number;
 
   constructor(private route: ActivatedRoute,
               private employeeService: EmployeeService,
@@ -119,12 +120,16 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
 
   moveWeekForward() {
     this.weekOffset += 7;
+    console.log("saving offset "+this.weekOffset);
+    this.localStorage.store("globalWeekOffset", this.weekOffset);
     this.initWeekBorders(this.weekOffset);
     this.getWorkForWeekAndRender();
   }
 
   moveWeekBack() {
     this.weekOffset -= 7;
+    console.log("saving offset "+this.weekOffset);
+    this.localStorage.store("globalWeekOffset", this.weekOffset);
     this.initWeekBorders(this.weekOffset);
     this.getWorkForWeekAndRender();
   }
@@ -235,6 +240,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
         this.getAgreementsWithWorkAndRender();
       });
     });
+    this.localStorage.store("globalWeekOffset", this.weekOffset);
   }
 
   private getAgreementsWithWorkAndRender() {
