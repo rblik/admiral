@@ -101,7 +101,7 @@ export class EmployeeDetailComponent implements OnInit, OnDestroy{
 
   submitAdditionToProject(){
 
-    if(!!this.chosenProject&&!!this.chosenClient&&!!this.selectedCurrencyAmount) {
+    if(!!this.chosenProject&&!!this.chosenClient&&!!this.selectedCurrencyAmount&&!!this.selectedCurrency&&!!this.selectedHoursCounting) {
       var agrTemp = new Agreement;
       var tariffTemp = new Tariff;
       tariffTemp.amount = this.selectedCurrencyAmount;
@@ -131,6 +131,8 @@ export class EmployeeDetailComponent implements OnInit, OnDestroy{
     this.initProjectsDropDown();
     this.fillClientsDropDown();
     this.fillProjectsDropDown();
+    this.selectedCurrency='SHEKEL';
+    this.selectedHoursCounting='HOUR';
     this.chosenClient=null;
     this.chosenProject=null;
     this.selectedCurrencyAmount=null;

@@ -17,8 +17,15 @@
                       (onSelect)="populateTimeServiceWithDates()"></p-calendar>
         </label>
       </div>
+      <span class="hebrew-direct col-md-3 pull-left" style="text-align: right">
+        <span style="margin: 0 auto; font-weight: bold">תקן חודשי - </span>
+        <span id="defaultMonthHours" style="margin: 0 auto; font-size:large; font-weight: bold">{{(defaultMonthHours?defaultMonthHours:0) + " ש'"}}</span>
+      </span>
+      <span class="col-md-3 pull-right"></span>
     </div>
+
     <div class="col-md-12 hebrew-direct" style="text-align: center">
+
       <div class="btn-group" style="margin: 0 auto; display: inline-block">
       <button class="btn btn-xs btn-default" (click)="moveMonth(1)">&nbsp;חודש קדימה&nbsp;<i class="fa fa-chevron-left" aria-hidden="true"></i></button>
       <button class="btn btn-xs btn-default" (click)="moveMonth(-1)"><i class="fa fa-chevron-right" aria-hidden="true"></i>&nbsp;חודש אחורה&nbsp;</button>
@@ -47,3 +54,4 @@
   </div>
 </div>
 <router-outlet></router-outlet>
+

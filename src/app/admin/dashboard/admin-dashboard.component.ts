@@ -443,6 +443,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
         console.log(this.chosenAgreement)
         let saved: WorkInfo = this.convertToInfo(workUnit, this.chosenAgreement);
         saved.clientName = this.getClientNameByAgreementId(this.chosenAgreement);
+        saved.projectName = this.getProjectNameByAgreementId(this.chosenAgreement);
         this.replaceInDayWorkInfos(saved);
         this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
         this.search(null);
@@ -484,6 +485,12 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     return (agreementId) ? this.agreements.filter(agreement => {
       return agreement.agreementId === agreementId
     })[0].clientName:"";
+  }
+
+  private getProjectNameByAgreementId(agreementId: number): string {
+    return (agreementId) ? this.agreements.filter(agreement => {
+      return agreement.agreementId === agreementId
+    })[0].projectName:"";
   }
 
   private replaceInDayWorkInfos(workInfo: WorkInfo) {

@@ -34,11 +34,11 @@ export class DownloadService {
     });
   }
 
-  public downloadPartial(type: string, from: string, to: string, employeeId: string, departmentId: string) {
+  public downloadPartial(type: string, from: string, to: string, employeeId: string, departmentId: string, limit:string) {
     let params = new URLSearchParams();
     params.append('from', from);
     params.append('to', to);
-    params.append('limit', '7');
+    params.append('limit', limit);
     params.append('employeeId', employeeId);
     params.append('departmentId', departmentId);
     return this.http.get(this.adminUrl + "/" + type + "/partial", {

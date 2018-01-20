@@ -141,7 +141,7 @@ export class ProjectEmployeeFormComponent implements OnInit, OnChanges, OnDestro
       department: [],
       tariff: this._fb.group({
         id: [],
-        amount: [this.project?this.project.tariff.amount:'', [Validators.required]],
+        amount: [this.project?this.project.tariff.amount:'', [Validators.pattern('^\\d+(\\.\\d+)?$')]],
         currency: [this.project?this.project.tariff.currency:'', [Validators.required]],
         type: [this.project?this.project.tariff.type:'', [Validators.required]],
       })
@@ -158,7 +158,7 @@ export class ProjectEmployeeFormComponent implements OnInit, OnChanges, OnDestro
         department: [],
         tariff: this._fb.group({
           id: [this.agreement.id],
-          amount: [this.agreement.tariff.amount, [Validators.required]],
+          amount: [this.agreement.tariff.amount, [Validators.pattern('^\\d+(\\.\\d+)?$')]],
           currency: [this.agreement.tariff.currency, [Validators.required]],
           type: [this.agreement.tariff.type, [Validators.required]],
         })

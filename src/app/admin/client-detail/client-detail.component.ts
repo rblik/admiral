@@ -105,16 +105,11 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
       enabled: [project.isEnabled],
       tariff: this._fb.group({
         id: [project.tariff.id],
-        amount: [project.tariff.amount, [Validators.required]],
+        amount: [project.tariff.amount, [Validators.pattern('^\\d+(\\.\\d+)?$')]],
         currency: [project.tariff.currency, [Validators.required]],
         type: [project.tariff.type, [Validators.required]],
       })
     });
-  }
-
-  check(checked:Boolean){
-    if(checked)this.formProject.isEnabled=true
-    else this.formProject.isEnabled=false
   }
 
   popupEdit(project: Project) {

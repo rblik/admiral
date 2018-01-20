@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {SelectItem} from "primeng/primeng";
 import {TimeService} from "../../service/time.service";
+import {MonthInfoService} from "../../service/month-info.service";
 
 @Component({
   selector: 'admin-report',
@@ -13,8 +14,9 @@ export class ReportComponent implements OnInit{
   private types: SelectItem[];
   private monthOffset: number;
   private he: any;
+  private defaultMonthHours:number=0;
 
-  constructor(private timeService: TimeService) {
+  constructor(private timeService: TimeService,private monthInfoService: MonthInfoService) {
     this.types = [];
     this.types.push({label: 'PDF', value: 'pdf'});
     this.types.push({label: 'Excel', value: 'xlsx'});
@@ -32,6 +34,8 @@ export class ReportComponent implements OnInit{
 
   setDefaultDateRange() {
     this.timeService.setDefaultDateRange(this.monthOffset);
+    this.monthInfoService.getMonthInfo(this.timeService.fromDate.getFullYear(), this.timeService.fromDate.getMonth())
+      .subscribe(monthInfo=>this.defaultMonthHours=monthInfo.hoursSum);
     this.startDate = this.timeService.fromDate;
     this.endDate= this.timeService.toDate;
   }

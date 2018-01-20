@@ -469,6 +469,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.inCreation = false;
         let saved: WorkInfo = this.convertToInfo(workUnit, this.chosenAgreement);
         saved.clientName = this.getClientNameByAgreementId(this.chosenAgreement);
+        saved.projectName = this.getProjectNameByAgreementId(this.chosenAgreement)
         saved.isActiveAgreement = true;
         this.replaceInDayWorkInfos(saved);
         this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
@@ -577,6 +578,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return (agreementId) ? this.agreements.filter(agreement => {
       return agreement.agreementId === agreementId
     })[0].clientName:"";
+  }
+
+  private getProjectNameByAgreementId(agreementId: number): string {
+    return (agreementId) ? this.agreements.filter(agreement => {
+      return agreement.agreementId === agreementId
+    })[0].projectName:"";
   }
 
   pivotalReport(calendar: any, template?: boolean) {

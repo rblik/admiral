@@ -113,7 +113,7 @@ export class PartialDaysComponent implements OnInit, OnDestroy{
     let departmentId = this.chosenDepartment != null ? this.chosenDepartment.id.toString() : null;
     let fromDate = this.timeService.getDateString(this.timeService.fromDate);
     let toDate = this.timeService.getDateString(this.timeService.toDate);
-    this.downloadPartialSubscription = this.downloadService.downloadPartial(this.selectedType, fromDate, toDate, employeeId, departmentId)
+    this.downloadPartialSubscription = this.downloadService.downloadPartial(this.selectedType, fromDate, toDate, employeeId, departmentId,this.limit.toString())
       .subscribe(res => {
           let appType = this.downloadService.getMimeType(this.selectedType);
           let blob = new Blob([res.blob()], {type: appType});

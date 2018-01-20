@@ -48,8 +48,11 @@
         <span class="hebrew-direct" [innerHTML]="vraag['employeeSurname'] + '&nbsp;' + vraag['employeeName']"></span>
       </template>
     </p-column>
+    <p-column field="employeeNumber" header="מספר עובד" [style]="{'width':'10%'}" [sortable]="true"></p-column>
     <p-column field="departmentName" header="צוות" [style]="{'width':'10%'}" [sortable]="true"></p-column>
     <p-column field="projectName" header="פרויקט" [sortable]="true"></p-column>
     <p-column field="clientName" header="לקוח" [sortable]="true"></p-column>
   </p-dataTable>
+  <br>
+
 </div>

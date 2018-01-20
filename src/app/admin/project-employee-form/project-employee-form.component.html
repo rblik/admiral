@@ -22,7 +22,7 @@
         <div formGroupName="tariff" class="col-md-12">
           <div class="form-group">
           <span class="pull-right">
-            <input style="margin: 0 1em 0 0" OnlyNumber="true" type="number" pInputText placeholder="סכום *" formControlName="amount">
+            <input style="margin: 0 1em 0 0" OnlyNumber="false" type="number" pInputText placeholder="סכום *" step="0.01" formControlName="amount">
           </span>
             <p-dropdown [options]="currenciesUi" [style]="{'width':'20%', 'margin':'0 1em 0 0'}" formControlName="currency"></p-dropdown>
             <p-dropdown [options]="tariffTypesUi" [style]="{'width':'20%', 'margin':'0 1em 0 0'}" formControlName="type"></p-dropdown>
