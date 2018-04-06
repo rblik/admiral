@@ -140,7 +140,7 @@
     <div style="width: 100%; display: inline-block; margin: 0 auto; font-size: x-small">
 
       <p-schedule [aspectRatio]="3" [editable]="true" [events]="pluu" #cal (onViewRender)="getMonthAndRender(cal)" [header]="header"
-                  (onDayClick)="getDayWork($event)" (onEventClick)="getEventWork($event)" [eventLimit]="2"></p-schedule>
+                  (onDayClick)="getDayWork($event)" (onEventClick)="getEventWork($event)" [eventLimit]="{'month':3,'basicWeek':24}"></p-schedule>
     </div>
   </div>
   <input type="file" style="display: none" id="chooseXslInput" accept=".xls,.xlsx"/>
