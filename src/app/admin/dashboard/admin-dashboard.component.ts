@@ -396,7 +396,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
       && event.target.parentElement.attributes.id.nodeValue === 'dayWorkInfoTo'
       && ((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode == 37)) {
       let clientsDropdown = jQuery('#clientsDropdownDash').find("div.ui-helper-hidden-accessible").find(":text").get(0);
-      if (!!clientsDropdown) clientsDropdown.focus();
+      if (!!clientsDropdown) {
+        clientsDropdown.click();
+        clientsDropdown.focus();}
+
     }
   }
 

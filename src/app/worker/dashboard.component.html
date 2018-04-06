@@ -49,11 +49,11 @@
                                  [maxlength]="5"></p-inputMask>
                   </label>
                   &nbsp;
-                  <label for="clientsDropdown" *ngIf="isPivotal" style="padding: 0.5em 0 0.5em 5em" class="hebrew-direct">
+                  <label for="clientsDropdown" *ngIf="isPivotal" style="padding: 0 0 0.5em 0" class="hebrew-direct">
                     &nbsp;לקוח&nbsp;<br>
                     <p-dropdown [options]="clientsDropdown" id="clientsDropdown"
                                 [scrollHeight] = "scale+'px'"
-                                [(ngModel)]="chosenClient"  (keyup)="jump($event)"  [style]="{'z-index': '9999','width':'190%'}" (onChange)="getProjectsUi(chosenClient)"
+                                [(ngModel)]="chosenClient"  (keyup)="jump($event)"  [style]="{'z-index': '9999','width':'190px'}" (onChange)="getProjectsUi(chosenClient)"
                                 [autoWidth]="false"
                                 [filter]="true">
                       <template let-cl pTemplate="item">
@@ -65,12 +65,12 @@
                       </template>
                     </p-dropdown>
                   </label>
-                  <label for="projectsDropdown" *ngIf="isPivotal" style="padding: 0.5em 0 0.5em 5em">
+                  <label for="projectsDropdown" *ngIf="isPivotal" style="padding: 0 0 0.5em 0">
                     &nbsp;פרויקט&nbsp;<br>
                     <p-dropdown [options]="projectsDropdown" id="projectsDropdown"
                                 [autoWidth]="false"
                                 [scrollHeight] = "scale+'px'"
-                                [(ngModel)]="chosenAgreement" (keyup)="jump($event)" [style]="{'z-index': '5','width':'190%'}" (onChange)="getClient(chosenAgreement)"
+                                [(ngModel)]="chosenAgreement" (keyup)="jump($event)" [style]="{'z-index': '5','width':'190px'}" (onChange)="getClient(chosenAgreement)"
                                 [filter]="true"
                                 >
                       <template let-proj pTemplate="item">

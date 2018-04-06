@@ -41,10 +41,10 @@
                                  [maxlength]="5"></p-inputMask>
                   </label>
                   &nbsp;
-                  <label for="clientsDropdownDash" *ngIf="isPivotal" style="padding: 0.5em 0 0.5em 5em" class="hebrew-direct">
+                  <label for="clientsDropdownDash" *ngIf="isPivotal" style="padding: 0 0 0.5em 0" class="hebrew-direct">
                     &nbsp;לקוח&nbsp;<br>
                     <p-dropdown [options]="clientsDropdown" id="clientsDropdownDash"
-                                [(ngModel)]="chosenClient" (keyup)="jump($event)"  [style]="{'z-index': '9999','width':'190%'}" (onChange)="getProjectsUi(chosenClient)"
+                                [(ngModel)]="chosenClient" (keyup)="jump($event)"  [style]="{'z-index': '9999','width':'190px'}" (onChange)="getProjectsUi(chosenClient)"
                                 [filter]="true">
                       <template let-cl pTemplate="item">
                         <div class="row" style="text-align: right;">
@@ -55,10 +55,10 @@
                       </template>
                     </p-dropdown>
                   </label>
-                  <label for="projectsDropdownDash" *ngIf="isPivotal" style="padding: 0.5em 0 0.5em 5em">
+                  <label for="projectsDropdownDash" *ngIf="isPivotal" style="padding: 0 0 0.5em 0">
                     &nbsp;פרויקט&nbsp;<br>
                     <p-dropdown [options]="projectsDropdown" id="projectsDropdownDash"
-                                [(ngModel)]="chosenAgreement" (keyup)="jump($event)" [style]="{'z-index': '5','width':'190%'}" (onChange)="getClient(chosenAgreement)"
+                                [(ngModel)]="chosenAgreement" (keyup)="jump($event)" [style]="{'z-index': '5','width':'190px'}" (onChange)="getClient(chosenAgreement)"
                                 [filter]="true">
                       <template let-proj pTemplate="item">
                         <div class="row" style="text-align: right;">
