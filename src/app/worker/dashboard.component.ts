@@ -309,11 +309,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
       ]).subscribe(([infos, monthInfo]) => {
       this.dayWorkInfos = infos;
       this.dayBydayLock = monthInfo.locked;
+``
+      let openModalButton = document.getElementById('openModalButton');
+      if (!!openModalButton) {
+        openModalButton.click();
+        if (this.dayWorkInfos.length == 0) {
+          this.create()
+        }
+      }
     });
-    let openModalButton = document.getElementById('openModalButton');
-    if (!!openModalButton) {
-      openModalButton.click();
-    }
+
   }
 
   moveDay(workDate: Date, step: number, agreementId?: number) {

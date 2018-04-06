@@ -28,23 +28,23 @@
                   <button type="button" class="btn ui-button-secondary" style="font-size: xx-small" iconPos="right" pButton icon="fa-clock-o" (click)="makeWholeDay()" label="יום עבודה מלא 9-18"></button>
                 </div>
                 <div style="text-align: center; position: relative;">
-                  <label for="dayWorkInfoFrom">
+                  <label for="dayWorkInfoFrom" style="padding: 0.5em 0 0 0">
                     &nbsp;מ-&nbsp;<br>
-                    <p-inputMask [style]="{'width':'5em'}" [(ngModel)]="workInfoItem.from" (keyup)="jump($event)"
+                    <p-inputMask [style]="{'width':'5em', 'padding-bottom':'0.4em'}" [(ngModel)]="workInfoItem.from" (keyup)="jump($event)"
                                  id="dayWorkInfoFrom" mask="99:99" inputStyleClass="form-control"
                                  [maxlength]="5"></p-inputMask>
                   </label>
                   <label for="dayWorkInfoTo">
                     &nbsp;עד-&nbsp;<br>
-                    <p-inputMask [style]="{'width':'5em'}" [(ngModel)]="workInfoItem.to" (keyup)="jump($event)"
+                    <p-inputMask [style]="{'width':'5em', 'padding-bottom':'0.4em'}" [(ngModel)]="workInfoItem.to" (keyup)="jump($event)"
                                  mask="99:99" id="dayWorkInfoTo" inputStyleClass="form-control"
                                  [maxlength]="5"></p-inputMask>
                   </label>
                   &nbsp;
-                  <label for="clientsDropdownDash" *ngIf="isPivotal" style="padding: 0.5em 0 0.5em 0" class="hebrew-direct">
+                  <label for="clientsDropdownDash" *ngIf="isPivotal" style="padding: 0.5em 0 0.5em 5em" class="hebrew-direct">
                     &nbsp;לקוח&nbsp;<br>
                     <p-dropdown [options]="clientsDropdown" id="clientsDropdownDash"
-                                [(ngModel)]="chosenClient" (keyup)="jump($event)"  [style]="{'z-index': '9999'}" (onChange)="getProjectsUi(chosenClient)"
+                                [(ngModel)]="chosenClient" (keyup)="jump($event)"  [style]="{'z-index': '9999','width':'190%'}" (onChange)="getProjectsUi(chosenClient)"
                                 [filter]="true">
                       <template let-cl pTemplate="item">
                         <div class="row" style="text-align: right;">
@@ -55,10 +55,10 @@
                       </template>
                     </p-dropdown>
                   </label>
-                  <label for="projectsDropdownDash" *ngIf="isPivotal">
+                  <label for="projectsDropdownDash" *ngIf="isPivotal" style="padding: 0.5em 0 0.5em 5em">
                     &nbsp;פרויקט&nbsp;<br>
                     <p-dropdown [options]="projectsDropdown" id="projectsDropdownDash"
-                                [(ngModel)]="chosenAgreement" (keyup)="jump($event)" [style]="{'z-index': '5'}" (onChange)="getClient(chosenAgreement)"
+                                [(ngModel)]="chosenAgreement" (keyup)="jump($event)" [style]="{'z-index': '5','width':'190%'}" (onChange)="getClient(chosenAgreement)"
                                 [filter]="true">
                       <template let-proj pTemplate="item">
                         <div class="row" style="text-align: right;">

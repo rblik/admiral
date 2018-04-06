@@ -188,11 +188,15 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
     this.activeDate = currentDate;
     this.allDayWorkSubscription = this.workService.getDayWork(currentDate, -1, this.employee.id, this.adminUnitsUrl).subscribe(infos => {
       this.dayWorkInfos = infos;
+      let openModalButton = document.getElementById('openModalButton');
+      if (!!openModalButton) {
+        openModalButton.click();
+        if (this.dayWorkInfos.length == 0) {
+          this.create()
+        }
+      }
     });
-    let openModalButton = document.getElementById('openModalButton');
-    if (!!openModalButton) {
-      openModalButton.click();
-    }
+
   }
 
   showWorkDayDialog(workInfo: WorkInfo, agreement: AgreementDto) {
@@ -209,11 +213,15 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
       this.activeDate = currentDate;
       this.dayWorkSubscription = this.workService.getDayWork(currentDate, workInfo.agreementId, this.employee.id, this.adminUnitsUrl).subscribe(infos => {
         this.dayWorkInfos = infos;
+        let openModalButton = document.getElementById('openModalButton');
+        if (!!openModalButton) {
+          openModalButton.click();
+          if (this.dayWorkInfos.length == 0) {
+            this.create()
+          }
+        }
+
       });
-      let openModalButton = document.getElementById('openModalButton');
-      if (!!openModalButton) {
-        openModalButton.click();
-    }
   }
 
 
