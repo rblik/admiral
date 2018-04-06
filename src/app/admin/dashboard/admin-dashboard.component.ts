@@ -449,8 +449,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
         saved.clientName = this.getClientNameByAgreementId(this.chosenAgreement);
         saved.projectName = this.getProjectNameByAgreementId(this.chosenAgreement);
         this.replaceInDayWorkInfos(saved);
-        this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
-        this.search(null);
+        this.getWorkForWeekAndRender();
         this.createDialog = false;
         jQuery('#dayWorkInfoForm').focus();
       }, err => this.error = err);

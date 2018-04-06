@@ -474,6 +474,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.replaceInDayWorkInfos(saved);
         this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
         this.refreshAllInfos(this.workInfos);
+
         this.createDialog = false;
         jQuery('#dayWorkInfoForm').focus();
       }, err => this.error = err);
