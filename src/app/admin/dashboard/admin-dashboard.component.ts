@@ -151,6 +151,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
         return workInfo.agreementId == agreement.agreementId;
       });
 
+      console.log(filtered);
+
       let resultArr: WorkInfo[] = [];
 
       for (let i = 0; i < filtered.length; i++) {
@@ -170,6 +172,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy{
       }
       agreement.workInfos = resultArr;
     });
+
+    this.uiAgreements = this.uiAgreements.filter(value => value.workInfos.filter(value1 => value1.duration != 0).length != 0)
   }
 
   showPivotalWorkDayDialog(date: Date) {
