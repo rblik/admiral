@@ -33,7 +33,7 @@
                 <!--<p-calendar [(ngModel)]="tes" [stepMinute]=10 hourFormat="24" readonlyInput="true" dataType="string" [timeOnly]="true"></p-calendar>-->
                 <div class="btn-group" style="padding: 0 0 0.5em 0">
                   <button type="button" class="btn ui-button-secondary" style="font-size: xx-small" iconPos="right" pButton icon="fa-clock-o" (click)="makeWholeDay()" label="יום עבודה מלא 9-18"></button>
-                  <button type="button" class="btn ui-button-text" style="font-size:xx-small" iconPos="right" pButton icon="fa-clock-o" (click)="fillDefaultChoice()" label="דווח לקוח ושעות ברירת מחדל"></button>
+                  <button type="button" class="btn ui-button-text" style="font-size:xx-small" iconPos="right" pButton icon="fa-clock-o" (click)="fillDefaultChoices()" label="דווח לקוח ושעות ברירת מחדל"></button>
                 </div>
                 <div style="text-align: center; position: relative;">
                   <label for="dayWorkInfoFrom">
@@ -82,6 +82,18 @@
                       </template>
                     </p-dropdown>
                   </label>
+                </div>
+                <div style="font-size: smaller; border: #EEEEEE solid 1px" *ngIf="defaultChoicesDialog">
+                  <div *ngFor="let defaultChoice of defaultChoices" class="hebrew-direct row" style="margin-bottom: 10px; margin-top: 10px; margin-right: 10px; width: 90%">
+                    <!--<li class="hebrew-direct col-md-2 pull-right list-group-item" style="text-align: right">{{ defaultChoice.agreement.id}}</li>-->
+                    <span class="hebrew-direct col-md-4 pull-right " style="text-align: right">{{ defaultChoice.agreement.clientName}}</span>
+                    <span class="hebrew-direct col-md-4  pull-right " style="text-align: right">{{ defaultChoice.agreement.projectName}}</span>
+                    <span class="hebrew-direct col-md-1  pull-right " style="text-align: right">{{ defaultChoice.start.substring(0,5)}}</span>
+                    <span class="hebrew-direct col-md-1  pull-right " style="text-align: right">{{ defaultChoice.finish.substring(0,5)}}</span>
+                    <span class="hebrew-direct col-md-1  pull-right " style="text-align: right"><button title="למחוק" type="button" class="btn btn-xs btn-danger pull-right" (click)="removeDefaultChoice(defaultChoice.id)"  style="font-size: smaller;"><i class="fa fa-trash-o fa-fw"></i>&nbsp;מחק&nbsp;</button></span>
+                    <span class="hebrew-direct col-md-1  pull-right " style="text-align: right; padding-right: 2em"><button title="לבחור" type="button" class="btn btn-xs btn-success pull-right" (click)="chooseDefaultChoice(defaultChoice.id)"  style="font-size: smaller;"><i class="fa fa-check fa-fw"></i>&nbsp;בחר&nbsp;</button></span>
+
+                  </div>
                 </div>
                 <br>
                 <textarea pInputTextarea [(ngModel)]="workInfoItem.comment" placeholder="תיאור הפעילות " id="dayWorkInfoComment" class="form-control" [maxlength]="255"></textarea>

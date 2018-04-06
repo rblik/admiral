@@ -63,7 +63,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private header: { left: string; center: string; right: string };
   private firstDayOfMonth: Date;
   private firstDayOfNextMonth: Date;
+  private defaultChoicesDialog:boolean = false;
   private defaultMonthHours: number = 0;
+  private defaultChoices: any[];
   private inCreation: boolean = false;
   private isEnabled: boolean = false;
   private defaultChoiceError: string;
@@ -91,19 +93,40 @@ export class DashboardComponent implements OnInit, OnDestroy {
       right: ''
     };
   }
-  fillDefaultChoice() {
-    this.workService.getDefaultChoice().subscribe(choice => {
-      // console.log(choice);
-      if (!!choice.start) this.workInfoItem.from = choice.start;
-      if (!!choice.finish) this.workInfoItem.to = choice.finish;
-      if (!!choice.agreement.id) this.chosenAgreement = choice.agreement.id;
-        // this.chosenClient = this.chosenAgreement.clientId;
-        this.chosenAgreement = choice.agreement.id;
-      this.getClient(this.chosenAgreement);
-    }, err => {
-      this.defaultChoiceError = err;
-    })
+
+  chooseDefaultChoice(defaultChoiceId: number) {
+    let defaultChoice = this.defaultChoices.filter(choice => choice.id == defaultChoiceId)[0];
+    console.log(defaultChoice);
+    if (!!defaultChoice.start) this.workInfoItem.from = defaultChoice.start;
+    if (!!defaultChoice.finish) this.workInfoItem.to = defaultChoice.finish;
+    if (!!defaultChoice.agreement.id) this.chosenAgreement = defaultChoice.agreement.agreementId;
+    // this.chosenClient = this.chosenAgreement.clientId;
+    this.chosenAgreement = defaultChoice.agreement.agreementId;
+    this.getClient(this.chosenAgreement);
   }
+
+  fillDefaultChoices() {
+    if(!this.defaultChoicesDialog) {
+      this.workService.getDefaultChoices().subscribe(choices => {
+        this.defaultChoicesDialog = true;
+        choices.forEach(choice => choice.agreement = this.agreementsUi.filter(agreement => agreement.agreementId == choice.agreement.id)[0])
+        this.defaultChoices = choices;
+        console.log(this.defaultChoices)
+      }, err => {
+        this.defaultChoiceError = err;
+      })
+    }
+    else {
+      this.defaultChoicesDialog=false;
+    }
+  }
+
+  removeDefaultChoice(defaultchoiceId:number){
+    this.workService.deleteDefaultChoiceById(defaultchoiceId).subscribe()
+
+    this.defaultChoices=this.defaultChoices.filter(defaultChoice=> defaultChoice.id!=defaultchoiceId)
+  }
+
   private getAgreementsWithWorkAndRender() {
     this.getAgreementsSubscription = this.workService.getWorkAgreements().subscribe(agreements => {
       this.agreements = agreements;
@@ -482,7 +505,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.replaceInDayWorkInfos(saved);
         this.replaceInAllWorkInfos(saved, workInfo.duration, workInfo.unitId != null);
         this.refreshAllInfos(this.workInfos);
-
+        this.defaultChoicesDialog=false;
         this.createDialog = false;
         jQuery('#dayWorkInfoForm').focus();
       }, err => this.error = err);

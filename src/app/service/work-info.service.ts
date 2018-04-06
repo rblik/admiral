@@ -12,10 +12,12 @@ export class WorkInfoService {
   private unitsUrl: string;
   private agreementsUrl: string;
   private defaultChoiceUrl: string;
+  private defaultChoicesUrl: string;
   constructor(private http: Http, private authService: AuthService) {
     this.agreementsUrl = Url.getUrl("/agreements");
     this.unitsUrl = Url.getUrl("/units");
     this.defaultChoiceUrl = Url.getUrl("/profile/defaultchoice");
+    this.defaultChoicesUrl = Url.getUrl("/profile/defaultchoices");
   }
 
   public getMonthWork(sundayDate: string, nextSundayDate: string, employeeId?: number, adminUnitsUrl?: string): Observable<WorkInfo[]> {
@@ -79,6 +81,27 @@ export class WorkInfoService {
     headers.append("Authorization", this.authService.getToken());
     let options = new RequestOptions({headers: headers});
     return this.http.get(this.defaultChoiceUrl, options)
+      .map(res => res.json())
+      .catch(e => {
+        return Observable.throw("קודם צריך ליצור את ברירת המחדל");
+      });
+  }
+  public getDefaultChoices(): Observable<any[]> {
+    let headers = new Headers({'Content-Type': 'application/json'});
+    headers.append("Authorization", this.authService.getToken());
+    let options = new RequestOptions({headers: headers});
+    return this.http.get(this.defaultChoicesUrl, options)
+      .map(res => res.json())
+      .catch(e => {
+        return Observable.throw("קודם צריך ליצור את ברירת המחדל");
+      });
+  }
+
+  public deleteDefaultChoiceById(defaultChoiceId:number): Observable<any> {
+    let headers = new Headers({'Content-Type': 'application/json'});
+    headers.append("Authorization", this.authService.getToken());
+    let options = new RequestOptions({headers: headers});
+    return this.http.delete(this.defaultChoicesUrl+'/'+defaultChoiceId, options)
       .map(res => res.json())
       .catch(e => {
         return Observable.throw("קודם צריך ליצור את ברירת המחדל");
