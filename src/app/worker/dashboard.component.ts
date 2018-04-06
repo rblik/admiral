@@ -86,7 +86,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.scale=Math.round(window.innerHeight*0.67-innerHeight*0.09)
     this.getAgreementsWithWorkAndRender();
     this.header = {
-      left: 'today',
+      left: 'today, basicWeek, month',
       center: 'title',
       right: ''
     };
