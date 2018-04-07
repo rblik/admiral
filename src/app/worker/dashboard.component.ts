@@ -83,9 +83,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(private arrSortPipe: ArraySortPipe, private auth: AuthService, private notificationBarService: NotificationBarService, private minToHours: MinutesToHoursPipe, private timeService: TimeService, private downloadService: UserDownloadService, private monthInfoService: MonthInfoService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
     this.types = [];
     this.sumByMonth = 0;
-    // this.neededSumByMonth = 0;
-    // console.log('Width: ' + window.innerWidth);
-    // console.log('Height: ' + window.innerHeight);
     this.scale=Math.round(window.innerHeight*0.67-innerHeight*0.09)
     this.getAgreementsWithWorkAndRender();
     this.header = {
@@ -97,7 +94,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   chooseDefaultChoice(defaultChoiceId: number) {
     let defaultChoice = this.defaultChoices.filter(choice => choice.id == defaultChoiceId)[0];
-    console.log(defaultChoice);
     if (!!defaultChoice.start) this.workInfoItem.from = defaultChoice.start;
     if (!!defaultChoice.finish) this.workInfoItem.to = defaultChoice.finish;
     if (!!defaultChoice.agreement.id) this.chosenAgreement = defaultChoice.agreement.agreementId;
@@ -112,7 +108,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.defaultChoicesDialog = true;
         choices.forEach(choice => choice.agreement = this.agreementsUi.filter(agreement => agreement.agreementId == choice.agreement.id)[0])
         this.defaultChoices = choices;
-        console.log(this.defaultChoices)
       }, err => {
         this.defaultChoiceError = err;
       })
@@ -260,7 +255,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         )
       ]).subscribe(([workInfos, monthInfo]) => {
       this.workInfos = workInfos;
-      console.log(workInfos);
       this.refreshAllInfos(workInfos);
       this.lock = monthInfo.locked;
       this.defaultMonthHours = monthInfo.hoursSum;
