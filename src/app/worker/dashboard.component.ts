@@ -76,6 +76,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private msgs:Message[]=[];
   private isDisabledError:boolean;
   private editError:string;
+  private clientColorMap:any[]=[];
 
 
 
@@ -234,6 +235,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.projectsDropdown.push({label: "בחר פרויקט", value: null});
   }
 
+  onRenderEvent(event, elements, view) {
+    elements[0].setAttribute('style', 'background-color: ' + window.sessionStorage.getItem(elements[0].innerText.split('-')[1].trim()));
+  }
+
   getMonthAndRender(calendar?: any) {
     if (this.firstRender) {
       this.addButtons(calendar);
@@ -255,6 +260,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         )
       ]).subscribe(([workInfos, monthInfo]) => {
       this.workInfos = workInfos;
+      console.log(workInfos);
       this.refreshAllInfos(workInfos);
       this.lock = monthInfo.locked;
       this.defaultMonthHours = monthInfo.hoursSum;
@@ -291,8 +297,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private getEvents(workInfos: WorkInfo[]): Event[] {
     return workInfos.map(info => {
+      window.sessionStorage.setItem(info.clientName.trim(), info.clientColor);
       this.sumByMonth += info.duration;
-      return new Event(this.minToHours.transform(info.duration, true) + " - " + info.clientName, info.date, info.duration);
+      return new Event(this.minToHours.transform(info.duration, true) + " - " + info.clientName, info.date, info.duration, info.clientColor);
     });
   }
 
@@ -508,7 +515,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.defaultChoicesDialog=false;
         this.createDialog = false;
         jQuery('#dayWorkInfoForm').focus();
+        this.workService.getMonthWork(
+          this.timeService.getDateString(this.firstDayOfMonth),
+          this.timeService.getDateString(this.firstDayOfNextMonth)
+        ).subscribe(workInfos=>{
+          this.refreshAllInfos(workInfos);
+        })
       }, err => this.error = err);
+
   }
 
   public remove(workInfo: WorkInfo) {

@@ -37,6 +37,7 @@ import {AdminMonthInfoService} from "./service/admin-month-info.service";
 import {IncomeComponent} from "./income/income.component";
 import {AdminFrontalMessagesService} from "./service/admin-frontalmessages.service";
 import { FrontalMessagesComponent} from "./frontalmessages/frontalmessages.component";
+import {ColorPickerModule} from 'angular2-color-picker/lib/color-picker.module';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { FrontalMessagesComponent} from "./frontalmessages/frontalmessages.compo
     InputMaskModule,
     DropdownModule,
     DataTableModule,
+    ColorPickerModule,
     SpinnerModule,
     CheckboxModule,
     MyCommonModule,

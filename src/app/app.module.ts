@@ -42,6 +42,7 @@ import {PasswordStrengthBarModule} from "ng2-password-strength-bar";
 import {PassrefreshComponent} from "./passrefresh/passrefresh.component";
 import {AuthGuardTokenOnlyService} from "./service/auth-guard-token-only-service";
 import {FrontalMessageService} from "./service/frontalmessage.service";
+import {ColorPickerModule} from 'angular2-color-picker/lib/color-picker.module';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import {FrontalMessageService} from "./service/frontalmessage.service";
     InputTextModule,
     InputMaskModule,
     DropdownModule,
+    ColorPickerModule,
     InputTextareaModule,
     Ng2Webstorage,
     MyCommonModule,

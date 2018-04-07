@@ -13,6 +13,7 @@ export class WorkInfo {
   date: string;
   from: string;
   to: string;
+  clientColor: string;
   duration: number;
   comment: string;
   editable: boolean;

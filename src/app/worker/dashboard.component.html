@@ -151,7 +151,7 @@
     </div>
     <div style="width: 100%; display: inline-block; margin: 0 auto; font-size: x-small">
 
-      <p-schedule [aspectRatio]="3" [editable]="true" [events]="pluu" #cal (onViewRender)="getMonthAndRender(cal)" [header]="header"
+      <p-schedule [aspectRatio]="3" [editable]="true" [events]="pluu" #cal [eventRender]="onRenderEvent" (onViewRender)="getMonthAndRender(cal)" [header]="header"
                   (onDayClick)="getDayWork($event)" (onEventClick)="getEventWork($event)" [eventLimit]="{'month':3,'basicWeek':24}"></p-schedule>
     </div>
   </div>

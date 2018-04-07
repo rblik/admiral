@@ -5,6 +5,7 @@ import {SessionStorageService} from "ng2-webstorage";
 import {ClientService} from "../service/client.service";
 import {Address} from "../../model/address";
 import {Subscription} from "rxjs/Subscription";
+import {ColorPickerService} from 'angular2-color-picker/lib/color-picker.service';
 
 @Component({
   selector: 'client-form',
@@ -17,9 +18,11 @@ export class ClientFormComponent implements OnInit, OnChanges, OnDestroy{
   @Output() outputClient: EventEmitter<Client> = new EventEmitter<Client>();
   public clientCreationForm: FormGroup;
   private errorClient: string;
+  private color: string = "#127bdc";
   private upsertClientSubscription: Subscription;
 
   constructor(private clientService: ClientService,
+              private cpService: ColorPickerService,
               private localSt: SessionStorageService,
               private _fb: FormBuilder) {
   }
@@ -70,6 +73,7 @@ export class ClientFormComponent implements OnInit, OnChanges, OnDestroy{
 
   submitForm(clientSubmitted: any) {
     let value = clientSubmitted.value;
+    value.color=this.color;
     value.id = this.clientForCreation.id;
     // this.clientForCreation.name = value.name;
     // this.clientForCreation.companyNumber = value.companyNumber;
@@ -101,6 +105,10 @@ export class ClientFormComponent implements OnInit, OnChanges, OnDestroy{
       phones: this._fb.array(!!client.phones? client.phones: []),
       addresses: this._fb.array([])
     });
+    if(!!client.color){
+      this.color = client.color;
+    }
+
     const control = <FormArray>this.clientCreationForm.controls['addresses'];
     if (!!client.addresses) {
       client.addresses.forEach(address => {

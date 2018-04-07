@@ -25,6 +25,20 @@
               <input type="text" class="form-control" formControlName="companyNumber">
             </label>
           </div>
+          <div class="english-direct col-md-offset-2 pull-left">
+            <label>צבע
+            <input type="button" style="width: 60%" [colorPicker]="color"
+                   (colorPickerChange)="color=$event"
+                   [cpOKButton]='true'
+                   [cpPosition]="'left'"
+                   [cpOutputFormat]="'hex'"
+                   [cpPositionOffset]="'0%'"
+                   [cpSaveClickOutside]="'true'"
+                   [cpDialogDisplay]="'popup'"
+                   [style.background]="color"/>
+            </label>
+          </div>
+
           <div class="form-group col-md-6 pull-right">
             <label>מס' לקוח במערכת
               <input type="text" class="form-control" formControlName="clientNumber">
