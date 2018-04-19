@@ -293,7 +293,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return workInfos.map(info => {
       window.sessionStorage.setItem(info.clientName.trim(), info.clientColor);
       this.sumByMonth += info.duration;
-      return new Event(this.minToHours.transform(info.duration, true) + " - " + info.clientName, info.date, info.duration, info.clientColor);
+      if(info.clientName=='Naya'){
+        let agreementDtos = this.agreements.filter(agreement => agreement.agreementId==info.agreementId);
+
+        console.log(this.agreements.filter(agreement => agreement.agreementId==info.agreementId))
+        return new Event(this.minToHours.transform(info.duration, true) + " - " + info.clientName+' - '+agreementDtos[0].projectName, info.date, info.duration, info.clientColor)
+      }
+      else return new Event(this.minToHours.transform(info.duration, true) + " - " + info.clientName, info.date, info.duration, info.clientColor);
     });
   }
 
