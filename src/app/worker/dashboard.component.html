@@ -151,7 +151,7 @@
     </div>
     <div style="width: 100%; display: inline-block; margin: 0 auto; font-size: x-small">
 
-      <p-schedule [aspectRatio]="3" [editable]="true" [events]="pluu" #cal [eventRender]="onRenderEvent" (onViewRender)="getMonthAndRender(cal)" [header]="header"
+      <p-schedule [aspectRatio]="2" [editable]="true" [events]="pluu" #cal [eventRender]="onRenderEvent" (onViewRender)="getMonthAndRender(cal)" [header]="header"
                   (onDayClick)="getDayWork($event)" (onEventClick)="getEventWork($event)" [eventLimit]="{'month':3,'basicWeek':24}"></p-schedule>
     </div>
   </div>
@@ -165,7 +165,5 @@
   <span style="margin: 0 auto; font-weight: bold">סה''כ שעות עבודה מדווחות - </span>
   <span id="sumByMonth" style="margin: 0 auto; font-weight: bold">{{sumByMonth | minutesToHours}}</span>
   <br>
-  <span style="margin: 0 auto; font-weight: bold">תקן חודשי - </span>
-  <span id="defaultMonthHours" style="margin: 0 auto; font-weight: bold">{{(defaultMonthHours?defaultMonthHours:0) + " ש'"}}</span>
 </div>
 </div>

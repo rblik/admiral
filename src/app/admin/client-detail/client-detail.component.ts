@@ -56,6 +56,10 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
     this.routeParamsSubscription = this.route.params.switchMap((params: Params) =>
       this.clientService.get(params['clientId'])).subscribe(client => {
       this.client = client;
+      this.client.projects = this.client.projects.map(proj => {
+        if (!!proj.workAgreements) proj.workAgreements = proj.workAgreements.filter(wa => wa.employee.enabled);
+        return proj
+      });
       this.clientName = client.name;
     });
   }

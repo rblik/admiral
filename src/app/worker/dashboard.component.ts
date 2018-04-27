@@ -83,7 +83,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(private arrSortPipe: ArraySortPipe, private auth: AuthService, private notificationBarService: NotificationBarService, private minToHours: MinutesToHoursPipe, private timeService: TimeService, private downloadService: UserDownloadService, private monthInfoService: MonthInfoService, private workService: WorkInfoService, private sessionStorageService: SessionStorageService) {
     this.types = [];
     this.sumByMonth = 0;
-    this.scale=Math.round(window.innerHeight*0.67-innerHeight*0.09)
+    this.scale = Math.round(window.innerHeight * 0.67 - innerHeight * 0.09);
     this.getAgreementsWithWorkAndRender();
     this.header = {
       left: 'today, basicWeek, month',
